@@ -2,22 +2,10 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
   SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -35,16 +23,20 @@ const ADMIN_navMain = [
     isActive: true,
     items: [
       {
-        title: "History",
-        url: "#",
+        title: "Profile",
+        url: "dashboard/me",
       },
       {
-        title: "Starred",
-        url: "#",
+        title: "All Booking",
+        url: "/dashboard/booking",
       },
       {
-        title: "Settings",
-        url: "#",
+        title: "All Tutors",
+        url: "/dashboard/tutors",
+      },
+      {
+        title: "Add Category",
+        url: "/dashboard/category",
       },
     ],
   },
@@ -58,16 +50,16 @@ const STUDENT_navMain = [
     isActive: true,
     items: [
       {
-        title: "History",
-        url: "#",
+        title: "Profile",
+        url: "/dashboard/me",
       },
       {
-        title: "Starred",
-        url: "#",
+        title: "Bookings",
+        url: "/dashboard/bookings",
       },
       {
-        title: "Settings",
-        url: "#",
+        title: "Manage Booking",
+        url: "/dashboard/manage",
       },
     ],
   },
@@ -81,16 +73,16 @@ const TUTOR_navMain = [
     isActive: true,
     items: [
       {
-        title: "History",
-        url: "#",
+        title: "Profile",
+        url: "/dashboard/me",
       },
       {
-        title: "Starred",
-        url: "#",
+        title: "Booking",
+        url: "/dashboard/booking",
       },
       {
-        title: "Settings",
-        url: "#",
+        title: "Manage Booking",
+        url: "/dashboard/manage",
       },
     ],
   },

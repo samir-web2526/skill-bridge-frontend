@@ -76,6 +76,10 @@ const Navbar = ({
       title: "Tutors",
       url: "/tutors",
     },
+    {
+      title: "Category",
+      url: "/category",
+    },
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -91,14 +95,14 @@ const Navbar = ({
       setUser(userData);
     };
     currentUser();
-  },[]);
+  }, []);
 
-  const handleLogOut = async()=>{
+  const handleLogOut = async () => {
     const success = await logOut();
-    if(success){
-      setUser(null)
+    if (success) {
+      setUser(null);
     }
-  }
+  };
 
   return (
     <section className={cn("py-4", className)}>
@@ -126,18 +130,27 @@ const Navbar = ({
             </div>
           </div>
           <div className="flex gap-2">
-            {user ? (
-              <Button onClick={handleLogOut}>Logout</Button>
-            ) : (
-              <>
-                <Button asChild variant="outline" size="sm">
-                  <a href={auth.login.url}>{auth.login.title}</a>
-                </Button>
-                <Button asChild size="sm">
-                  <a href={auth.signup.url}>{auth.signup.title}</a>
-                </Button>
-              </>
-            )}
+            <div className="flex gap-2">
+              {user ? (
+                <>
+                  <Button asChild size="sm">
+                    <a href="/dashboard">Dashboard</a>
+                  </Button>
+                  <Button onClick={handleLogOut} size="sm">
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild variant="outline" size="sm">
+                    <a href={auth.login.url}>{auth.login.title}</a>
+                  </Button>
+                  <Button asChild size="sm">
+                    <a href={auth.signup.url}>{auth.signup.title}</a>
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
         </nav>
 
@@ -268,7 +281,3 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
 };
 
 export { Navbar };
-  function getUserFromSession() {
-    throw new Error("Function not implemented.");
-  }
-

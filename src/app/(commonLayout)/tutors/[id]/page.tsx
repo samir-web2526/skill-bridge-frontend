@@ -1,7 +1,7 @@
 
 
 import TutorDetailCard from "@/components/modules/tutors/tutorDetails";
-import { getTutorDetails } from "@/services/tutorServices/tutorServices"
+import { getTutorDetails } from "@/services/tutor.service"
 
 export default async function TutorDetailsPage({
   params,

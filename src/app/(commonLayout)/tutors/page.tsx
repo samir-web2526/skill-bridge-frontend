@@ -1,5 +1,5 @@
 import TutorCard from "@/components/modules/tutors/TutorCard";
-import { getAllTutors } from "@/services/tutorServices/tutorServices";
+import { getAllTutors } from "@/services/tutor.service";
 import React from "react";
 
 export default async function TutorsPage() {
