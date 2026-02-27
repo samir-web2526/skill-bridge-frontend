@@ -1,9 +1,9 @@
 "use server"
 
 import { cookies } from "next/headers";
-import { env } from "process";
 
-const AUTH_URL = env.AUTH_URL;
+
+const AUTH_URL = process.env.AUTH_URL;
 export const getSession = async () => {
   try {
     const cookieStore = await cookies();

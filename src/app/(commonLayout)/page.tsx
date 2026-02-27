@@ -1,4 +1,5 @@
 import Banner from "@/components/modules/home/Banner";
+
 import { getSession } from "@/services/user.service";
 
 export default async function Home() {
@@ -7,6 +8,7 @@ export default async function Home() {
   return (
    <div className="mx-auto px-16">
      <Banner></Banner>
+    
    </div>
   );
 }
