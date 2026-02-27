@@ -62,3 +62,30 @@ export const getAllBookings = async () => {
     return { data: [], paginations: {} };
   }
 };
+
+export const cancelBooking = async (bookingId: string) => {
+  try {
+     const cookieStore = await cookies();
+    const res = await fetch(
+      `${API_URL}/api/bookings/${bookingId}/cancel`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+           Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message);
+    }
+
+    return await res.json();
+  } catch (error: any) {
+    console.error("Cancel booking error:", error);
+    return null;
+  }
+};

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAllBookings } from "@/services/booking.service";
+import { cancelBooking, getAllBookings } from "@/services/booking.service";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -39,8 +39,24 @@ export default function StudentBookingList() {
   }, [page]);
 
   if (loading) return <p className="text-center mt-10">Loading bookings...</p>;
-  if (bookings.length === 0) return <p className="text-center mt-10">No bookings yet.</p>;
+  if (bookings.length === 0)
+    return <p className="text-center mt-10">No bookings yet.</p>;
 
+  const handleCancel = async (bookingId: string) => {
+    const res = await cancelBooking(bookingId);
+
+    if (res) {
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId ? { ...b, status: "CANCELLED" } : b,
+        ),
+      );
+
+      alert("Booking cancelled successfully");
+    } else {
+      alert("Cancel failed");
+    }
+  };
   return (
     <div className="max-w-6xl mx-auto mt-10 p-4">
       <h1 className="text-2xl font-bold mb-6 text-center">Student Bookings</h1>
@@ -53,6 +69,7 @@ export default function StudentBookingList() {
             <TableHead>Rate</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Created At</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -64,7 +81,10 @@ export default function StudentBookingList() {
                 <div className="flex items-center gap-2">
                   <Avatar className="h-10 w-10">
                     <AvatarImage
-                      src={b.tutor?.user?.image || "https://i.pravatar.cc/150?img=4"}
+                      src={
+                        b.tutor?.user?.image ||
+                        "https://i.pravatar.cc/150?img=4"
+                      }
                     />
                     <AvatarFallback>👨‍🏫</AvatarFallback>
                   </Avatar>
@@ -87,8 +107,8 @@ export default function StudentBookingList() {
                     b.status === "CONFIRMED"
                       ? "success"
                       : b.status === "PENDING"
-                      ? "warning"
-                      : "secondary"
+                        ? "warning"
+                        : "secondary"
                   }
                 >
                   {b.status}
@@ -98,6 +118,18 @@ export default function StudentBookingList() {
               {/* Created At */}
               <TableCell className="text-gray-500 text-sm">
                 {new Date(b.createdAt).toLocaleString()}
+              </TableCell>
+              <TableCell>
+                {b.status === "PENDING" ? (
+                  <button
+                    onClick={() => handleCancel(b.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Cancel
+                  </button>
+                ) : (
+                  b.status
+                )}
               </TableCell>
             </TableRow>
           ))}
