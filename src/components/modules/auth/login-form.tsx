@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { userClientService } from "@/services/user.client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   email: z.email(),
@@ -32,7 +32,10 @@ const formSchema = z.object({
 
 export function LoginForm() {
 
-  const router = useRouter()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
+  console.log(redirectPath)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,7 +58,7 @@ export function LoginForm() {
 
       if (userData) {
         toast.success("Login successful!");
-        router.push("/")
+        router.push(redirectPath?redirectPath:"/")
       }
     } catch (error) {
       console.error(error);
