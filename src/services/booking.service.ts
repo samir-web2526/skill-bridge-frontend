@@ -89,3 +89,35 @@ export const cancelBooking = async (bookingId: string) => {
     return null;
   }
 };
+
+export const updateBooking = async (
+  bookingId: string,
+  payload: { status: string }
+) => {
+  try {
+    const cookieStore = await cookies();
+
+    const res = await fetch(
+      `${API_URL}/api/bookings/${bookingId}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message);
+    }
+
+    return await res.json();
+  } catch (error: any) {
+    console.error("Update booking error:", error);
+    return null;
+  }
+};
