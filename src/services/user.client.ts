@@ -21,7 +21,8 @@ export const userClientService = {
         };
       }
       return { data, error: null };
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
       console.error(error);
       return {
         data: null,
@@ -43,7 +44,8 @@ export const userClientService = {
       });
       if (error) return { data: null, error: { message: error.message } };
       return { data, error: null };
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
       console.error(error);
       return {
         data: null,

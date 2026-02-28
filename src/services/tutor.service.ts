@@ -1,5 +1,7 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getAllTutors = async () => {
@@ -38,3 +40,25 @@ export const getTutorDetails = async (id: string) => {
   }
 }
 
+export const deleteTutor = async (tutorId: string) => {
+  try {
+     const cookieStore = await cookies();
+    const res = await fetch(`${API_URL}/api/tutors/${tutorId}`, {
+      method: "DELETE",
+     headers:{
+      Cookie:cookieStore.toString(),
+     }
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Delete tutor error:", error);
+    throw error;
+  }
+};

@@ -1,80 +1,41 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 import { getUser } from "@/services/user.service";
+import React from "react";
 
-export default function TutorProfileTable() {
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default async function TutorProfile() {
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-      const res = await getUser();
-      setProfile(res);
-      setLoading(false);
-    };
-    fetchProfile();
-  }, []);
-
-  if (loading) return <p className="text-center mt-10">Loading profile...</p>;
-  if (!profile) return <p className="text-center mt-10">Profile not found.</p>;
-
+  const profile = await getUser();
+  console.log(profile);
+ 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">Tutor Profile</h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Field</TableHead>
-            <TableHead>Details</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {/* Avatar */}
-          <TableRow>
-            <TableCell>Avatar</TableCell>
-            <TableCell>
-              <Avatar className="w-20 h-20">
-                <AvatarImage src={profile.image || "https://randomuser.me/api/portraits/men/32.jpg"} />
-                <AvatarFallback>👨‍🏫</AvatarFallback>
-              </Avatar>
-            </TableCell>
-          </TableRow>
+    <div>
+      <Card className="max-w-4xl mx-auto mt-10 p-6 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+      
+      {/* Left: Avatar + Name + Phone */}
+      <div className="flex flex-col items-center sm:items-start w-full sm:w-1/3">
+        <Avatar className="w-32 h-32 mb-4">
+          <AvatarImage
+            src={
+              profile.image ||
+              "https://randomuser.me/api/portraits/men/32.jpg"
+            }
+            alt={profile.name}
+          />
+        </Avatar>
+       
+      </div>
 
-          {/* Name */}
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>{profile.name || "N/A"}</TableCell>
-          </TableRow>
+      {/* Right: Other Info */}
+      <CardContent className="flex-1 flex flex-col justify-center w-full sm:w-2/3">
+       <h2 className="text-2xl font-bold">{profile.name}</h2>
+        {profile.phone && <p className="text-gray-600">📞 {profile.phone}</p>}
+        <p className="text-gray-600 mb-1">✉️ {profile.email}</p>
+        <p className="text-gray-600 mb-1">Status: {profile.status}</p>
+        <p className="text-gray-600">Role: {profile.role}</p>
+      </CardContent>
 
-          {/* Phone */}
-          <TableRow>
-            <TableCell>Phone</TableCell>
-            <TableCell>{profile.phone || "N/A"}</TableCell>
-          </TableRow>
-
-          {/* Email */}
-          <TableRow>
-            <TableCell>Email</TableCell>
-            <TableCell>{profile.email || "N/A"}</TableCell>
-          </TableRow>
-
-          {/* Status */}
-          <TableRow>
-            <TableCell>Status</TableCell>
-            <TableCell>{profile.status || "N/A"}</TableCell>
-          </TableRow>
-
-          {/* Role */}
-          <TableRow>
-            <TableCell>Role</TableCell>
-            <TableCell>{profile.role || "N/A"}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+    </Card>
     </div>
   );
 }

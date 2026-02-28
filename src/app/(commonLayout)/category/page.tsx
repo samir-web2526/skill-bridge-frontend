@@ -1,4 +1,4 @@
-import { getAllCategories } from '@/services/categoryServices/categoryServices';
+import { getAllCategories } from '@/services/category.service';
 import React from 'react'
 
 export default async function CategoryPage() {

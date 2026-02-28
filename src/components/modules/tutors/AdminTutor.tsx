@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAllTutors } from "@/services/tutor.service";
+import { deleteTutor, getAllTutors } from "@/services/tutor.service";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,6 +20,7 @@ import {
   PaginationNext,
   PaginationContent,
 } from "@/components/ui/pagination";
+import { Button } from "@/components/ui/button";
 
 export default function AdminTutorsTable() {
   const [tutors, setTutors] = useState<any[]>([]);
@@ -53,6 +54,26 @@ export default function AdminTutorsTable() {
   if (tutors.length === 0)
     return <p className="text-center mt-10">No tutors found.</p>;
 
+  const handleDelete = async (id: string) => {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this tutor?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const res = await deleteTutor(id);
+
+     if(res){
+       setTutors((prev) => prev.filter((tutor) => tutor.id !== id));
+     }
+
+      alert("Tutor deleted successfully");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto mt-10 p-4">
       <h1 className="text-2xl font-bold mb-6 text-center">All Tutors</h1>
@@ -66,6 +87,7 @@ export default function AdminTutorsTable() {
             <TableHead>Category</TableHead>
             <TableHead>Total Bookings</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -101,12 +123,21 @@ export default function AdminTutorsTable() {
                     tutor.status === "ACTIVE"
                       ? "success"
                       : tutor.status === "INACTIVE"
-                      ? "secondary"
-                      : "warning"
+                        ? "secondary"
+                        : "warning"
                   }
                 >
                   {tutor?.user?.status || "Unknown"}
                 </Badge>
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDelete(tutor.id)}
+                >
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}
