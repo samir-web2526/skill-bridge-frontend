@@ -1,27 +1,26 @@
+"use server"
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+import { cookies } from "next/headers";
+
 export const createCategory = async (payload: { name: string }) => {
-  try {
-    const res = await fetch(`${API_URL}/api/categories`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+  const cookieStore = await cookies();
+  const res = await fetch(`${API_URL}/api/categories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookieStore.toString(),
+    },
+    body: JSON.stringify(payload),
+  });
 
-    if (!res.ok) {
-      const error = await res.json();
-      console.error("Category error:", error);
-      return null;
-    }
-
-    return await res.json();
-  } catch (error) {
-    console.error("Category service error:", error);
-    return null;
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message);
   }
+
+  return await res.json();
 };
 
 export const getAllCategories = async () => {
