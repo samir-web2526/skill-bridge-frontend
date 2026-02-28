@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { cancelBooking, getAllBookings } from "@/services/booking.service";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
 import {
   Table,
   TableHeader,
@@ -12,6 +14,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+
 import {
   Pagination,
   PaginationItem,
@@ -21,26 +24,40 @@ import {
   PaginationContent,
 } from "@/components/ui/pagination";
 
+import ReviewModal from "../review/Review";
+
 export default function StudentBookingList() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+
+  const fetchBookings = async () => {
+    try {
+      setLoading(true);
+
+      const res = await getAllBookings();
+      console.log(res);
+
+      setBookings(
+        (res?.data || []).map((b: any) => ({
+          ...b,
+          reviewed: !!b.review,
+        })),
+      );
+
+      setTotalPage(res?.paginations?.totalPage || 1);
+    } catch (error) {
+      console.error("Booking fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      setLoading(true);
-      const res = await getAllBookings(); // backend handles pagination
-      setBookings(res.data || []);
-      setTotalPage(res.paginations?.totalPage || 1);
-      setLoading(false);
-    };
     fetchBookings();
   }, [page]);
-
-  if (loading) return <p className="text-center mt-10">Loading bookings...</p>;
-  if (bookings.length === 0)
-    return <p className="text-center mt-10">No bookings yet.</p>;
 
   const handleCancel = async (bookingId: string) => {
     const res = await cancelBooking(bookingId);
@@ -51,12 +68,27 @@ export default function StudentBookingList() {
           b.id === bookingId ? { ...b, status: "CANCELLED" } : b,
         ),
       );
-
-      alert("Booking cancelled successfully");
-    } else {
-      alert("Cancel failed");
     }
   };
+
+  const handleReviewSuccess = (bookingId: string, updatedReview?: any) => {
+    setBookings((prev) =>
+      prev.map((b) =>
+        b.id === bookingId
+          ? { ...b, reviewed: true, review: updatedReview || b.review }
+          : b,
+      ),
+    );
+  };
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading bookings...</p>;
+  }
+
+  if (!bookings.length) {
+    return <p className="text-center mt-10">No bookings yet.</p>;
+  }
+
   return (
     <div className="max-w-6xl mx-auto mt-10 p-4">
       <h1 className="text-2xl font-bold mb-6 text-center">Student Bookings</h1>
@@ -75,60 +107,57 @@ export default function StudentBookingList() {
 
         <TableBody>
           {bookings.map((b) => (
-            <TableRow key={b.id} className="hover:bg-gray-50">
-              {/* Tutor */}
+            <TableRow key={b.id}>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Avatar className="h-10 w-10">
                     <AvatarImage
-                      src={
-                        b.tutor?.user?.image ||
-                        "https://i.pravatar.cc/150?img=4"
-                      }
+                      src={b?.tutor?.user?.image || "https://i.pravatar.cc/150"}
                     />
                     <AvatarFallback>👨‍🏫</AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">
-                    {b.tutor?.name || b.tutor?.bio || "No Name"}
-                  </span>
+
+                  <span>{b?.tutor?.bio || "Tutor"}</span>
                 </div>
               </TableCell>
 
-              {/* Experience */}
-              <TableCell>{b.tutor?.experience || 0} yrs</TableCell>
+              <TableCell>{b?.tutor?.experience ?? 0} yrs</TableCell>
 
-              {/* Rate */}
-              <TableCell>{b.tutor?.hourlyRate || 0} BDT/hr</TableCell>
+              <TableCell>{b?.tutor?.hourlyRate ?? 0} BDT/hr</TableCell>
 
-              {/* Status */}
               <TableCell>
-                <Badge
-                  variant={
-                    b.status === "CONFIRMED"
-                      ? "success"
-                      : b.status === "PENDING"
-                        ? "warning"
-                        : "secondary"
-                  }
-                >
-                  {b.status}
-                </Badge>
+                <Badge>{b.status}</Badge>
               </TableCell>
 
-              {/* Created At */}
-              <TableCell className="text-gray-500 text-sm">
-                {new Date(b.createdAt).toLocaleString()}
-              </TableCell>
-              <TableCell>
-                {b.status === "PENDING" ? (
-                  <button
+              <TableCell>{new Date(b.createdAt).toLocaleString()}</TableCell>
+
+              <TableCell className="space-x-2">
+                {b.status === "PENDING" && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
                     onClick={() => handleCancel(b.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                   >
                     Cancel
-                  </button>
-                ) : (
-                  b.status
+                  </Button>
+                )}
+
+                {b.status === "COMPLETED" && (
+                  <Button
+                    size="sm"
+                    className={
+                      b.reviewed
+                        ? "bg-green-600 text-white"
+                        : "bg-blue-600 text-white"
+                    }
+                    onClick={() => {
+                      if (!b.reviewed) {
+                        setSelectedBooking(b);
+                      }
+                    }}
+                  >
+                    {b.reviewed ? "Update Review" : "Write Review"}
+                  </Button>
                 )}
               </TableCell>
             </TableRow>
@@ -136,13 +165,25 @@ export default function StudentBookingList() {
         </TableBody>
       </Table>
 
+      {/* Review Modal */}
+      {selectedBooking && (
+        <ReviewModal
+          booking={selectedBooking}
+          existingReview={selectedBooking.review}
+          onClose={() => setSelectedBooking(null)}
+          onSuccess={(updatedReview: any) =>
+            handleReviewSuccess(selectedBooking.id, updatedReview)
+          }
+        />
+      )}
+
       {/* Pagination */}
       {totalPage > 1 && (
         <Pagination className="mt-6 flex justify-center">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                onClick={() => setPage(Math.max(page - 1, 1))}
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               />
             </PaginationItem>
 
@@ -159,7 +200,7 @@ export default function StudentBookingList() {
 
             <PaginationItem>
               <PaginationNext
-                onClick={() => setPage(Math.min(page + 1, totalPage))}
+                onClick={() => setPage((prev) => Math.min(prev + 1, totalPage))}
               />
             </PaginationItem>
           </PaginationContent>
