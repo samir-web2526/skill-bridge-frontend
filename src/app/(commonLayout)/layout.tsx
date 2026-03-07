@@ -1,7 +1,7 @@
-import { Navbar } from '@/components/pages/sharedPages/Navbar';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { Navbar } from "@/components/pages/sharedPages/Navbar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-import React from 'react'
+import React from "react";
 
 export default function CommonLayout({
   children,
@@ -9,9 +9,9 @@ export default function CommonLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='max-w-7xl mx-auto'>
-        <Navbar></Navbar>
-         <TooltipProvider>{children}</TooltipProvider>
+    <div className="max-w-7xl mx-auto">
+      <Navbar></Navbar>
+      <TooltipProvider>{children}</TooltipProvider>
     </div>
-  )
+  );
 }

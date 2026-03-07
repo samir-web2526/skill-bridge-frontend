@@ -11,12 +11,11 @@ export async function getSession() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API}/api/auth/get-session`,
     {
-    cache: "no-store", 
+      cache: "no-store",
       headers: {
         // Cookie: `better-auth.session_token=${token.value}`,
         Cookie: `better-auth.session_token=${token.value}`,
         Origin: process.env.FRONTEND_URL || "http://localhost:3000",
-        
       },
     },
   );
@@ -24,7 +23,7 @@ export async function getSession() {
     return null;
   }
   const data = await res.json();
- console.log("session response:", JSON.stringify(data)); 
+  console.log("session response:", JSON.stringify(data));
   return data;
 }
 
@@ -37,7 +36,7 @@ export async function saveSessionCookie(token: string) {
     httpOnly: true,
     path: "/",
     secure: process.env.NODE_ENV === "production",
-    sameSite:"lax",
+    sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7,
   });
 }

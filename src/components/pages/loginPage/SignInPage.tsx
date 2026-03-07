@@ -42,7 +42,7 @@ export function SignInForm() {
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     const result = await signIn(data);
-    console.log(result)
+    console.log(result);
 
     if (result?.error) {
       toast.error(result.error);
@@ -51,7 +51,7 @@ export function SignInForm() {
     if (result?.success) {
       toast.success("User sign in successfully");
       router.push("/");
-      router.refresh()
+      router.refresh();
     }
   }
 
@@ -72,9 +72,7 @@ export function SignInForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="form-email">
-                      Your Email
-                    </FieldLabel>
+                    <FieldLabel htmlFor="form-email">Your Email</FieldLabel>
                     <Input
                       {...field}
                       id="form-email"
@@ -93,9 +91,7 @@ export function SignInForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="form-email">
-                      Your Password
-                    </FieldLabel>
+                    <FieldLabel htmlFor="form-email">Your Password</FieldLabel>
                     <Input
                       {...field}
                       id="form-email"
