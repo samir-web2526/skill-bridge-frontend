@@ -1,5 +1,7 @@
 "use server";
+import { cookies } from "next/headers";
 import { saveSessionCookie } from "./session";
+import { redirect } from "next/navigation";
 
 export async function signIn(data: { email: string; password: string }) {
   const res = await fetch(
@@ -56,4 +58,11 @@ export async function signUp(data: {
   await saveSessionCookie(decodeURIComponent(tokenValue));
 
   return { success: true };
+}
+
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("better-auth.session_token");
+  redirect("/sign-in");
 }

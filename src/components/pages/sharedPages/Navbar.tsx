@@ -1,9 +1,7 @@
 "use client";
 
 import { Menu } from "lucide-react";
-
 import { cn } from "@/lib/utils";
-
 import {
   Accordion,
   AccordionContent,
@@ -27,6 +25,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { useTransition } from "react";
+import { logout } from "@/lib/auth/actions";
 
 interface MenuItem {
   title: string;
@@ -36,43 +36,38 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
-interface Navbar1Props {
+interface NavbarProps {
   className?: string;
+  user?: { name: string; email: string } | null;
   menu?: MenuItem[];
-  auth?: {
-    login: {
-      title: string;
-      url: string;
-    };
-    signup: {
-      title: string;
-      url: string;
-    };
-  };
 }
 
-const Navbar = ({
-  menu = [
-    { title: "Home", url: "/" },
-    {
-      title: "About",
-      url: "/about",
-    },
-    {
-      title: "Tutors",
-      url: "/tutors",
-    },
-  ],
-  auth = {
-    login: { title: "Sign In", url: "/sign-in" },
-    signup: { title: "Sign up", url: "/sign-up" },
-  },
-  className,
-}: Navbar1Props) => {
+const defaultMenu: MenuItem[] = [
+  { title: "Home", url: "/" },
+  { title: "About", url: "/about" },
+  { title: "Tutors", url: "/tutors" },
+];
+
+function LogoutButton() {
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={isPending}
+      onClick={() => startTransition(() => logout())}
+    >
+      {isPending ? "Logging out..." : "Logout"}
+    </Button>
+  );
+}
+
+const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
   return (
     <section className={cn("py-4", className)}>
       <div className="container">
-        {/* Desktop Menu */}
+        {/* Desktop */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
             <Link href="/">
@@ -80,29 +75,37 @@ const Navbar = ({
                 Skill Bridge
               </span>
             </Link>
-            <div className="flex items-center">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
+            <NavigationMenu>
+              <NavigationMenuList>
+                {menu.map((item) => renderMenuItem(item))}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
+
           <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <a href={auth.login.url}>{auth.login.title}</a>
-            </Button>
-            <Button asChild size="sm">
-              <a href={auth.signup.url}>{auth.signup.title}</a>
-            </Button>
+            {user ? (
+              <LogoutButton />
+            ) : (
+              <>
+                <Button asChild variant="outline" size="sm">
+                  <a href="/sign-in">Sign In</a>
+                </Button>
+                <Button asChild size="sm">
+                  <a href="/sign-up">Sign Up</a>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
-        {/* Mobile Menu */}
+        {/* Mobile */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-
+            <Link href="/">
+              <span className="text-lg font-semibold tracking-tighter">
+                Skill Bridge
+              </span>
+            </Link>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -111,7 +114,7 @@ const Navbar = ({
               </SheetTrigger>
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
-                  <SheetTitle></SheetTitle>
+                  <SheetTitle />
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
                   <Accordion
@@ -121,14 +124,19 @@ const Navbar = ({
                   >
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
-
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
-                    <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
-                    </Button>
+                    {user ? (
+                      <LogoutButton />
+                    ) : (
+                      <>
+                        <Button asChild variant="outline">
+                          <a href="/sign-in">Sign In</a>
+                        </Button>
+                        <Button asChild>
+                          <a href="/sign-up">Sign Up</a>
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>
@@ -155,7 +163,6 @@ const renderMenuItem = (item: MenuItem) => {
       </NavigationMenuItem>
     );
   }
-
   return (
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
@@ -183,7 +190,6 @@ const renderMobileMenuItem = (item: MenuItem) => {
       </AccordionItem>
     );
   }
-
   return (
     <a key={item.title} href={item.url} className="text-md font-semibold">
       {item.title}

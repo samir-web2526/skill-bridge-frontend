@@ -13,7 +13,6 @@ export async function getSession() {
     {
       cache: "no-store",
       headers: {
-        // Cookie: `better-auth.session_token=${token.value}`,
         Cookie: `better-auth.session_token=${token.value}`,
         Origin: process.env.FRONTEND_URL || "http://localhost:3000",
       },
