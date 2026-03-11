@@ -50,7 +50,7 @@ export function SignInForm() {
     }
     if (result?.success) {
       toast.success("User sign in successfully");
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     }
   }

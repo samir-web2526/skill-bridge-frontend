@@ -38,7 +38,7 @@ export function Pagination({ paginations, onPageChange }: Props) {
         <span className="font-medium text-foreground">
           {from}–{to}
         </span>{" "}
-        of <span className="font-medium text-foreground">{total}</span> tutors
+        of <span className="font-medium text-foreground">{total}</span>
       </p>
 
       <div className="flex items-center gap-1">

@@ -26,6 +26,18 @@ export async function getSession() {
   return data;
 }
 
+export async function getUser() {
+  const session = await getSession();
+  if (!session?.user) return null;
+
+  return {
+    id: session.user.id as string,
+    name: session.user.name as string,
+    email: session.user.email as string,
+    role: session.user.role as "ADMIN" | "STUDENT" | "TUTOR",
+  };
+}
+
 // src/lib/auth/session.ts
 
 export async function saveSessionCookie(token: string) {
