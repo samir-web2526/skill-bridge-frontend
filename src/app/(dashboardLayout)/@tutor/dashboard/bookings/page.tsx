@@ -1,7 +1,10 @@
+import TutorBookingPage from '@/components/pages/dashboardPages/tutorPages/TutorBookingPage'
 import React from 'react'
 
 export default function TutorBookings() {
   return (
-    <div>TutorBookings</div>
+    <div>
+      <TutorBookingPage></TutorBookingPage>
+    </div>
   )
 }
