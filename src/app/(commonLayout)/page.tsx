@@ -644,23 +644,23 @@ function HeroBanner() {
   );
 }
 
-function Stars({ rating }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star
-          key={s}
-          size={12}
-          className={
-            s <= Math.floor(rating)
-              ? "fill-amber-400 text-amber-400"
-              : "fill-zinc-200 text-zinc-200"
-          }
-        />
-      ))}
-    </div>
-  );
-}
+// function Stars({ rating }) {
+//   return (
+//     <div className="flex items-center gap-0.5">
+//       {[1, 2, 3, 4, 5].map((s) => (
+//         <Star
+//           key={s}
+//           size={12}
+//           className={
+//             s <= Math.floor(rating)
+//               ? "fill-amber-400 text-amber-400"
+//               : "fill-zinc-200 text-zinc-200"
+//           }
+//         />
+//       ))}
+//     </div>
+//   );
+// }
 
 /* ─────────────────────────────────────────
    PAGE
@@ -674,7 +674,7 @@ export default async function SkillBridgeHome() {
         <div>
           <Badge className="mb-6 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1 text-xs font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse inline-block" />
-            Bangladesh's #1 Tutor Platform
+            Bangladesh&apos;s #1 Tutor Platform
           </Badge>
 
           <h1 className="text-5xl lg:text-6xl font-extrabold leading-[1.08] tracking-tight mb-6">

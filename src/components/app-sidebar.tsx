@@ -5,7 +5,6 @@ import * as React from "react";
 import {
   BookOpen,
   LayoutDashboard,
-  Users,
   CalendarDays,
   UserCircle,
   Tag,
