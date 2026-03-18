@@ -110,6 +110,37 @@ export async function getTutorReviews(
   }
 }
 
+export async function createTutorProfile(formData: {
+  bio: string;
+  hourlyRate: number;
+  experience: number;
+  categoryId: string;
+}) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("better-auth.session_token");
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const res = await fetch(`${BASE_URL}/api/tutors`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `better-auth.session_token=${token.value}`,
+        Origin: ORIGIN,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const json = await res.json();
+    if (!res.ok) return { error: json.message || "Failed to create profile" };
+    return { data: json.data };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    console.error("[createTutorProfile]", err.message);
+    return { error: err.message };
+  }
+}
+
 export async function getTutorProfile() {
   const cookieStore = await cookies();
   const token = cookieStore.get("better-auth.session_token");
@@ -133,3 +164,5 @@ export async function getTutorProfile() {
     return null;
   }
 }
+
+

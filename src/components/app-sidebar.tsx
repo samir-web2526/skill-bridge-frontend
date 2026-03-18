@@ -108,6 +108,11 @@ const TUTOR_NAV = [
         icon: Star, // students যে reviews দিয়েছে
       },
       {
+        title: "Create Profile",
+        url: "/dashboard/create-profile",
+        icon: UserCircle, 
+      },
+      {
         title: "My Profile",
         url: "/dashboard/me",
         icon: UserCircle,

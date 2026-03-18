@@ -1,11 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -13,7 +8,6 @@ import {
   ChevronRight,
   ArrowRight,
   CheckCircle,
-  MapPin,
   Star,
 } from "lucide-react";
 import SearchBar from "@/components/pages/homePage/SearchBar";
@@ -21,6 +15,10 @@ import { getAllCategories } from "@/lib/auth/adminActions/actions";
 import { getTutors } from "@/services/tutors.services";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import { getAllReviews } from "@/lib/reviews/reviewsActions";
+import CategorySection from "@/components/pages/homePage/CategorySection";
+import FeaturedTutors from "@/components/pages/homePage/FeaturedTutors";
+import BecomeTutorButton from "@/components/pages/homePage/BecomeTutorButton";
+import { getUser } from "@/lib/auth/session";
 
 /* ─────────────────────────────────────────
    DATA
@@ -43,6 +41,7 @@ const categoriesResult = await getAllCategories(1, 10);
 const categories = categoriesResult?.data ?? [];
 const reviewsResult = await getAllReviews(1, 3);
 const reviews = reviewsResult?.data ?? [];
+const user = await getUser();
 
 const STEPS = [
   {
@@ -67,9 +66,6 @@ const STEPS = [
   },
 ];
 
-/* ─────────────────────────────────────────
-   HERO ILLUSTRATION
-───────────────────────────────────────── */
 function HeroBanner() {
   return (
     <div className="relative w-full max-w-135 mx-auto">
@@ -648,9 +644,6 @@ function HeroBanner() {
   );
 }
 
-/* ─────────────────────────────────────────
-   STAR RATING
-───────────────────────────────────────── */
 function Stars({ rating }) {
   return (
     <div className="flex items-center gap-0.5">
@@ -746,125 +739,14 @@ export default async function SkillBridgeHome() {
           <h2 className="text-3xl font-extrabold tracking-tight mb-10">
             Which class do you need help with?
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categories.map((cat) => {
-              const { bg, text, icon: Icon } = getCategoryColor(cat.name);
-              return (
-                <Card
-                  key={cat.id}
-                  className={`group cursor-pointer border-0 hover:-translate-y-1 transition-all duration-200 ${bg}`}
-                >
-                  <CardContent className="p-5 text-center">
-                    <Icon size={22} className={`mx-auto mb-3 ${text}`} />
-                    <div
-                      className={`font-semibold text-sm mb-1 ${text} opacity-90`}
-                    >
-                      {cat.name}
-                    </div>
-                    <div
-                      className={`text-xs leading-relaxed ${text} opacity-70`}
-                    >
-                      {cat.description ?? ""}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+          <CategorySection categories={categories}></CategorySection>
         </div>
       </section>
 
       {/* ── FEATURED TUTORS ── */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-2">
-                Featured
-              </p>
-              <h2 className="text-3xl font-extrabold tracking-tight">
-                Meet our top tutors
-              </h2>
-            </div>
-            <Button
-              variant="ghost"
-              className="text-emerald-600 font-semibold text-sm group"
-            >
-              View all tutors{" "}
-              <ArrowRight
-                size={14}
-                className="ml-1.5 group-hover:translate-x-1 transition-transform"
-              />
-            </Button>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5">
-            {tutors.map((t) => (
-              <Card
-                key={t.id}
-                className="group border border-zinc-100 hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
-              >
-                <CardHeader className="p-5 pb-4">
-                  <div className="flex gap-3 items-start">
-                    <Avatar className="h-12 w-12 rounded-xl shrink-0 bg-emerald-100">
-                      <AvatarFallback className="font-bold text-base rounded-xl bg-emerald-100 text-emerald-700">
-                        {t.user.name
-                          .split(" ")
-                          .map((n: string) => n[0])
-                          .join("")
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-bold text-base leading-tight">
-                        {t.user.name}
-                      </div>
-                      <div className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1">
-                        <MapPin size={11} /> {t.user.email}
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className="mt-1.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700 border-emerald-200"
-                      >
-                        {t.category?.name ?? "Tutor"}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-5 pb-4">
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    <Badge
-                      variant="secondary"
-                      className="text-xs rounded-md bg-zinc-100 text-zinc-700 font-medium"
-                    >
-                      {t.category?.name}
-                    </Badge>
-                  </div>
-                  <Separator className="mb-4" />
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Stars rating={t.averageRating} />
-                      <span className="text-xs text-zinc-400">
-                        {t.averageRating} ({t.totalReview})
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-extrabold text-base">
-                        ৳{t.hourlyRate}
-                      </span>
-                      <span className="text-xs text-zinc-400"> /hr</span>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="px-5 pb-5">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold">
-                    Book a Session
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+          <FeaturedTutors tutors={tutors} />
         </div>
       </section>
 
@@ -1067,13 +949,13 @@ export default async function SkillBridgeHome() {
             >
               Book a Free Class <ArrowRight size={16} className="ml-2" />
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
+
+            <BecomeTutorButton
+              role={user?.role}
               className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white rounded-xl px-8 font-semibold text-base bg-transparent"
             >
               Become a Tutor
-            </Button>
+            </BecomeTutorButton>
           </div>
         </div>
       </section>
@@ -1091,20 +973,25 @@ export default async function SkillBridgeHome() {
           </div>
           <div className="flex gap-6 flex-wrap justify-center">
             {[
-              "Find Tutors",
-              "Become a Tutor",
-              "About Us",
-              "Contact",
-              "Privacy Policy",
-            ].map((l) => (
+              { label: "Find Tutors", href: "/tutors" },
+              { label: "About Us", href: "#" },
+              { label: "Contact", href: "#" },
+              { label: "Privacy Policy", href: "#" },
+            ].map(({ label, href }) => (
               <a
-                key={l}
-                href="#"
+                key={label}
+                href={href}
                 className="text-xs text-zinc-500 hover:text-white transition-colors"
               >
-                {l}
+                {label}
               </a>
             ))}
+            <BecomeTutorButton
+              role={user?.role}
+              className="text-xs text-zinc-500 hover:text-white transition-colors"
+            >
+              Become a Tutor
+            </BecomeTutorButton>
           </div>
           <div className="text-xs text-zinc-600">
             © 2025 SkillBridge. All rights reserved.

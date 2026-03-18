@@ -28,6 +28,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useTransition } from "react";
 import { logout } from "@/lib/auth/actions";
+import BecomeTutorButton from "../homePage/BecomeTutorButton";
+
 
 interface MenuItem {
   title: string;
@@ -39,7 +41,7 @@ interface MenuItem {
 
 interface NavbarProps {
   className?: string;
-  user?: { name: string; email: string } | null;
+  user?: { name: string; email: string; role?: string } | null;
   menu?: MenuItem[];
 }
 
@@ -47,8 +49,6 @@ const defaultMenu: MenuItem[] = [
   { title: "Home", url: "/" },
   { title: "Find Tutors", url: "/tutors" },
   { title: "Subjects", url: "/subjects" },
-  { title: "Pricing", url: "/pricing" },
-  { title: "Become a Tutor", url: "/become-tutor" },
 ];
 
 function LogoutButton() {
@@ -77,7 +77,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
       <div className="container mx-auto px-4">
         {/* ── DESKTOP ── */}
         <nav className="hidden lg:flex items-center justify-between h-16">
-          {/* Logo + Links */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center shadow-sm">
@@ -99,8 +98,14 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
           <div className="flex items-center gap-2">
             {user ? (
               <div className="flex items-center gap-3">
+                {/* ← Become a Tutor */}
+                <BecomeTutorButton
+                  role={user.role}
+                  className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
+                >
+                  Become a Tutor
+                </BecomeTutorButton>
 
-                {/* ✅ শুধু এটুকু add হয়েছে */}
                 <Button
                   asChild
                   size="sm"
@@ -131,6 +136,13 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
               </div>
             ) : (
               <>
+                {/* ← Become a Tutor for guest */}
+                <BecomeTutorButton
+                  className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
+                >
+                  Become a Tutor
+                </BecomeTutorButton>
+
                 <Button
                   asChild
                   variant="ghost"
@@ -214,7 +226,14 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                           <p className="text-xs text-zinc-400">{user.email}</p>
                         </div>
                       </div>
-                      {/* ✅ Mobile-এও Dashboard button */}
+                      {/* ← Become a Tutor mobile */}
+                      <BecomeTutorButton
+                        role={user?.role}
+                        className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
+                      >
+                        Become a Tutor
+                      </BecomeTutorButton>
+
                       <Button
                         asChild
                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold gap-2"
@@ -228,6 +247,13 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                     </div>
                   ) : (
                     <>
+                      {/* ← Become a Tutor mobile guest */}
+                      <BecomeTutorButton
+                        className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
+                      >
+                        Become a Tutor
+                      </BecomeTutorButton>
+
                       <Button
                         asChild
                         variant="outline"
