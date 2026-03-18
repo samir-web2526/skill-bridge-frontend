@@ -114,6 +114,7 @@ export async function deleteReview(reviewId: string) {
 export type CategoriesResult = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
+ 
   paginations: {
     total: number;
     page: number;
@@ -126,10 +127,6 @@ export async function getAllCategories(
   page: number,
   limit = 5,
 ): Promise<CategoriesResult | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("better-auth.session_token");
-  if (!token) return null;
-
   try {
     const params = new URLSearchParams();
     params.set("page", String(page));
@@ -137,10 +134,6 @@ export async function getAllCategories(
 
     const res = await fetch(`${BASE_URL}/api/categories?${params.toString()}`, {
       cache: "no-store",
-      headers: {
-        Cookie: `better-auth.session_token=${token.value}`,
-        Origin: ORIGIN,
-      },
     });
 
     if (!res.ok) throw new Error("Failed to fetch categories");

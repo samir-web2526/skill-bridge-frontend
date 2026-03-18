@@ -35,10 +35,11 @@ export async function getUser() {
     name: session.user.name as string,
     email: session.user.email as string,
     role: session.user.role as "ADMIN" | "STUDENT" | "TUTOR",
+    status: (session.user.status ?? "ACTIVE") as "ACTIVE" | "BANNED",
+    phone: (session.user.phone ?? null) as string | null,
+    image: (session.user.image ?? null) as string | null,
   };
 }
-
-// src/lib/auth/session.ts
 
 export async function saveSessionCookie(token: string) {
   console.log("saving token:", token);
