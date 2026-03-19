@@ -1,4 +1,3 @@
-// components/app-sidebar.tsx
 "use client";
 
 import * as React from "react";
@@ -36,17 +35,17 @@ const ADMIN_NAV = [
       {
         title: "Bookings",
         url: "/dashboard/bookings",
-        icon: CalendarDays, // booking দেখা
+        icon: CalendarDays,
       },
       {
         title: "Reviews",
         url: "/dashboard/reviews",
-        icon: Star, // review delete
+        icon: Star,
       },
       {
         title: "Categories",
         url: "/dashboard/categories",
-        icon: Tag, // create, update, delete
+        icon: Tag,
       },
       {
         title: "My Profile",
@@ -73,7 +72,7 @@ const STUDENT_NAV = [
       {
         title: "My Bookings",
         url: "/dashboard/bookings",
-        icon: CalendarDays, // সব booking এক জায়গায়, filter করে দেখাবে
+        icon: CalendarDays,
       },
       {
         title: "My Reviews",
@@ -99,17 +98,17 @@ const TUTOR_NAV = [
       {
         title: "My Bookings",
         url: "/dashboard/bookings",
-        icon: CalendarDays, // সব booking এক জায়গায় দেখবে
+        icon: CalendarDays,
       },
       {
         title: "My Reviews",
         url: "/dashboard/reviews",
-        icon: Star, // students যে reviews দিয়েছে
+        icon: Star,
       },
       {
         title: "Create Profile",
         url: "/dashboard/create-profile",
-        icon: UserCircle, 
+        icon: UserCircle,
       },
       {
         title: "My Profile",

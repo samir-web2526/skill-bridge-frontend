@@ -1,7 +1,11 @@
-// src/components/pages/homePage/FeaturedTutors.tsx
 "use client";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +19,11 @@ function Stars({ rating }: { rating: number }) {
         <Star
           key={s}
           size={12}
-          className={s <= Math.floor(rating) ? "fill-amber-400 text-amber-400" : "fill-zinc-200 text-zinc-200"}
+          className={
+            s <= Math.floor(rating)
+              ? "fill-amber-400 text-amber-400"
+              : "fill-zinc-200 text-zinc-200"
+          }
         />
       ))}
     </div>
@@ -61,7 +69,11 @@ export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
       <div className="grid md:grid-cols-3 gap-5">
         {tutors.map((t) => {
           const initials = t.user.name
-            .split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
           return (
             <Card
               key={t.id}
@@ -75,7 +87,9 @@ export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-base leading-tight">{t.user.name}</div>
+                    <div className="font-bold text-base leading-tight">
+                      {t.user.name}
+                    </div>
                     <div className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1">
                       <MapPin size={11} /> {t.user.email}
                     </div>
@@ -98,7 +112,9 @@ export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
                     </span>
                   </div>
                   <div>
-                    <span className="font-extrabold text-base">৳{t.hourlyRate}</span>
+                    <span className="font-extrabold text-base">
+                      ৳{t.hourlyRate}
+                    </span>
                     <span className="text-xs text-zinc-400"> /hr</span>
                   </div>
                 </div>

@@ -94,7 +94,7 @@ export default function AdminCategoriesPage() {
         inputDescription.trim(),
       );
       if (result?.error) {
-        toast.error(result.error); // ✅ error toast
+        toast.error(result.error);
         setIsSubmitting(false);
         setDialogOpen(false);
         return;

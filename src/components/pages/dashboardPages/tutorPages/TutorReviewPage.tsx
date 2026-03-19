@@ -4,7 +4,12 @@ import { useState, useEffect } from "react";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { Star } from "lucide-react";
 import { getTutorReviews } from "@/lib/auth/tutorActions/actions";
@@ -64,13 +69,19 @@ export default function TutorReviewPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : reviews.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No reviews yet.
                 </TableCell>
               </TableRow>
@@ -78,13 +89,19 @@ export default function TutorReviewPage() {
               reviews.map((review) => (
                 <TableRow key={review.id}>
                   <TableCell>
-                    <p className="font-medium text-sm">{review.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{review.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {review.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {review.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-semibold">{review.rating}</span>
+                      <span className="text-sm font-semibold">
+                        {review.rating}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground max-w-xs truncate">
@@ -92,7 +109,9 @@ export default function TutorReviewPage() {
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(review.createdAt).toLocaleDateString("en-BD", {
-                      day: "numeric", month: "short", year: "numeric",
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
                     })}
                   </TableCell>
                 </TableRow>

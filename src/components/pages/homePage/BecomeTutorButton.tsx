@@ -23,7 +23,8 @@ export default function BecomeTutorButton({
 
     if (role !== "TUTOR") {
       toast.error("Your account is not registered as a tutor.", {
-        description: "Please sign up with a tutor account to access this feature.",
+        description:
+          "Please sign up with a tutor account to access this feature.",
       });
       return;
     }
@@ -44,7 +45,12 @@ export default function BecomeTutorButton({
   };
 
   return (
-    <div onClick={handleClick} role="button" className={className} style={{ cursor: "pointer" }}>
+    <div
+      onClick={handleClick}
+      role="button"
+      className={className}
+      style={{ cursor: "pointer" }}
+    >
       {children}
     </div>
   );

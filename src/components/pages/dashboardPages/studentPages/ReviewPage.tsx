@@ -14,9 +14,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, Star } from "lucide-react";
 
-
 import { toast } from "sonner";
-import { deleteReview, getMyReviews, updateReview } from "@/lib/auth/studentActions/actions";
+import {
+  deleteReview,
+  getMyReviews,
+  updateReview,
+} from "@/lib/auth/studentActions/actions";
 import { ReviewDialog } from "./ReviewDialog";
 
 export default function StudentReviewPage() {
@@ -55,8 +58,6 @@ export default function StudentReviewPage() {
 
     load();
   }, [page, refresh]);
-
-  // ── Open edit dialog ──────────────────────────────────
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openEditDialog = (review: any) => {
     setSelectedReview(review);
@@ -65,7 +66,6 @@ export default function StudentReviewPage() {
     setDialogOpen(true);
   };
 
-  // ── Submit edit ───────────────────────────────────────
   const handleSubmit = async () => {
     if (!selectedReview) return;
     setIsSubmitting(true);
@@ -83,7 +83,6 @@ export default function StudentReviewPage() {
     setIsSubmitting(false);
   };
 
-  // ── Delete ────────────────────────────────────────────
   const handleDelete = async (reviewId: string) => {
     const result = await deleteReview(reviewId);
     if (result?.error) {
@@ -125,13 +124,19 @@ export default function StudentReviewPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : reviews.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No reviews found. Complete a session to write a review.
                 </TableCell>
               </TableRow>
@@ -139,13 +144,19 @@ export default function StudentReviewPage() {
               reviews.map((review) => (
                 <TableRow key={review.id}>
                   <TableCell>
-                    <p className="font-medium text-sm">{review.tutor?.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{review.tutor?.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {review.tutor?.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {review.tutor?.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-semibold">{review.rating}</span>
+                      <span className="text-sm font-semibold">
+                        {review.rating}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground max-w-50 truncate">

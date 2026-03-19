@@ -3,8 +3,6 @@
 import { PaginationMeta } from "@/components/ui/Pagination";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API;
-// const ORIGIN = process.env.FRONTEND_URL || "http://localhost:3000";
-
 
 export type ReviewsResult = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +26,7 @@ export async function getAllReviews(
 
     const json = await res.json();
     return json.data;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getAllReviews]", err.message);
     return null;

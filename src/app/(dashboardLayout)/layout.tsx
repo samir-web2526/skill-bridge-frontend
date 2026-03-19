@@ -1,5 +1,3 @@
-// app/(dashboardLayout)/dashboard/layout.tsx
-
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -30,7 +28,7 @@ export default async function DashboardLayout({
 }) {
  
 const user = await getUser()
-  // User না থাকলে login page-এ পাঠাও
+
   if (!user) redirect("/sign-in");
 
   const roleLabel = {
@@ -65,7 +63,6 @@ const user = await getUser()
         </header>
 
         <div className="flex flex-1 flex-col gap-4 p-4 pt-4">
-          {/* ✅ Role অনুযায়ী parallel route slot render হবে */}
           {user.role === "ADMIN" && admin}
           {user.role === "STUDENT" && student}
           {user.role === "TUTOR" && tutor}

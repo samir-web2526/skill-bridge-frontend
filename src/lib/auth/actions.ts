@@ -60,7 +60,6 @@ export async function signUp(data: {
   return { success: true };
 }
 
-
 export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete("better-auth.session_token");

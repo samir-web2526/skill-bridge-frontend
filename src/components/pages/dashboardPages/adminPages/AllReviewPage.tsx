@@ -45,13 +45,6 @@ export default function AdminReviewsPage() {
     load();
   }, [page]);
 
-//   const handleDelete = async (reviewId: string) => {
-//     const result = await deleteReview(reviewId);
-//     if (result) {
-//       setReviews((prev) => prev.filter((r) => r.id !== reviewId));
-//     }
-//   };
-
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="mb-6">
@@ -84,13 +77,19 @@ export default function AdminReviewsPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : reviews.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No reviews found
                 </TableCell>
               </TableRow>
@@ -98,17 +97,27 @@ export default function AdminReviewsPage() {
               reviews.map((review) => (
                 <TableRow key={review.id}>
                   <TableCell>
-                    <p className="font-medium text-sm">{review.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{review.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {review.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {review.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell>
-                    <p className="font-medium text-sm">{review.tutor?.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{review.tutor?.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {review.tutor?.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {review.tutor?.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-semibold">{review.rating}</span>
+                      <span className="text-sm font-semibold">
+                        {review.rating}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground max-w-50 truncate">
@@ -126,7 +135,6 @@ export default function AdminReviewsPage() {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                      // onClick={() => handleDelete(review.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -139,10 +147,7 @@ export default function AdminReviewsPage() {
       </div>
 
       {paginations && (
-        <Pagination
-          paginations={paginations}
-          onPageChange={handlePageChange}
-        />
+        <Pagination paginations={paginations} onPageChange={handlePageChange} />
       )}
     </div>
   );

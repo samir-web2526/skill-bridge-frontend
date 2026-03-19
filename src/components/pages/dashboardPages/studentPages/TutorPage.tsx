@@ -42,7 +42,9 @@ export default function StudentTutorPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">Find Tutors</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          {!isLoading ? `${tutors.length} tutor${tutors.length !== 1 ? "s" : ""} available` : ""}
+          {!isLoading
+            ? `${tutors.length} tutor${tutors.length !== 1 ? "s" : ""} available`
+            : ""}
         </p>
       </div>
 
@@ -67,13 +69,19 @@ export default function StudentTutorPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : tutors.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No tutors available
                 </TableCell>
               </TableRow>
@@ -81,8 +89,12 @@ export default function StudentTutorPage() {
               tutors.map((tutor) => (
                 <TableRow key={tutor.id}>
                   <TableCell>
-                    <p className="font-medium text-sm">{tutor.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{tutor.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {tutor.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {tutor.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {tutor.category?.name ?? "—"}

@@ -25,7 +25,7 @@ import { BookingDialog } from "./BookingDialog";
 import { ReviewDialog } from "./ReviewDialog";
 
 const STATUS_STYLE: Record<string, string> = {
-  PENDING:   "bg-yellow-100 text-yellow-700 border-yellow-200",
+  PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
   CONFIRMED: "bg-blue-100 text-blue-700 border-blue-200",
   COMPLETED: "bg-green-100 text-green-700 border-green-200",
   CANCELLED: "bg-red-100 text-red-700 border-red-200",
@@ -39,9 +39,10 @@ export default function StudentBookingPage() {
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
 
-  // booking dialog
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
-  const [bookingDialogMode, setBookingDialogMode] = useState<"create" | "cancel">("create");
+  const [bookingDialogMode, setBookingDialogMode] = useState<
+    "create" | "cancel"
+  >("create");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,7 +50,6 @@ export default function StudentBookingPage() {
   const [selectedTutorId, setSelectedTutorId] = useState("");
   const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
 
-  // review dialog
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [reviewTarget, setReviewTarget] = useState<any | null>(null);
@@ -80,7 +80,6 @@ export default function StudentBookingPage() {
     load();
   }, [page, refresh]);
 
-  // ── Open create booking ───────────────────────────────
   const openCreateDialog = async () => {
     const result = await getAvailableTutors(1, 50);
     setTutors(result?.data ?? []);
@@ -89,8 +88,6 @@ export default function StudentBookingPage() {
     setSelectedBooking(null);
     setBookingDialogOpen(true);
   };
-
-  // ── Open cancel booking ───────────────────────────────
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openCancelDialog = (booking: any) => {
     setSelectedBooking(booking);
@@ -98,7 +95,6 @@ export default function StudentBookingPage() {
     setBookingDialogOpen(true);
   };
 
-  // ── Submit booking dialog ─────────────────────────────
   const handleBookingSubmit = async () => {
     setIsBookingSubmitting(true);
 
@@ -106,7 +102,7 @@ export default function StudentBookingPage() {
       if (!selectedTutorId) return;
       const result = await createBooking({
         tutorId: selectedTutorId,
-        date: new Date().toISOString(), // ← automatically today
+        date: new Date().toISOString(),
       });
       if (result?.error) {
         toast.error(result.error);
@@ -131,8 +127,6 @@ export default function StudentBookingPage() {
 
     setIsBookingSubmitting(false);
   };
-
-  // ── Open review dialog ────────────────────────────────
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openReviewDialog = (booking: any) => {
     setReviewTarget(booking);
@@ -141,7 +135,6 @@ export default function StudentBookingPage() {
     setReviewDialogOpen(true);
   };
 
-  // ── Submit review ─────────────────────────────────────
   const handleReviewSubmit = async () => {
     if (!reviewTarget || !reviewComment.trim()) return;
     setIsReviewSubmitting(true);
@@ -199,41 +192,59 @@ export default function StudentBookingPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : bookings.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No bookings found
                 </TableCell>
               </TableRow>
             ) : (
               bookings.map((booking) => {
                 const canCancel = booking.status === "PENDING";
-                const canReview = booking.status === "COMPLETED" && !booking.review;
-                const hasReview = booking.status === "COMPLETED" && booking.review;
+                const canReview =
+                  booking.status === "COMPLETED" && !booking.review;
+                const hasReview =
+                  booking.status === "COMPLETED" && booking.review;
 
                 return (
                   <TableRow key={booking.id}>
                     <TableCell>
-                      <p className="font-medium text-sm">{booking.tutor?.user?.name?? "—"}</p>
-                      <p className="text-xs text-muted-foreground">{booking.tutor?.user?.email ?? ""}</p>
+                      <p className="font-medium text-sm">
+                        {booking.tutor?.user?.name ?? "—"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {booking.tutor?.user?.email ?? ""}
+                      </p>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {booking.tutor?.category?.name ?? "—"}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {booking.tutor?.hourlyRate ? `৳${booking.tutor.hourlyRate}/hr` : "—"}
+                      {booking.tutor?.hourlyRate
+                        ? `৳${booking.tutor.hourlyRate}/hr`
+                        : "—"}
                     </TableCell>
                     <TableCell>
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLE[booking.status] ?? "bg-zinc-100 text-zinc-600"}`}>
+                      <span
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLE[booking.status] ?? "bg-zinc-100 text-zinc-600"}`}
+                      >
                         {booking.status}
                       </span>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {new Date(booking.date ?? booking.createdAt).toLocaleDateString("en-BD", {
+                      {new Date(
+                        booking.date ?? booking.createdAt,
+                      ).toLocaleDateString("en-BD", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
@@ -263,7 +274,9 @@ export default function StudentBookingPage() {
                           </Button>
                         )}
                         {hasReview && (
-                          <span className="text-xs text-muted-foreground px-2">★ Reviewed</span>
+                          <span className="text-xs text-muted-foreground px-2">
+                            ★ Reviewed
+                          </span>
                         )}
                       </div>
                     </TableCell>

@@ -30,7 +30,6 @@ import { useTransition } from "react";
 import { logout } from "@/lib/auth/actions";
 import BecomeTutorButton from "../homePage/BecomeTutorButton";
 
-
 interface MenuItem {
   title: string;
   url: string;
@@ -94,11 +93,9 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
             </NavigationMenu>
           </div>
 
-          {/* Auth */}
           <div className="flex items-center gap-2">
             {user ? (
               <div className="flex items-center gap-3">
-                {/* ← Become a Tutor */}
                 <BecomeTutorButton
                   role={user.role}
                   className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
@@ -136,10 +133,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
               </div>
             ) : (
               <>
-                {/* ← Become a Tutor for guest */}
-                <BecomeTutorButton
-                  className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
-                >
+                <BecomeTutorButton className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer">
                   Become a Tutor
                 </BecomeTutorButton>
 
@@ -226,7 +220,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                           <p className="text-xs text-zinc-400">{user.email}</p>
                         </div>
                       </div>
-                      {/* ← Become a Tutor mobile */}
                       <BecomeTutorButton
                         role={user?.role}
                         className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
@@ -247,10 +240,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                     </div>
                   ) : (
                     <>
-                      {/* ← Become a Tutor mobile guest */}
-                      <BecomeTutorButton
-                        className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
-                      >
+                      <BecomeTutorButton className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer">
                         Become a Tutor
                       </BecomeTutorButton>
 

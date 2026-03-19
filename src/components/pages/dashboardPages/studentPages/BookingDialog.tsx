@@ -14,14 +14,11 @@ import { Label } from "@/components/ui/label";
 type Props = {
   open: boolean;
   mode: "create" | "cancel";
-  // create mode
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tutors?: any[];
   selectedTutorId?: string;
   onTutorChange?: (id: string) => void;
-  // cancel mode
   cancelTutorName?: string;
-  // shared
   isSubmitting: boolean;
   onClose: () => void;
   onSubmit: () => void;

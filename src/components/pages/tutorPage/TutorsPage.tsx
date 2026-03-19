@@ -5,11 +5,10 @@ import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TutorFilter, TutorFilters } from "./TutorFilter";
 import { FormattedTutor } from "./TutorCard";
-
 import { TutorList } from "./TutorList";
 import { TutorProfile } from "./TutorProfile";
 import { getTutors } from "@/services/tutors.services";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 
@@ -33,18 +32,22 @@ const DEFAULT_FILTERS: TutorFilters = {
 };
 
 export default function TutorsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { page, handlePageChange } = usePagination();
+
+  const [filters, setFilters] = useState<TutorFilters>(() => {
+    const search = searchParams.get("search") ?? "";
+    const category = searchParams.get("category") ?? "All";
+    return { ...DEFAULT_FILTERS, search, category };
+  });
+
   const [tutors, setTutors] = useState<FormattedTutor[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<TutorFilters>(DEFAULT_FILTERS);
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedTutor, setSelectedTutor] = useState<FormattedTutor | null>(
-    null,
-  );
-
-  const router = useRouter();
-  const { page, handlePageChange } = usePagination();
+  const [selectedTutor, setSelectedTutor] = useState<FormattedTutor | null>(null);
 
   useEffect(() => {
     const load = async () => {

@@ -4,20 +4,28 @@ import { useState, useEffect } from "react";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { getTutorBookings, updateTutorBookingStatus } from "@/lib/auth/tutorActions/actions";
+import {
+  getTutorBookings,
+  updateTutorBookingStatus,
+} from "@/lib/auth/tutorActions/actions";
 
 const STATUS_STYLE: Record<string, string> = {
-  PENDING:   "bg-yellow-100 text-yellow-700 border-yellow-200",
+  PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
   CONFIRMED: "bg-blue-100 text-blue-700 border-blue-200",
   COMPLETED: "bg-green-100 text-green-700 border-green-200",
   CANCELLED: "bg-red-100 text-red-700 border-red-200",
 };
 
 const ALLOWED_TRANSITIONS: Record<string, string[]> = {
-  PENDING:   ["CONFIRMED", "CANCELLED"],
+  PENDING: ["CONFIRMED", "CANCELLED"],
   CONFIRMED: ["COMPLETED", "CANCELLED"],
   COMPLETED: [],
   CANCELLED: [],
@@ -55,7 +63,7 @@ export default function TutorBookingPage() {
     } else {
       toast.success("Status updated!");
       setBookings((prev) =>
-        prev.map((b) => b.id === bookingId ? { ...b, status: newStatus } : b)
+        prev.map((b) => (b.id === bookingId ? { ...b, status: newStatus } : b)),
       );
     }
   };
@@ -90,13 +98,19 @@ export default function TutorBookingPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : bookings.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No bookings found
                 </TableCell>
               </TableRow>
@@ -106,17 +120,25 @@ export default function TutorBookingPage() {
                 return (
                   <TableRow key={booking.id}>
                     <TableCell>
-                      <p className="font-medium text-sm">{booking.user?.name ?? "—"}</p>
-                      <p className="text-xs text-muted-foreground">{booking.user?.email ?? ""}</p>
+                      <p className="font-medium text-sm">
+                        {booking.user?.name ?? "—"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {booking.user?.email ?? ""}
+                      </p>
                     </TableCell>
                     <TableCell>
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLE[booking.status] ?? "bg-zinc-100 text-zinc-600"}`}>
+                      <span
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLE[booking.status] ?? "bg-zinc-100 text-zinc-600"}`}
+                      >
                         {booking.status}
                       </span>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {new Date(booking.createdAt).toLocaleDateString("en-BD", {
-                        day: "numeric", month: "short", year: "numeric",
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
                       })}
                     </TableCell>
                     <TableCell className="text-right">
@@ -124,13 +146,18 @@ export default function TutorBookingPage() {
                         <select
                           defaultValue=""
                           onChange={(e) => {
-                            if (e.target.value) handleStatusChange(booking.id, e.target.value);
+                            if (e.target.value)
+                              handleStatusChange(booking.id, e.target.value);
                           }}
                           className="text-xs border rounded-md px-2 py-1 bg-white"
                         >
-                          <option value="" disabled>Change...</option>
+                          <option value="" disabled>
+                            Change...
+                          </option>
                           {allowedNext.map((s) => (
-                            <option key={s} value={s}>{s}</option>
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
                           ))}
                         </select>
                       ) : (

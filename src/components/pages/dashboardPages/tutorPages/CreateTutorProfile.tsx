@@ -10,7 +10,11 @@ import { createTutorProfile } from "@/lib/auth/tutorActions/actions";
 
 type Category = { id: string; name: string };
 
-export default function BecomeTutorForm({ categories }: { categories: Category[] }) {
+export default function BecomeTutorForm({
+  categories,
+}: {
+  categories: Category[];
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,8 +55,6 @@ export default function BecomeTutorForm({ categories }: { categories: Category[]
 
   return (
     <div className="rounded-2xl border border-zinc-100 p-6 flex flex-col gap-5">
-
-      {/* Bio */}
       <div className="flex flex-col gap-2">
         <Label>Bio</Label>
         <Textarea
@@ -63,7 +65,6 @@ export default function BecomeTutorForm({ categories }: { categories: Category[]
         />
       </div>
 
-      {/* Category */}
       <div className="flex flex-col gap-2">
         <Label>Category</Label>
         <select
@@ -80,7 +81,6 @@ export default function BecomeTutorForm({ categories }: { categories: Category[]
         </select>
       </div>
 
-      {/* Hourly Rate */}
       <div className="flex flex-col gap-2">
         <Label>Hourly Rate (৳)</Label>
         <Input
@@ -91,7 +91,6 @@ export default function BecomeTutorForm({ categories }: { categories: Category[]
         />
       </div>
 
-      {/* Experience */}
       <div className="flex flex-col gap-2">
         <Label>Experience (years)</Label>
         <Input
@@ -102,9 +101,7 @@ export default function BecomeTutorForm({ categories }: { categories: Category[]
         />
       </div>
 
-      {error && (
-        <p className="text-sm text-red-500">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <Button
         onClick={handleSubmit}

@@ -6,8 +6,7 @@ import { redirect } from "next/navigation";
 
 export default async function BecomeTutorPage() {
   const profile = await getTutorProfile();
-  
-  // Already tutor profile ache — dashboard e pathao
+
   if (profile) redirect("/dashboard");
 
   const categoriesResult = await getAllCategories(1, 100);

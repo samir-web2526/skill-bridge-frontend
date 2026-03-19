@@ -53,7 +53,6 @@ export async function updateTutorBookingStatus(
 
   try {
     const res = await fetch(`${BASE_URL}/api/bookings/${bookingId}/status`, {
-      // ← /status যোগ হলো
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -134,7 +133,7 @@ export async function createTutorProfile(formData: {
     const json = await res.json();
     if (!res.ok) return { error: json.message || "Failed to create profile" };
     return { data: json.data };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[createTutorProfile]", err.message);
     return { error: err.message };
@@ -164,5 +163,3 @@ export async function getTutorProfile() {
     return null;
   }
 }
-
-

@@ -1,4 +1,3 @@
-// src/components/pages/homePage/CategorySection.tsx
 "use client";
 
 import { useState } from "react";
@@ -14,7 +13,11 @@ type Category = {
   description: string | null;
 };
 
-export default function CategorySection({ categories }: { categories: Category[] }) {
+export default function CategorySection({
+  categories,
+}: {
+  categories: Category[];
+}) {
   const [showAll, setShowAll] = useState(false);
 
   const visible = showAll ? categories : categories.slice(0, 4);
@@ -31,7 +34,9 @@ export default function CategorySection({ categories }: { categories: Category[]
             >
               <CardContent className="p-5 text-center">
                 <Icon size={22} className={`mx-auto mb-3 ${text}`} />
-                <div className={`font-semibold text-sm mb-1 ${text} opacity-90`}>
+                <div
+                  className={`font-semibold text-sm mb-1 ${text} opacity-90`}
+                >
                   {cat.name}
                 </div>
                 <div className={`text-xs leading-relaxed ${text} opacity-70`}>
@@ -51,9 +56,14 @@ export default function CategorySection({ categories }: { categories: Category[]
             className="gap-2 text-sm font-semibold border-zinc-200 hover:border-emerald-300 hover:text-emerald-700"
           >
             {showAll ? (
-              <>Show Less <ChevronUp size={16} /></>
+              <>
+                Show Less <ChevronUp size={16} />
+              </>
             ) : (
-              <>Show All {categories.length} Categories <ChevronDown size={16} /></>
+              <>
+                Show All {categories.length} Categories{" "}
+                <ChevronDown size={16} />
+              </>
             )}
           </Button>
         </div>

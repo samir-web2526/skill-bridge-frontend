@@ -80,13 +80,19 @@ export default function AdminBookingsPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground py-10"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : bookings.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground py-10"
+                >
                   No bookings found
                 </TableCell>
               </TableRow>
@@ -94,15 +100,25 @@ export default function AdminBookingsPage() {
               bookings.map((booking) => (
                 <TableRow key={booking.id}>
                   <TableCell>
-                    <p className="font-medium text-sm">{booking.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{booking.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {booking.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {booking.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell>
-                    <p className="font-medium text-sm">{booking.tutor?.user?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{booking.tutor?.user?.email ?? ""}</p>
+                    <p className="font-medium text-sm">
+                      {booking.tutor?.user?.name ?? "—"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {booking.tutor?.user?.email ?? ""}
+                    </p>
                   </TableCell>
                   <TableCell>
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLE[booking.status] ?? "bg-zinc-100 text-zinc-600"}`}>
+                    <span
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLE[booking.status] ?? "bg-zinc-100 text-zinc-600"}`}
+                    >
                       {booking.status}
                     </span>
                   </TableCell>
@@ -121,10 +137,7 @@ export default function AdminBookingsPage() {
       </div>
 
       {paginations && (
-        <Pagination
-          paginations={paginations}
-          onPageChange={handlePageChange}
-        />
+        <Pagination paginations={paginations} onPageChange={handlePageChange} />
       )}
     </div>
   );
