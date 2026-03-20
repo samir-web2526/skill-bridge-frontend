@@ -1,20 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 
 type Props = {
   open: boolean;
   mode: "create" | "cancel";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tutors?: any[];
   selectedTutorId?: string;
   onTutorChange?: (id: string) => void;
@@ -23,6 +21,121 @@ type Props = {
   onClose: () => void;
   onSubmit: () => void;
 };
+
+function CalendarIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect
+        x="2"
+        y="4"
+        width="12"
+        height="10"
+        rx="2"
+        stroke="#059669"
+        strokeWidth="1.3"
+      />
+      <path
+        d="M5 2v3M11 2v3M2 8h12"
+        stroke="#059669"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function AlertIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="6" stroke="#ef4444" strokeWidth="1.3" />
+      <path
+        d="M8 5v3.5M8 11v.5"
+        stroke="#ef4444"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 12 12">
+      <polygon
+        points="6,1 7.5,4.5 11,4.5 8.5,7 9.5,11 6,9 2.5,11 3.5,7 1,4.5 4.5,4.5"
+        fill="#d97706"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+      <path
+        d="M1.5 4.5l2 2 4-4"
+        stroke="#fff"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ConfirmIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+      <path
+        d="M2 6l2.5 2.5 5.5-5"
+        stroke="#fff"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function WarnTriangle() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      className="shrink-0 mt-0.5"
+    >
+      <path
+        d="M7 2L13 12H1L7 2z"
+        stroke="#d97706"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 6v2.5M7 10v.5"
+        stroke="#d97706"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function TutorAvatar({ name }: { name: string }) {
+  const initials =
+    name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) ?? "?";
+  return (
+    <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold flex items-center justify-center shrink-0">
+      {initials}
+    </div>
+  );
+}
 
 export function BookingDialog({
   open,
@@ -35,88 +148,165 @@ export function BookingDialog({
   onClose,
   onSubmit,
 }: Props) {
+  const isCreate = mode === "create";
+
+  const selectedTutor = tutors.find((t) => t.id === selectedTutorId);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
-            {mode === "create" ? "Book a Tutor" : "Cancel Booking"}
+      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border border-zinc-100">
+        <DialogHeader className="px-6 pt-6 pb-0">
+          <div
+            className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 shrink-0 ${
+              isCreate ? "bg-emerald-50" : "bg-red-50"
+            }`}
+          >
+            {isCreate ? <CalendarIcon /> : <AlertIcon />}
+          </div>
+
+          <DialogTitle className="text-base font-extrabold tracking-tight text-zinc-900">
+            {isCreate ? "Book a tutor" : "Cancel booking"}
           </DialogTitle>
-          <DialogDescription>
-            {mode === "create"
-              ? "Select a tutor to book a session."
-              : `Cancel your booking with ${cancelTutorName}.`}
-          </DialogDescription>
+          <p className="text-sm text-zinc-400 mt-1 font-normal">
+            {isCreate
+              ? "Pick a tutor and confirm your session."
+              : "This action cannot be undone."}
+          </p>
+          <div className="h-px bg-zinc-100 mt-4" />
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          {mode === "create" ? (
-            <div className="space-y-1.5">
-              <Label>Select Tutor</Label>
+        <div className="px-6 py-5">
+          {isCreate ? (
+            <div className="space-y-3">
+              {selectedTutor && (
+                <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+                  <span className="text-[11px] font-bold tracking-widest text-emerald-600 uppercase">
+                    Selected
+                  </span>
+                  <span className="text-xs font-semibold text-emerald-700">
+                    {selectedTutor.user?.name} · ৳{selectedTutor.hourlyRate}/hr
+                  </span>
+                </div>
+              )}
+              <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase">
+                Available tutors
+              </p>
               {tutors.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-400 py-4 text-center">
                   No available tutors at the moment.
                 </p>
               ) : (
-                <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-1">
-                  {tutors.map((t) => (
-                    <div
-                      key={t.id}
-                      onClick={() => onTutorChange?.(t.id)}
-                      className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors ${
-                        selectedTutorId === t.id
-                          ? "border-zinc-900 bg-zinc-50"
-                          : "border-zinc-100 hover:bg-zinc-50"
-                      }`}
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          {t.user?.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {t.category?.name ?? "General"} · ৳{t.hourlyRate}/hr
-                        </p>
+                <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-0.5">
+                  {tutors.map((t) => {
+                    const isSelected = selectedTutorId === t.id;
+                    return (
+                      <div
+                        key={t.id}
+                        onClick={() => onTutorChange?.(t.id)}
+                        className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl border cursor-pointer transition-colors ${
+                          isSelected
+                            ? "border-emerald-300 bg-emerald-50"
+                            : "border-zinc-100 hover:bg-zinc-50 hover:border-zinc-200"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <TutorAvatar name={t.user?.name ?? "?"} />
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-zinc-800 truncate">
+                              {t.user?.name}
+                            </p>
+                            <p className="text-xs text-zinc-400 truncate">
+                              {t.category?.name ?? "General"} · ৳{t.hourlyRate}
+                              /hr
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
+                            <StarIcon />
+                            {Number(t.averageRating).toFixed(1)}
+                          </span>
+                          {isSelected && (
+                            <div className="w-4 h-4 rounded-full bg-emerald-600 flex items-center justify-center">
+                              <CheckIcon />
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="text-xs text-yellow-600 font-semibold shrink-0">
-                        ★ {Number(t.averageRating).toFixed(1)}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
           ) : (
-            <div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Are you sure you want to cancel your booking with{" "}
-                <span className="font-semibold text-foreground">
+            <div className="space-y-3">
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                Are you sure you want to cancel your session with{" "}
+                <span className="font-semibold text-zinc-800">
                   {cancelTutorName}
                 </span>
-                ?
+                ? Your slot will be released.
               </p>
-              <p className="text-xs text-yellow-600 mt-2">
-                ⚠️ Only PENDING bookings can be cancelled.
-              </p>
+              <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
+                <WarnTriangle />
+                <p className="text-xs text-amber-800 leading-relaxed">
+                  Only <span className="font-semibold">Pending</span> bookings
+                  can be cancelled. Confirmed sessions require tutor approval.
+                </p>
+              </div>
             </div>
           )}
         </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
-            {mode === "create" ? "Cancel" : "Keep It"}
-          </Button>
+        <div className="flex items-center justify-between px-6 py-4 bg-zinc-50 border-t border-zinc-100">
           <Button
-            variant={mode === "cancel" ? "destructive" : "default"}
-            onClick={onSubmit}
-            disabled={isSubmitting || (mode === "create" && !selectedTutorId)}
+            variant="ghost"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-xl text-sm font-semibold"
           >
-            {isSubmitting
-              ? "Saving..."
-              : mode === "create"
-                ? "Confirm Booking"
-                : "Yes, Cancel"}
+            {isCreate ? "Cancel" : "Keep it"}
           </Button>
-        </DialogFooter>
+
+          <Button
+            onClick={onSubmit}
+            disabled={isSubmitting || (isCreate && !selectedTutorId)}
+            className={`rounded-xl text-sm font-semibold px-5 flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+              isCreate
+                ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-100"
+                : "bg-red-500 hover:bg-red-400 text-white shadow-red-100"
+            }`}
+          >
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="animate-spin w-3.5 h-3.5 shrink-0"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                >
+                  <circle
+                    cx="7"
+                    cy="7"
+                    r="5"
+                    stroke="#fff"
+                    strokeWidth="1.5"
+                    strokeDasharray="20"
+                    strokeDashoffset="10"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Saving…
+              </>
+            ) : isCreate ? (
+              <>
+                <ConfirmIcon />
+                Confirm booking
+              </>
+            ) : (
+              "Yes, cancel"
+            )}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

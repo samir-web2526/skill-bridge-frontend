@@ -14,7 +14,7 @@ export type TutorsResult = {
 
 export async function getAvailableTutors(
   page: number,
-  limit = 20,
+  limit = 5,
 ): Promise<TutorsResult | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("better-auth.session_token");
