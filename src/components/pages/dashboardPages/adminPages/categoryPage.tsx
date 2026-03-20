@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useMemo } from "react";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import {
@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, AlertCircle, Inbox } from "lucide-react";
 import {
   createCategory,
   deleteCategory,
@@ -21,10 +21,34 @@ import {
   updateCategory,
 } from "@/lib/auth/adminActions/actions";
 import { CategoryDialog } from "./categoryDialog";
+import { getCategoryColor } from "@/lib/category/categoryColors";
 import { toast } from "sonner";
 
+function StatCard({
+  label,
+  value,
+  dotColor,
+  valueColor,
+}: {
+  label: string;
+  value: string | number;
+  dotColor: string;
+  valueColor: string;
+}) {
+  return (
+    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+      <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
+        {value}
+      </p>
+      <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
+        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+        {label}
+      </p>
+    </div>
+  );
+}
+
 export default function AdminCategoriesPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [categories, setCategories] = useState<any[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +56,6 @@ export default function AdminCategoriesPage() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
   const [inputName, setInputName] = useState("");
   const [inputDescription, setInputDescription] = useState("");
@@ -44,21 +67,30 @@ export default function AdminCategoriesPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-
       const result = await getAllCategories(page);
-
       if (result) {
         setCategories(result.data);
         setPaginations(result.paginations);
       } else {
         setError("Failed to load categories. Please try again.");
       }
-
       setIsLoading(false);
     };
-
     load();
   }, [page]);
+
+  const stats = useMemo(() => {
+    const total = paginations?.total ?? categories.length;
+    const totalTutors = categories.reduce(
+      (s, c) => s + (c._count?.tutor ?? 0),
+      0,
+    );
+    const avg =
+      categories.length > 0
+        ? (totalTutors / categories.length).toFixed(1)
+        : "—";
+    return { total, totalTutors, avg };
+  }, [categories, paginations]);
 
   const openCreateDialog = () => {
     setDialogMode("create");
@@ -68,7 +100,6 @@ export default function AdminCategoriesPage() {
     setDialogOpen(true);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openEditDialog = (category: any) => {
     setDialogMode("edit");
     setInputName(category.name);
@@ -117,94 +148,192 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="flex items-end justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Categories</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {paginations
-              ? `${paginations.total} categor${paginations.total !== 1 ? "ies" : "y"} found`
-              : ""}
-          </p>
+    <div className="min-h-screen bg-[#faf9f7]">
+      <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
+        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+          Admin
+        </p>
+        <div className="flex items-end justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+              Categories
+            </h1>
+            {paginations && (
+              <p className="text-sm text-zinc-400 font-medium mt-0.5">
+                {paginations.total} categor
+                {paginations.total !== 1 ? "ies" : "y"} total
+              </p>
+            )}
+          </div>
+
+          <Button
+            onClick={openCreateDialog}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold px-4 flex items-center gap-2 shadow-sm shadow-emerald-100"
+          >
+            <Plus size={15} />
+            Add new
+          </Button>
         </div>
-        <Button size="sm" className="gap-2" onClick={openCreateDialog}>
-          <Plus className="w-4 h-4" />
-          Add New
-        </Button>
       </div>
 
-      {error && (
-        <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
-          {error}
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
+        {error && (
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+            <AlertCircle size={15} className="shrink-0" />
+            {error}
+          </div>
+        )}
+
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard
+            label="Total categories"
+            value={stats.total}
+            dotColor="bg-zinc-300"
+            valueColor="text-zinc-800"
+          />
+          <StatCard
+            label="Total tutors"
+            value={stats.totalTutors}
+            dotColor="bg-emerald-500"
+            valueColor="text-emerald-700"
+          />
+          <StatCard
+            label="Avg per category"
+            value={stats.avg}
+            dotColor="bg-blue-400"
+            valueColor="text-blue-700"
+          />
         </div>
-      )}
 
-      <div className="rounded-xl border border-zinc-100 overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-zinc-50">
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  className="text-center text-muted-foreground py-10"
-                >
-                  Loading...
-                </TableCell>
+        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+                <TableHead className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 pl-6">
+                  Category
+                </TableHead>
+                <TableHead className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3">
+                  Description
+                </TableHead>
+                <TableHead className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 text-right pr-6">
+                  Actions
+                </TableHead>
               </TableRow>
-            ) : categories.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  className="text-center text-muted-foreground py-10"
-                >
-                  No categories found
-                </TableCell>
-              </TableRow>
-            ) : (
-              categories.map((category) => (
-                <TableRow key={category.id}>
-                  <TableCell className="font-medium">{category.name}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground max-w-50 truncate">
-                    {category.description ?? "—"}
-                  </TableCell>
+            </TableHeader>
 
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
-                        onClick={() => openEditDialog(category)}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                        onClick={() => handleDelete(category.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+            <TableBody>
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i} className="animate-pulse">
+                    <TableCell className="pl-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-zinc-100 shrink-0" />
+                        <div className="space-y-1.5">
+                          <div className="h-3 w-24 rounded bg-zinc-100" />
+                          <div className="h-2.5 w-14 rounded bg-zinc-100" />
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div className="h-3 w-48 rounded bg-zinc-100" />
+                    </TableCell>
+                    <TableCell className="py-4 pr-6">
+                      <div className="flex gap-2 justify-end">
+                        <div className="h-7 w-7 rounded-lg bg-zinc-100" />
+                        <div className="h-7 w-7 rounded-lg bg-zinc-100" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : categories.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={3} className="py-20 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
+                        <Inbox size={22} className="text-emerald-600" />
+                      </div>
+                      <p className="text-sm font-semibold text-zinc-400">
+                        No categories found
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ) : (
+                categories.map((category, idx) => {
+                  const {
+                    icon: Icon,
+                    bg: bgColor,
+                    text: color,
+                  } = getCategoryColor(category.name);
+                  return (
+                    <TableRow
+                      key={category.id}
+                      className={`hover:bg-zinc-50 transition-colors ${
+                        idx % 2 === 1 ? "bg-zinc-50/50" : ""
+                      }`}
+                    >
+                      <TableCell className="pl-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${bgColor}`}
+                          >
+                            <Icon size={15} className={color} />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-zinc-800">
+                              {category.name}
+                            </p>
+                            <p className="text-xs text-zinc-400 mt-0.5">
+                              {category._count?.tutor ?? 0} tutor
+                              {(category._count?.tutor ?? 0) !== 1 ? "s" : ""}
+                            </p>
+                          </div>
+                        </div>
+                      </TableCell>
 
-      {paginations && (
-        <Pagination paginations={paginations} onPageChange={handlePageChange} />
-      )}
+                      <TableCell className="py-4 max-w-65">
+                        <p className="text-sm text-zinc-400 truncate">
+                          {category.description ?? "—"}
+                        </p>
+                      </TableCell>
+
+                      <TableCell className="py-4 pr-6">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openEditDialog(category)}
+                            className="h-8 w-8 rounded-lg border border-zinc-200 bg-white text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 transition-colors"
+                          >
+                            <Pencil size={13} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(category.id)}
+                            className="h-8 w-8 rounded-lg border border-red-100 bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+                          >
+                            <Trash2 size={13} />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {paginations && (
+          <div className="pt-2">
+            <Pagination
+              paginations={paginations}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+      </div>
 
       <CategoryDialog
         open={dialogOpen}
