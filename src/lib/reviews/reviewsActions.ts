@@ -1,4 +1,4 @@
-"use server";
+
 
 import { PaginationMeta } from "@/components/ui/Pagination";
 
@@ -19,7 +19,7 @@ export async function getAllReviews(
     params.set("limit", String(limit));
 
     const res = await fetch(`${BASE_URL}/api/reviews?${params.toString()}`, {
-      cache: "no-store",
+      next:{revalidate:5000}
     });
 
     if (!res.ok) throw new Error("Failed to fetch reviews");

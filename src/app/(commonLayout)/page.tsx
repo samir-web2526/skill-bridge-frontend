@@ -1,43 +1,20 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import {
   BookOpen,
   ChevronRight,
   ArrowRight,
   CheckCircle,
-  Star,
 } from "lucide-react";
 import SearchBar from "@/components/pages/homePage/SearchBar";
 import { getAllCategories } from "@/lib/auth/adminActions/actions";
 import { getTutors } from "@/services/tutors.services";
 import { getCategoryColor } from "@/lib/category/categoryColors";
-import { getAllReviews } from "@/lib/reviews/reviewsActions";
 import CategorySection from "@/components/pages/homePage/CategorySection";
 import FeaturedTutors from "@/components/pages/homePage/FeaturedTutors";
 import BecomeTutorButton from "@/components/pages/homePage/BecomeTutorButton";
 import { getUser } from "@/lib/auth/session";
-
-const tutorsResult = await getTutors(
-  {
-    search: "",
-    category: "All",
-    minPrice: undefined,
-    maxPrice: undefined,
-    minRating: undefined,
-    availableOnly: false,
-  },
-  1,
-  3,
-);
-const tutors = tutorsResult?.data ?? [];
-const categoriesResult = await getAllCategories(1, 10);
-const categories = categoriesResult?.data ?? [];
-const reviewsResult = await getAllReviews(1, 3);
-const reviews = reviewsResult?.data ?? [];
-const user = await getUser();
+import ReviewsSection from "@/components/pages/homePage/ReviewSection";
 
 const STEPS = [
   {
@@ -622,9 +599,24 @@ function HeroBanner() {
 }
 
 export default async function SkillBridgeHome() {
+  const tutorsResult = await getTutors(
+    {
+      search: "",
+      category: "All",
+      minPrice: undefined,
+      maxPrice: undefined,
+      minRating: undefined,
+      availableOnly: false,
+    },
+    1,
+    3,
+  );
+  const tutors = tutorsResult?.data ?? [];
+  const categoriesResult = await getAllCategories(1, 10);
+  const categories = categoriesResult?.data ?? [];
+  const user = await getUser();
   return (
     <div className="min-h-screen bg-[#faf9f7] text-zinc-900">
-
       <section className="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-16 items-center">
         <div>
           <Badge className="mb-6 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1 text-xs font-semibold">
@@ -772,106 +764,7 @@ export default async function SkillBridgeHome() {
           <h2 className="text-3xl font-extrabold tracking-tight mb-10">
             What students are saying
           </h2>
-          <div className="grid md:grid-cols-3 gap-5">
-            {reviews.map((review) => {
-              const tutorInitials =
-                review.tutor?.user?.name
-                  ?.split(" ")
-                  .map((n: string) => n[0])
-                  .join("")
-                  .toUpperCase()
-                  .slice(0, 2) ?? "T";
-              const studentInitials =
-                review.user?.name
-                  ?.split(" ")
-                  .map((n: string) => n[0])
-                  .join("")
-                  .toUpperCase()
-                  .slice(0, 2) ?? "S";
-
-              const avatarColors = [
-                { bg: "bg-emerald-50", text: "text-emerald-700" },
-                { bg: "bg-purple-50", text: "text-purple-700" },
-                { bg: "bg-amber-50", text: "text-amber-800" },
-                { bg: "bg-blue-50", text: "text-blue-700" },
-                { bg: "bg-rose-50", text: "text-rose-700" },
-              ];
-              const color =
-                avatarColors[review.id?.charCodeAt(0) % avatarColors.length] ??
-                avatarColors[0];
-
-              return (
-                <Card
-                  key={review.id}
-                  className="border border-zinc-100 hover:shadow-md transition-shadow flex flex-col"
-                >
-                  <CardContent className="p-5 flex flex-col gap-3 flex-1">
-                    {/* Tutor info */}
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10 shrink-0">
-                        <AvatarFallback
-                          className={`font-medium text-sm ${color.bg} ${color.text}`}
-                        >
-                          {tutorInitials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-semibold text-foreground leading-tight">
-                          {review.tutor?.user?.name ?? "Tutor"}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {review.tutor?.category?.name ?? ""}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Rating */}
-                    <div className="flex gap-0.5">
-                      {Array.from({ length: 5 }).map(
-                        (_: unknown, i: number) => (
-                          <Star
-                            key={i}
-                            size={13}
-                            className={
-                              i < review.rating
-                                ? "fill-amber-400 text-amber-400"
-                                : "fill-zinc-200 text-zinc-200"
-                            }
-                          />
-                        ),
-                      )}
-                    </div>
-
-                    {/* Comment */}
-                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                      {review.comment ?? "Great tutor!"}
-                    </p>
-
-                    <Separator />
-
-                    {/* Student info */}
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7 shrink-0">
-                        <AvatarFallback className="text-[11px] font-medium bg-zinc-100 text-zinc-600">
-                          {studentInitials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-xs font-medium text-foreground">
-                          {review.user?.name ?? "Student"}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          Verified Student
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+          <ReviewsSection />
         </div>
       </section>
 

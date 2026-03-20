@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { PaginationMeta } from "@/components/ui/Pagination";
@@ -7,7 +8,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API;
 const ORIGIN = process.env.FRONTEND_URL || "http://localhost:3000";
 
 export type TutorsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -37,7 +37,6 @@ export async function getAvailableTutors(
     if (!res.ok) throw new Error("Failed to fetch tutors");
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getAvailableTutors]", err.message);
     return null;
@@ -45,7 +44,6 @@ export async function getAvailableTutors(
 }
 
 export type BookingsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -74,7 +72,6 @@ export async function getMyBookings(
     if (!res.ok) throw new Error("Failed to fetch bookings");
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getMyBookings]", err.message);
     return null;
@@ -105,7 +102,6 @@ export async function createBooking(payload: CreateBookingPayload) {
     const json = await res.json();
     if (!res.ok) return { error: json.message || "Failed to create booking" };
     return json;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     return { error: err.message };
   }
@@ -128,7 +124,6 @@ export async function cancelBooking(bookingId: string) {
     const json = await res.json();
     if (!res.ok) return { error: json.message || "Failed to cancel booking" };
     return { success: true };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[cancelBooking]", err.message);
     return { error: err.message };
@@ -136,7 +131,6 @@ export async function cancelBooking(bookingId: string) {
 }
 
 export type ReviewsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -165,7 +159,6 @@ export async function getMyReviews(
     if (!res.ok) throw new Error("Failed to fetch reviews");
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getMyReviews]", err.message);
     return null;
@@ -196,7 +189,6 @@ export async function createReview(payload: {
     const json = await res.json();
     if (!res.ok) return { error: json.message || "Failed to create review" };
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[createReview]", err.message);
     return { error: err.message };

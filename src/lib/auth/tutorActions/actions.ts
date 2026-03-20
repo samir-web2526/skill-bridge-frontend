@@ -91,7 +91,7 @@ export async function getTutorReviews(
     params.set("page", String(page));
     params.set("limit", String(limit));
 
-    const res = await fetch(`${BASE_URL}/api/reviews?${params.toString()}`, {
+    const res = await fetch(`${BASE_URL}/api/reviews/my-reviews?${params.toString()}`, {
       cache: "no-store",
       headers: {
         Cookie: `better-auth.session_token=${token.value}`,

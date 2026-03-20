@@ -30,7 +30,7 @@ export async function getTutors(
     if (filters.availableOnly) params.set("availableOnly", "true");
 
     const res = await fetch(`${BASE_URL}/api/tutors?${params.toString()}`, {
-      cache: "no-store",
+      next:{revalidate:3000}
     });
 
     if (!res.ok) throw new Error("Failed to fetch tutors");
