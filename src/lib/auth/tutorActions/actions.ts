@@ -91,13 +91,16 @@ export async function getTutorReviews(
     params.set("page", String(page));
     params.set("limit", String(limit));
 
-    const res = await fetch(`${BASE_URL}/api/reviews/my-reviews?${params.toString()}`, {
-      cache: "no-store",
-      headers: {
-        Cookie: `better-auth.session_token=${token.value}`,
-        Origin: ORIGIN,
+    const res = await fetch(
+      `${BASE_URL}/api/reviews/my-reviews?${params.toString()}`,
+      {
+        cache: "no-store",
+        headers: {
+          Cookie: `better-auth.session_token=${token.value}`,
+          Origin: ORIGIN,
+        },
       },
-    });
+    );
 
     if (!res.ok) throw new Error("Failed to fetch reviews");
     const json = await res.json();
@@ -153,8 +156,11 @@ export async function getTutorProfile() {
         Origin: ORIGIN,
       },
     });
-
-    if (!res.ok) throw new Error("Failed to fetch tutor profile");
+    
+    if (!res.ok) {
+      if (res.status === 403) return null;
+      throw new Error("Failed to fetch tutor profile");
+    }
     const json = await res.json();
     return json.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -50,7 +50,7 @@ export type BookingsResult = {
 
 export async function getMyBookings(
   page: number,
-  limit = 10,
+  limit = 5,
 ): Promise<BookingsResult | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("better-auth.session_token");

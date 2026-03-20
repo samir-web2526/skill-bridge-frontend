@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth/actions";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -32,6 +33,7 @@ const formSchema = z.object({
 });
 
 export function SignUpForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,6 +52,8 @@ export function SignUpForm() {
     }
     if (result?.success) {
       toast.success("User sign up successfully");
+      router.refresh();
+      router.push("/sign-in");
     }
   }
 
