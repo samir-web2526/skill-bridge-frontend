@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Search, RotateCcw } from "lucide-react";
 
 export type TutorFilters = {
@@ -39,6 +37,8 @@ const RATING_OPTIONS = [
   { label: "4.8+", value: 4.8 },
 ];
 
+const BANNER_GREEN = "#0d7a5f";
+
 export function TutorFilter({ filters, onChange, categories }: Props) {
   const allCategories = ["All", ...categories];
 
@@ -52,14 +52,17 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
   ].filter(Boolean).length;
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-5">
-      <div className="flex items-center justify-between">
+    <div className="bg-card border border-border rounded-4xl overflow-hidden flex flex-col">
+      <div className="px-4.5 py-4 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
-          <p className="font-semibold text-sm text-foreground">Filters</p>
+          <p className="text-sm font-medium text-foreground">Filters</p>
           {activeFilterCount > 0 && (
-            <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 h-auto">
+            <span
+              className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+              style={{ background: BANNER_GREEN }}
+            >
               {activeFilterCount}
-            </Badge>
+            </span>
           )}
         </div>
         {activeFilterCount > 0 && (
@@ -67,7 +70,7 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
             variant="ghost"
             size="sm"
             onClick={() => onChange(DEFAULT_FILTERS)}
-            className="h-7 text-xs text-muted-foreground hover:text-foreground gap-1"
+            className="h-7 text-xs text-muted-foreground hover:text-foreground gap-1 px-2"
           >
             <RotateCcw className="w-3 h-3" />
             Reset
@@ -75,50 +78,62 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
         )}
       </div>
 
-      <Separator />
-
-      <div className="flex flex-col gap-2">
-        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+      <div className="px-4.5 py-3.5 flex flex-col gap-2 border-b border-border">
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Search
-        </Label>
+        </p>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
           <Input
             placeholder="Name or subject..."
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
-            className="pl-9 h-9 text-sm"
+            className="pl-9 h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0"
+            style={{
+              outline: "none",
+              boxShadow: "none",
+              borderColor: filters.search ? BANNER_GREEN : undefined,
+            }}
           />
         </div>
       </div>
-
-      <div className="flex flex-col gap-2">
-        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+      <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Category
-        </Label>
+        </p>
         <div className="flex flex-wrap gap-1.5">
-          {allCategories.map((c) => (
-            <button
-              key={c}
-              onClick={() => onChange({ ...filters, category: c })}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
-                filters.category === c
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-background text-muted-foreground border-border hover:border-foreground/30"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
+          {allCategories.map((c) => {
+            const isActive = filters.category === c;
+            return (
+              <button
+                key={c}
+                onClick={() => onChange({ ...filters, category: c })}
+                className="px-3 py-1 rounded-full text-xs font-medium transition-all border"
+                style={
+                  isActive
+                    ? {
+                        background: BANNER_GREEN,
+                        color: "#fff",
+                        borderColor: BANNER_GREEN,
+                        boxShadow: `0 4px 12px -2px ${BANNER_GREEN}66`,
+                      }
+                    : {
+                        background: "transparent",
+                        color: "var(--color-text-secondary)",
+                        borderColor: "var(--color-border-tertiary)",
+                      }
+                }
+              >
+                {c}
+              </button>
+            );
+          })}
         </div>
       </div>
-
-      <Separator />
-
-      <div className="flex flex-col gap-2">
-        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+      <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Price (৳/hr)
-        </Label>
+        </p>
         <div className="flex gap-2 items-center">
           <Input
             type="number"
@@ -130,7 +145,11 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
                 minPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className="h-9 text-sm"
+            className="h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center"
+            style={{
+              boxShadow: "none",
+              borderColor: filters.minPrice ? BANNER_GREEN : undefined,
+            }}
           />
           <span className="text-muted-foreground text-sm shrink-0">—</span>
           <Input
@@ -143,43 +162,62 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
                 maxPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className="h-9 text-sm"
+            className="h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center"
+            style={{
+              boxShadow: "none",
+              borderColor: filters.maxPrice ? BANNER_GREEN : undefined,
+            }}
           />
         </div>
       </div>
-
-      <div className="flex flex-col gap-2">
-        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+      <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Min Rating
-        </Label>
+        </p>
         <div className="flex gap-1.5">
-          {RATING_OPTIONS.map((r) => (
-            <button
-              key={r.label}
-              onClick={() => onChange({ ...filters, minRating: r.value })}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
-                filters.minRating === r.value
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-background text-muted-foreground border-border hover:border-foreground/30"
-              }`}
-            >
-              {r.label}
-            </button>
-          ))}
+          {RATING_OPTIONS.map((r) => {
+            const isActive = filters.minRating === r.value;
+            return (
+              <button
+                key={r.label}
+                onClick={() => onChange({ ...filters, minRating: r.value })}
+                className="px-3 py-1 rounded-full text-xs font-medium transition-all border"
+                style={
+                  isActive
+                    ? {
+                        background: BANNER_GREEN,
+                        color: "#fff",
+                        borderColor: BANNER_GREEN,
+                        boxShadow: `0 4px 12px -2px ${BANNER_GREEN}66`,
+                      }
+                    : {
+                        background: "transparent",
+                        color: "var(--color-text-secondary)",
+                        borderColor: "var(--color-border-tertiary)",
+                      }
+                }
+              >
+                {r.label}
+              </button>
+            );
+          })}
         </div>
       </div>
-
-      <Separator />
-
-      <div className="flex items-center justify-between">
+      <div className="px-4.5 py-3.5 flex items-center justify-between">
         <Label className="text-sm font-medium text-foreground cursor-pointer">
-          Available Only
+          Available only
         </Label>
         <Switch
           checked={filters.availableOnly}
           onCheckedChange={(checked) =>
             onChange({ ...filters, availableOnly: checked })
           }
+          style={
+            filters.availableOnly
+              ? ({ "--switch-bg": BANNER_GREEN } as React.CSSProperties)
+              : undefined
+          }
+          className={filters.availableOnly ? "[&>span]:bg-[#0d7a5f]" : ""}
         />
       </div>
     </div>

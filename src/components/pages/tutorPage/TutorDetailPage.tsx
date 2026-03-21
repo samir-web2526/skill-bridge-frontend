@@ -162,3 +162,5 @@ export default function TutorDetailPage({ tutor }: Props) {
     </div>
   );
 }
+
+

@@ -47,7 +47,8 @@ interface NavbarProps {
 const defaultMenu: MenuItem[] = [
   { title: "Home", url: "/" },
   { title: "Find Tutors", url: "/tutors" },
-  { title: "Subjects", url: "/subjects" },
+  { title: "Student Reviews", url: "/reviews" },
+
 ];
 
 function LogoutButton() {

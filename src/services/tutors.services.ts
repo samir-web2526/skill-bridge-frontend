@@ -55,3 +55,16 @@ export async function getTutorById(tutorId: string) {
   const json = await res.json();
   return json.data as FormattedTutor;
 }
+
+export async function getCategories(): Promise<string[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/categories`, {
+      next: { revalidate: 3000 },
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data.data.map((c: { name: string }) => c.name);
+  } catch {
+    return [];
+  }
+}

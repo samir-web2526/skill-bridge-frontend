@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,20 +8,10 @@ import { TutorFilter, TutorFilters } from "./TutorFilter";
 import { FormattedTutor } from "./TutorCard";
 import { TutorList } from "./TutorList";
 import { TutorProfile } from "./TutorProfile";
-import { getTutors } from "@/services/tutors.services";
+import { getTutors, getCategories } from "@/services/tutors.services";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
-
-const CATEGORIES = [
-  "Math",
-  "Higher Math",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Bangla",
-  "English",
-];
 
 const DEFAULT_FILTERS: TutorFilters = {
   search: "",
@@ -44,10 +35,15 @@ export default function TutorsPage() {
 
   const [tutors, setTutors] = useState<FormattedTutor[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showFilter, setShowFilter] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState<FormattedTutor | null>(null);
+
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -111,7 +107,7 @@ export default function TutorsPage() {
             <TutorFilter
               filters={filters}
               onChange={handleFilterChange}
-              categories={CATEGORIES}
+              categories={categories}
             />
           )}
 
