@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
   const sessionToken = request.cookies.get("better-auth.session_token");
 
   if (!sessionToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
   return NextResponse.next();

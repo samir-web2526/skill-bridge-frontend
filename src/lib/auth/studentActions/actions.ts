@@ -203,19 +203,24 @@ export async function updateReview(
   const token = cookieStore.get("better-auth.session_token");
   if (!token) return { error: "Unauthorized" };
 
-  const res = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `better-auth.session_token=${token.value}`,
-      Origin: ORIGIN,
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `better-auth.session_token=${token.value}`,
+        Origin: ORIGIN,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  const json = await res.json();
-  if (!res.ok) return { error: json.message || "Failed to update review" };
-  return json.data;
+    const json = await res.json();
+    if (!res.ok) return { error: json.message || "Failed to update review" };
+    return json.data;
+  } catch (err: any) {
+    console.error("[updateReview]", err.message);
+    return { error: err.message || "Something went wrong" };
+  }
 }
 
 export async function deleteReview(reviewId: string) {
@@ -223,14 +228,19 @@ export async function deleteReview(reviewId: string) {
   const token = cookieStore.get("better-auth.session_token");
   if (!token) return { error: "Unauthorized" };
 
-  const res = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
-    method: "DELETE",
-    headers: {
-      Cookie: `better-auth.session_token=${token.value}`,
-      Origin: ORIGIN,
-    },
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
+      method: "DELETE",
+      headers: {
+        Cookie: `better-auth.session_token=${token.value}`,
+        Origin: ORIGIN,
+      },
+    });
 
-  if (!res.ok) return { error: "Failed to delete review" };
-  return { success: true };
+    if (!res.ok) throw new Error("Failed to delete review");
+    return { success: true };
+  } catch (err: any) {
+    console.error("[deleteReview]", err.message);
+    return { error: err.message || "Something went wrong" };
+  }
 }

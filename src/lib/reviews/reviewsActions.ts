@@ -1,11 +1,10 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { PaginationMeta } from "@/components/ui/Pagination";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API;
 
 export type ReviewsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -19,14 +18,13 @@ export async function getAllReviews(
     params.set("limit", String(limit));
 
     const res = await fetch(`${BASE_URL}/api/reviews?${params.toString()}`, {
-      next:{revalidate:5000}
+      next: { revalidate: 5000 },
     });
 
     if (!res.ok) throw new Error("Failed to fetch reviews");
 
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getAllReviews]", err.message);
     return null;

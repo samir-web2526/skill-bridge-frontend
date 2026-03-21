@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PaginationMeta } from "@/components/ui/Pagination";
 import { FormattedTutor } from "@/components/pages/tutorPage/TutorCard";
 import { TutorFilters } from "@/components/pages/tutorPage/TutorFilter";
@@ -30,15 +31,13 @@ export async function getTutors(
     if (filters.availableOnly) params.set("availableOnly", "true");
 
     const res = await fetch(`${BASE_URL}/api/tutors?${params.toString()}`, {
-      next:{revalidate:3000}
+      next: { revalidate: 3000 },
     });
 
     if (!res.ok) throw new Error("Failed to fetch tutors");
 
     const json = await res.json();
     return json.data;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[fetchTutors]", err.message);
     return null;
@@ -46,14 +45,19 @@ export async function getTutors(
 }
 
 export async function getTutorById(tutorId: string) {
-  const res = await fetch(`${BASE_URL}/api/tutors/${tutorId}`, {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/api/tutors/${tutorId}`, {
+      cache: "no-store",
+    });
 
-  if (!res.ok) return null;
+    if (!res.ok) return null;
 
-  const json = await res.json();
-  return json.data as FormattedTutor;
+    const json = await res.json();
+    return json.data as FormattedTutor;
+  } catch (err: any) {
+    console.error("[getTutorById]", err.message);
+    return null;
+  }
 }
 
 export async function getCategories(): Promise<string[]> {

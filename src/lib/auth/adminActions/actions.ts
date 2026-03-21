@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { PaginationMeta } from "@/components/ui/Pagination";
@@ -7,7 +8,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API;
 const ORIGIN = process.env.FRONTEND_URL || "http://localhost:3000";
 
 export type BookingsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -37,7 +37,6 @@ export async function getAllBookings(
 
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getAllBookings]", err.message);
     return null;
@@ -45,7 +44,6 @@ export async function getAllBookings(
 }
 
 export type ReviewsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -75,7 +73,6 @@ export async function getAllReviews(
 
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getAllReviews]", err.message);
     return null;
@@ -87,21 +84,24 @@ export async function deleteReview(reviewId: string) {
   const token = cookieStore.get("better-auth.session_token");
   if (!token) return { error: "Unauthorized" };
 
-  const res = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
-    method: "DELETE",
-    headers: {
-      Cookie: `better-auth.session_token=${token.value}`,
-      Origin: ORIGIN,
-    },
-  });
-  if (!res.ok) return { error: "Failed to delete review" };
-  return { success: true };
+  try {
+    const res = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
+      method: "DELETE",
+      headers: {
+        Cookie: `better-auth.session_token=${token.value}`,
+        Origin: ORIGIN,
+      },
+    });
+    if (!res.ok) throw new Error("Failed to delete review");
+    return { success: true };
+  } catch (err: any) {
+    console.error("[deleteReview]", err.message);
+    return { error: err.message || "Something went wrong" };
+  }
 }
 
 export type CategoriesResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
-
   paginations: {
     total: number;
     page: number;
@@ -127,7 +127,6 @@ export async function getAllCategories(
 
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getAllCategories]", err.message);
     return null;
@@ -154,7 +153,6 @@ export async function createCategory(name: string, description: string) {
 
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[createCategory]", err.message);
     return null;
@@ -170,18 +168,23 @@ export async function updateCategory(
   const token = cookieStore.get("better-auth.session_token");
   if (!token) return { error: "Unauthorized" };
 
-  const res = await fetch(`${BASE_URL}/api/categories/${categoryId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `better-auth.session_token=${token.value}`,
-      Origin: ORIGIN,
-    },
-    body: JSON.stringify({ name, description }),
-  });
-  if (!res.ok) return { error: "Failed to update category" };
-  const json = await res.json();
-  return json.data;
+  try {
+    const res = await fetch(`${BASE_URL}/api/categories/${categoryId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `better-auth.session_token=${token.value}`,
+        Origin: ORIGIN,
+      },
+      body: JSON.stringify({ name, description }),
+    });
+    if (!res.ok) throw new Error("Failed to update category");
+    const json = await res.json();
+    return json.data;
+  } catch (err: any) {
+    console.error("[updateCategory]", err.message);
+    return { error: err.message || "Something went wrong" };
+  }
 }
 
 export async function deleteCategory(categoryId: string) {
@@ -189,13 +192,18 @@ export async function deleteCategory(categoryId: string) {
   const token = cookieStore.get("better-auth.session_token");
   if (!token) return { error: "Unauthorized" };
 
-  const res = await fetch(`${BASE_URL}/api/categories/${categoryId}`, {
-    method: "DELETE",
-    headers: {
-      Cookie: `better-auth.session_token=${token.value}`,
-      Origin: ORIGIN,
-    },
-  });
-  if (!res.ok) return { error: "Failed to delete category" };
-  return { success: true };
+  try {
+    const res = await fetch(`${BASE_URL}/api/categories/${categoryId}`, {
+      method: "DELETE",
+      headers: {
+        Cookie: `better-auth.session_token=${token.value}`,
+        Origin: ORIGIN,
+      },
+    });
+    if (!res.ok) throw new Error("Failed to delete category");
+    return { success: true };
+  } catch (err: any) {
+    console.error("[deleteCategory]", err.message);
+    return { error: err.message || "Something went wrong" };
+  }
 }

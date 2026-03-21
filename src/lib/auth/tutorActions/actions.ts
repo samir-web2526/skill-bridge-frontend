@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { PaginationMeta } from "@/components/ui/Pagination";
@@ -7,7 +8,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API;
 const ORIGIN = process.env.FRONTEND_URL || "http://localhost:3000";
 
 export type BookingsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -36,7 +36,6 @@ export async function getTutorBookings(
     if (!res.ok) throw new Error("Failed to fetch bookings");
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getTutorBookings]", err.message);
     return null;
@@ -65,7 +64,6 @@ export async function updateTutorBookingStatus(
     const json = await res.json();
     if (!res.ok) return { error: json.message || "Failed to update booking" };
     return { data: json.data };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[updateTutorBookingStatus]", err.message);
     return { error: err.message };
@@ -73,7 +71,6 @@ export async function updateTutorBookingStatus(
 }
 
 export type ReviewsResult = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   paginations: PaginationMeta;
 };
@@ -105,7 +102,6 @@ export async function getTutorReviews(
     if (!res.ok) throw new Error("Failed to fetch reviews");
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getTutorReviews]", err.message);
     return null;
@@ -136,7 +132,6 @@ export async function createTutorProfile(formData: {
     const json = await res.json();
     if (!res.ok) return { error: json.message || "Failed to create profile" };
     return { data: json.data };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[createTutorProfile]", err.message);
     return { error: err.message };
@@ -156,14 +151,13 @@ export async function getTutorProfile() {
         Origin: ORIGIN,
       },
     });
-    
+
     if (!res.ok) {
       if (res.status === 403) return null;
       throw new Error("Failed to fetch tutor profile");
     }
     const json = await res.json();
     return json.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[getTutorProfile]", err.message);
     return null;
