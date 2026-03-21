@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, ArrowRight, Star } from "lucide-react";
+import { getCategoryColor } from "@/lib/category/categoryColors";
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -39,7 +40,13 @@ type Tutor = {
   user: { name: string; email: string };
 };
 
-export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
+export default function FeaturedTutors({
+  tutors,
+  user,
+}: {
+  tutors: Tutor[];
+  user: { role: string } | null;
+}) {
   const router = useRouter();
 
   return (
@@ -56,7 +63,7 @@ export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
         <Button
           variant="ghost"
           onClick={() => router.push("/tutors")}
-          className="text-emerald-600 font-semibold text-sm group"
+          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 text-emerald-700 hover:bg-emerald-50 shadow-md shadow-emerald-100 animate-[bounce_2s_ease-in-out_infinite]"
         >
           View all tutors
           <ArrowRight
@@ -74,10 +81,15 @@ export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
             .join("")
             .toUpperCase()
             .slice(0, 2);
+          const { shadowHex } = getCategoryColor(t.category?.name ?? "default");
           return (
             <Card
               key={t.id}
-              className="group border border-zinc-100 hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+              className="group border border-zinc-100 transition-all duration-200 hover:-translate-y-1"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow = `0 4px 14px 0 ${shadowHex}`)
+              }
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
             >
               <CardHeader className="p-5 pb-4">
                 <div className="flex gap-3 items-start">
@@ -120,8 +132,14 @@ export default function FeaturedTutors({ tutors }: { tutors: Tutor[] }) {
                 </div>
               </CardContent>
               <CardFooter className="px-5 pb-5">
-                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold">
-                  Book a Session
+                <Button
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!user || user.role !== "STUDENT"}
+                  onClick={() => router.push(`/tutors/${t.id}`)}
+                >
+                  {user?.role === "STUDENT"
+                    ? "Book a Session"
+                    : "Login as Student to Book"}
                 </Button>
               </CardFooter>
             </Card>

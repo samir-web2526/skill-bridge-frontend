@@ -21,10 +21,12 @@ function getInitials(name = "") {
 
 type Props = {
   tutor: FormattedTutor;
+  user: { role: string } | null;
 };
 
-export default function TutorDetailPage({ tutor }: Props) {
+export default function TutorDetailPage({ tutor, user }: Props) {
   const router = useRouter();
+  const isStudent = user?.role === "STUDENT";
   const color = getCategoryColor(tutor.category.name);
   const initials = getInitials(tutor.user.name);
 
@@ -142,11 +144,15 @@ export default function TutorDetailPage({ tutor }: Props) {
           </div>
 
           <Button
-            onClick={() => setShowBooking(true)}
-            disabled={!tutor.isAvailable}
+            onClick={() => isStudent && setShowBooking(true)}
+            disabled={!tutor.isAvailable || !isStudent}
             className="h-11 px-6 font-semibold"
           >
-            {tutor.isAvailable ? "Book a Session" : "Unavailable"}
+            {!isStudent
+              ? "Login as Student to Book"
+              : tutor.isAvailable
+                ? "Book a Session"
+                : "Unavailable"}
           </Button>
         </div>
       </div>
@@ -162,5 +168,3 @@ export default function TutorDetailPage({ tutor }: Props) {
     </div>
   );
 }
-
-

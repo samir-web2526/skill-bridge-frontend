@@ -30,9 +30,7 @@ export async function getTutors(
       params.set("minRating", String(filters.minRating));
     if (filters.availableOnly) params.set("availableOnly", "true");
 
-    const res = await fetch(`${BASE_URL}/api/tutors?${params.toString()}`, {
-      next: { revalidate: 3000 },
-    });
+    const res = await fetch(`${BASE_URL}/api/tutors?${params.toString()}`);
 
     if (!res.ok) throw new Error("Failed to fetch tutors");
 
@@ -62,13 +60,31 @@ export async function getTutorById(tutorId: string) {
 
 export async function getCategories(): Promise<string[]> {
   try {
-    const res = await fetch(`${BASE_URL}/api/categories`, {
-      next: { revalidate: 3000 },
-    });
+    const res = await fetch(`${BASE_URL}/api/categories`);
     if (!res.ok) return [];
     const json = await res.json();
     return json.data.data.map((c: { name: string }) => c.name);
   } catch {
     return [];
+  }
+}
+
+export type Stats = {
+  totalTutors: number;
+  totalStudents: number;
+  satisfactionPercent: number;
+};
+
+export async function getStats(): Promise<Stats | null> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/tutors/stats`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Failed to fetch stats");
+    const json = await res.json();
+    return json.data as Stats;
+  } catch (err: any) {
+    console.error("[getStats]", err.message);
+    return null;
   }
 }

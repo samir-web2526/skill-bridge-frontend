@@ -77,7 +77,7 @@ export type ReviewsResult = {
 
 export async function getTutorReviews(
   page: number,
-  limit = 10,
+  limit = 5,
 ): Promise<ReviewsResult | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("better-auth.session_token");

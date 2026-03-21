@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { getAllReviews } from "@/lib/reviews/reviewsActions";
 import { ReviewCard } from "../ReviewPage/ReviewCard";
-
+import { Button } from "@/components/ui/button";
 
 export default function ReviewsSection() {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -32,13 +32,14 @@ export default function ReviewsSection() {
       </div>
 
       <div className="flex justify-center">
-        <button
+        <Button
+          variant="outline"
           onClick={() => router.push("/reviews")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all duration-200"
+          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 text-emerald-700 hover:bg-emerald-50 shadow-md shadow-emerald-100 animate-[bounce_2s_ease-in-out_infinite]"
         >
           View all reviews
           <ArrowRight className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

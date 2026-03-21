@@ -17,7 +17,7 @@ import { Pencil, Trash2, CalendarDays, AlertCircle, Inbox } from "lucide-react";
 import { toast } from "sonner";
 import {
   deleteReview,
-  getMyReviews,
+  getStudentReviews,
   updateReview,
 } from "@/lib/auth/studentActions/actions";
 import { ReviewDialog } from "./ReviewDialog";
@@ -124,7 +124,7 @@ export default function StudentReviewPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getMyReviews(page);
+      const result = await getStudentReviews(page);
       if (result) {
         setReviews(result.data);
         setPaginations(result.paginations);

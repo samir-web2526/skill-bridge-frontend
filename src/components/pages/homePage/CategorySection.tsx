@@ -26,11 +26,20 @@ export default function CategorySection({
     <>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {visible.map((cat) => {
-          const { bg, text, icon: Icon } = getCategoryColor(cat.name);
+          const {
+            bg,
+            text,
+            icon: Icon,
+            shadowHex,
+          } = getCategoryColor(cat.name);
           return (
             <Card
               key={cat.id}
               className={`group cursor-pointer border-0 hover:-translate-y-1 transition-all duration-200 ${bg}`}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow = `0 4px 14px 0 ${shadowHex}`)
+              }
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
             >
               <CardContent className="p-5 text-center">
                 <Icon size={22} className={`mx-auto mb-3 ${text}`} />
@@ -53,7 +62,7 @@ export default function CategorySection({
           <Button
             variant="outline"
             onClick={() => setShowAll(!showAll)}
-            className="gap-2 text-sm font-semibold border-zinc-200 hover:border-emerald-300 hover:text-emerald-700"
+            className="gap-2 text-sm font-semibold border-emerald-300 text-emerald-700 hover:bg-emerald-50 shadow-md shadow-emerald-100 animate-[bounce_2s_ease-in-out_infinite]"
           >
             {showAll ? (
               <>

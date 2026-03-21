@@ -135,9 +135,9 @@ export type ReviewsResult = {
   paginations: PaginationMeta;
 };
 
-export async function getMyReviews(
+export async function getStudentReviews(
   page: number,
-  limit = 10,
+  limit = 5,
 ): Promise<ReviewsResult | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("better-auth.session_token");
@@ -148,7 +148,7 @@ export async function getMyReviews(
     params.set("page", String(page));
     params.set("limit", String(limit));
 
-    const res = await fetch(`${BASE_URL}/api/reviews?${params.toString()}`, {
+    const res = await fetch(`${BASE_URL}/api/reviews/my-reviews?${params.toString()}`, {
       cache: "no-store",
       headers: {
         Cookie: `better-auth.session_token=${token.value}`,
@@ -160,7 +160,7 @@ export async function getMyReviews(
     const json = await res.json();
     return json.data;
   } catch (err: any) {
-    console.error("[getMyReviews]", err.message);
+    console.error("[getStudentReviews]", err.message);
     return null;
   }
 }

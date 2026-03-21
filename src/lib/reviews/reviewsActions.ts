@@ -17,9 +17,7 @@ export async function getAllReviews(
     params.set("page", String(page));
     params.set("limit", String(limit));
 
-    const res = await fetch(`${BASE_URL}/api/reviews?${params.toString()}`, {
-      next: { revalidate: 5000 },
-    });
+    const res = await fetch(`${BASE_URL}/api/reviews?${params.toString()}`);
 
     if (!res.ok) throw new Error("Failed to fetch reviews");
 

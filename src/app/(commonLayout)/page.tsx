@@ -1,20 +1,17 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  BookOpen,
-  ChevronRight,
-  ArrowRight,
-  CheckCircle,
-} from "lucide-react";
+import { BookOpen, ArrowRight, CheckCircle } from "lucide-react";
 import SearchBar from "@/components/pages/homePage/SearchBar";
 import { getAllCategories } from "@/lib/auth/adminActions/actions";
-import { getTutors } from "@/services/tutors.services";
+import { getStats, getTutors } from "@/services/tutors.services";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import CategorySection from "@/components/pages/homePage/CategorySection";
 import FeaturedTutors from "@/components/pages/homePage/FeaturedTutors";
 import BecomeTutorButton from "@/components/pages/homePage/BecomeTutorButton";
 import { getUser } from "@/lib/auth/session";
 import ReviewsSection from "@/components/pages/homePage/ReviewSection";
+
+export const dynamic = "force-dynamic";
 
 const STEPS = [
   {
@@ -615,6 +612,7 @@ export default async function SkillBridgeHome() {
   const categoriesResult = await getAllCategories(1, 10);
   const categories = categoriesResult?.data ?? [];
   const user = await getUser();
+  const stats = await getStats();
   return (
     <div className="min-h-screen bg-[#faf9f7] text-zinc-900">
       <section className="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-16 items-center">
@@ -654,9 +652,9 @@ export default async function SkillBridgeHome() {
 
           <div className="flex gap-8 pt-6 border-t border-zinc-100">
             {[
-              ["5,800+", "Active Students"],
-              ["640+", "Verified Tutors"],
-              ["98%", "Satisfaction Rate"],
+              [`${stats?.totalStudents ?? "5,800"}+`, "Active Students"],
+              [`${stats?.totalTutors ?? "640"}+`, "Verified Tutors"],
+              [`${stats?.satisfactionPercent ?? "98"}%`, "Satisfaction Rate"],
             ].map(([n, l]) => (
               <div key={l}>
                 <div className="text-2xl font-extrabold text-emerald-600 tracking-tight">
@@ -689,7 +687,7 @@ export default async function SkillBridgeHome() {
 
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <FeaturedTutors tutors={tutors} />
+          <FeaturedTutors tutors={tutors} user={user} />
         </div>
       </section>
 
@@ -705,9 +703,12 @@ export default async function SkillBridgeHome() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
             <div className="hidden lg:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-zinc-100 z-0" />
-            {STEPS.map(({ num, title, desc }) => (
+            {STEPS.map(({ num, title, desc }, index) => (
               <div key={num} className="text-center relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-emerald-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-100">
+                <div
+                  className="w-16 h-16 rounded-2xl bg-emerald-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-100 animate-[bounce_3s_ease-in-out_infinite]"
+                  style={{ animationDelay: `${index * 0.4}s` }}
+                >
                   {num}
                 </div>
                 <h3 className="font-bold text-base mb-2">{title}</h3>
@@ -742,13 +743,9 @@ export default async function SkillBridgeHome() {
                       {cat.name}
                     </div>
                     <div className="text-xs text-emerald-300/60 mt-0.5">
-                      {cat._count?.tutor ?? 0} tutors available {/* ← eta */}
+                      {cat._count?.tutor ?? 0} tutors available
                     </div>
                   </div>
-                  <ChevronRight
-                    size={16}
-                    className="text-white/20 group-hover:text-emerald-300 group-hover:translate-x-1 transition-all"
-                  />
                 </div>
               );
             })}
@@ -813,7 +810,7 @@ export default async function SkillBridgeHome() {
           <div className="flex gap-6 flex-wrap justify-center">
             {[
               { label: "Find Tutors", href: "/tutors" },
-              { label: "About Us", href: "/about" },
+              { label: "About Us", href: "/#" },
               { label: "Contact", href: "#" },
               { label: "Privacy Policy", href: "#" },
             ].map(({ label, href }) => (

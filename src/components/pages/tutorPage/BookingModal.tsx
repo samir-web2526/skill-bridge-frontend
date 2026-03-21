@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -14,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { CalendarDays, Loader2 } from "lucide-react";
 import { FormattedTutor } from "./TutorCard";
 import { createBooking } from "@/services/booking.service";
+import { toast } from "sonner";
 
 type Props = {
   tutor: FormattedTutor | null;
@@ -42,11 +44,18 @@ export function BookingModal({ tutor, onClose, onSuccess }: Props) {
         date: new Date(date).toISOString(),
       });
 
+      toast.success("Booking confirmed!", {
+        description: `Session with ${tutor.user.name} booked successfully.`,
+      });
+
       onSuccess();
       onClose();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      const message = err.message || "Something went wrong";
+      setError(message);
+      toast.error("Booking failed!", {
+        description: message,
+      });
     } finally {
       setIsLoading(false);
     }

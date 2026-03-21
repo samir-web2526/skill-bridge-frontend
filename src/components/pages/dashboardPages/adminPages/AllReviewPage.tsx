@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { getAllReviews } from "@/lib/auth/adminActions/actions";
+import { deleteReview, getAllReviews } from "@/lib/auth/adminActions/actions";
 import {
   AlertCircle,
   CalendarDays,
@@ -21,6 +21,7 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 function InitialAvatar({
   name,
@@ -179,6 +180,7 @@ export default function AdminReviewsPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [refresh, setRefresh] = useState(0);
 
   const { page, handlePageChange } = usePagination();
 
@@ -196,7 +198,17 @@ export default function AdminReviewsPage() {
       setIsLoading(false);
     };
     load();
-  }, [page]);
+  }, [page,refresh]);
+
+  const handleDelete = async (reviewId: string) => {
+    const result = await deleteReview(reviewId);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Review deleted.");
+      setRefresh((prev) => prev + 1);
+    }
+  };
 
   const stats = useMemo(() => {
     const total = reviews.length;
@@ -273,12 +285,6 @@ export default function AdminReviewsPage() {
               dotColor="bg-zinc-300"
               valueColor="text-zinc-800"
             />
-            {/* <StatCard
-              label="Avg rating"
-              value={stats.avg > 0 ? stats.avg.toFixed(1) : "—"}
-              dotColor="bg-emerald-500"
-              valueColor="text-emerald-700"
-            /> */}
             <StatCard
               label="Avg rating"
               value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
@@ -498,6 +504,7 @@ export default function AdminReviewsPage() {
                       <Button
                         variant="ghost"
                         size="icon"
+                        onClick={() => handleDelete(review.id)}
                         className="h-8 w-8 rounded-lg border border-red-100 bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

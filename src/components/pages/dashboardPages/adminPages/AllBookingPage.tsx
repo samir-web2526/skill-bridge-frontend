@@ -198,6 +198,12 @@ export default function AdminBookingsPage() {
             dotColor="bg-amber-400"
             valueColor="text-amber-700"
           />
+          <StatCard
+            label="Cancelled"
+            value={counts.cancelled}
+            dotColor="bg-red-400"
+            valueColor="text-red-700"
+          />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

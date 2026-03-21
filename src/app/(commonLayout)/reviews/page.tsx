@@ -1,10 +1,14 @@
-import AllReviewPage from '@/components/pages/ReviewPage/ReviewsPage'
-import React from 'react'
+import AllReviewPage from "@/components/pages/ReviewPage/ReviewsPage";
+import React, { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default function ReviewsPage() {
   return (
     <div>
-        <AllReviewPage></AllReviewPage>
+      <Suspense fallback={<div>Loading...</div>}>
+        <AllReviewPage />
+      </Suspense>
     </div>
-  )
+  );
 }

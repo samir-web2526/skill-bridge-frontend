@@ -60,6 +60,7 @@ export default function AdminCategoriesPage() {
   const [inputName, setInputName] = useState("");
   const [inputDescription, setInputDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [refresh, setRefresh] = useState(0);
 
   const { page, handlePageChange } = usePagination();
 
@@ -77,7 +78,7 @@ export default function AdminCategoriesPage() {
       setIsLoading(false);
     };
     load();
-  }, [page]);
+  }, [page, refresh]);
 
   const stats = useMemo(() => {
     const total = paginations?.total ?? categories.length;
@@ -117,7 +118,11 @@ export default function AdminCategoriesPage() {
         inputName.trim(),
         inputDescription.trim(),
       );
-      if (result) setCategories((prev) => [result, ...prev]);
+      if (result) {
+        toast.success("Category created successfully.");
+        setCategories((prev) => [result, ...prev]);
+        setRefresh((prev) => prev + 1);
+      }
     } else if (dialogMode === "edit" && selectedCategory) {
       const result = await updateCategory(
         selectedCategory.id,
@@ -131,9 +136,11 @@ export default function AdminCategoriesPage() {
         return;
       }
       if (result) {
+        toast.success("Category updated successfully.");
         setCategories((prev) =>
           prev.map((c) => (c.id === selectedCategory.id ? result : c)),
         );
+        setRefresh((prev) => prev + 1);
       }
     }
 
@@ -143,8 +150,13 @@ export default function AdminCategoriesPage() {
 
   const handleDelete = async (categoryId: string) => {
     const result = await deleteCategory(categoryId);
-    if (result)
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Category deleted successfully.");
       setCategories((prev) => prev.filter((c) => c.id !== categoryId));
+      setRefresh((prev) => prev + 1);
+    }
   };
 
   return (
