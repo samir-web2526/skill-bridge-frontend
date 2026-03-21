@@ -60,29 +60,39 @@ function StudentAvatar({ name }: { name: string }) {
 function StatCard({
   label,
   value,
-  dotColor,
   valueColor,
   starDisplay,
+  avgRating,
 }: {
   label: string;
   value: string | number;
   dotColor?: string;
   valueColor: string;
   starDisplay?: boolean;
+  avgRating?: number;
 }) {
   return (
     <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
-      <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
-        {starDisplay ? (
-          <span className="text-amber-400 text-xs">★★★★★</span>
-        ) : (
-          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+      <div className="flex flex-col gap-0.5 mt-0.5">
+        {starDisplay && (
+          <span className="flex gap-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span
+                key={i}
+                style={{
+                  color: i < Math.round(avgRating ?? 0) ? "#fbbf24" : "#e5e7eb",
+                }}
+              >
+                ★
+              </span>
+            ))}
+          </span>
         )}
-        {label}
-      </p>
+        <p className="text-xs text-zinc-400 font-medium">{label}</p>
+      </div>
     </div>
   );
 }
@@ -147,7 +157,7 @@ export default function TutorReviewPage() {
 
   const stats = useMemo(() => {
     const total = paginations?.total ?? reviews.length;
-    const avg =
+    const avgRating =
       reviews.length > 0
         ? reviews.reduce((s, r) => s + (r.rating ?? 0), 0) / reviews.length
         : 0;
@@ -156,7 +166,15 @@ export default function TutorReviewPage() {
     const threeStar = reviews.filter((r) => Math.round(r.rating) === 3).length;
     const twoStar = reviews.filter((r) => Math.round(r.rating) === 2).length;
     const oneStar = reviews.filter((r) => Math.round(r.rating) === 1).length;
-    return { total, avg, fiveStar, fourStar, threeStar, twoStar, oneStar };
+    return {
+      total,
+      avgRating,
+      fiveStar,
+      fourStar,
+      threeStar,
+      twoStar,
+      oneStar,
+    };
   }, [reviews, paginations]);
 
   return (
@@ -196,10 +214,12 @@ export default function TutorReviewPage() {
             />
             <StatCard
               label="Avg rating"
-              value={stats.avg > 0 ? stats.avg.toFixed(1) : "—"}
+              value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
               valueColor="text-amber-500"
               starDisplay
+              avgRating={stats.avgRating}
             />
+
             <StatCard
               label="5-star reviews"
               value={stats.fiveStar}

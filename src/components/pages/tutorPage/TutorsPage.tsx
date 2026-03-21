@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -38,8 +37,23 @@ export default function TutorsPage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedTutor, setSelectedTutor] = useState<FormattedTutor | null>(null);
+
+  const [showDrawer, setShowDrawer] = useState(false);
+
+  const [selectedTutor, setSelectedTutor] = useState<FormattedTutor | null>(
+    null,
+  );
+
+  const activeFilterCount = [
+    filters.category !== "All",
+    filters.minPrice !== undefined,
+    filters.maxPrice !== undefined,
+    filters.minRating !== undefined,
+    filters.availableOnly,
+    filters.search !== "",
+  ].filter(Boolean).length;
 
   useEffect(() => {
     getCategories().then(setCategories);
@@ -49,19 +63,15 @@ export default function TutorsPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-
       const result = await getTutors(filters, page);
-
       if (result) {
         setTutors(result.data);
         setPaginations(result.paginations);
       } else {
         setError("Failed to load tutors. Please try again.");
       }
-
       setIsLoading(false);
     };
-
     load();
   }, [filters, page]);
 
@@ -87,11 +97,38 @@ export default function TutorsPage() {
             variant={showFilter ? "default" : "outline"}
             size="sm"
             onClick={() => setShowFilter((v) => !v)}
-            className="gap-2"
+            className="gap-2 hidden md:flex"
           >
             <SlidersHorizontal className="w-4 h-4" />
             {showFilter ? "Hide Filters" : "Filters"}
+            {activeFilterCount > 0 && (
+              <span className="bg-white text-[#0d7a5f] text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
           </Button>
+
+          <button
+            onClick={() => setShowDrawer(true)}
+            className="flex md:hidden items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-border transition-all"
+            style={
+              activeFilterCount > 0
+                ? {
+                    background: "#0d7a5f",
+                    color: "#fff",
+                    borderColor: "#0d7a5f",
+                  }
+                : undefined
+            }
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="bg-white text-[#0d7a5f] text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
         </div>
 
         {error && (
@@ -101,14 +138,16 @@ export default function TutorsPage() {
         )}
 
         <div
-          className={`grid gap-5 items-start ${showFilter ? "grid-cols-[260px_1fr]" : "grid-cols-1"}`}
+          className={`grid gap-5 items-start ${showFilter ? "md:grid-cols-[260px_1fr]" : "grid-cols-1"}`}
         >
           {showFilter && (
-            <TutorFilter
-              filters={filters}
-              onChange={handleFilterChange}
-              categories={categories}
-            />
+            <div className="hidden md:block">
+              <TutorFilter
+                filters={filters}
+                onChange={handleFilterChange}
+                categories={categories}
+              />
+            </div>
           )}
 
           <div>
@@ -117,7 +156,6 @@ export default function TutorsPage() {
               isLoading={isLoading}
               onSelect={setSelectedTutor}
             />
-
             {paginations && (
               <Pagination
                 paginations={paginations}
@@ -127,6 +165,16 @@ export default function TutorsPage() {
           </div>
         </div>
       </div>
+
+      {showDrawer && (
+        <TutorFilter
+          filters={filters}
+          onChange={handleFilterChange}
+          categories={categories}
+          asDrawer
+          onClose={() => setShowDrawer(false)}
+        />
+      )}
 
       <TutorProfile
         tutor={selectedTutor}

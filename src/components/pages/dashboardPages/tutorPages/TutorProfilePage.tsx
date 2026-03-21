@@ -143,14 +143,28 @@ export default async function TutorProfilePage() {
             </div>
 
             {profile && (
-              <div className="grid grid-cols-2 gap-3 px-6 py-4 bg-zinc-50 border-t border-zinc-100">
-                <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3">
+              <div className="bg-white rounded-xl flex flex-row justify-between border border-zinc-100 px-4 py-3">
+                <div>
                   <p className="text-2xl font-extrabold text-amber-500">
                     {Number(profile?.averageRating ?? 0).toFixed(1)}
                   </p>
-                  <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1">
-                    <span className="text-amber-400 text-xs">★★★★★</span>
-                    Avg rating
+                  <p className="text-xs text-zinc-400 mt-0.5 flex flex-col gap-0.5">
+                    <span className="flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            color:
+                              i < Math.round(profile?.averageRating ?? 0)
+                                ? "#fbbf24"
+                                : "#e5e7eb",
+                          }}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </span>
+                    <span>Avg rating</span>
                   </p>
                 </div>
                 <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3">

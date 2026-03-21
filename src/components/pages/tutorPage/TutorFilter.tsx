@@ -19,6 +19,8 @@ type Props = {
   filters: TutorFilters;
   onChange: (filters: TutorFilters) => void;
   categories: string[];
+  asDrawer?: boolean;
+  onClose?: () => void;
 };
 
 const DEFAULT_FILTERS: TutorFilters = {
@@ -39,7 +41,13 @@ const RATING_OPTIONS = [
 
 const BANNER_GREEN = "#0d7a5f";
 
-export function TutorFilter({ filters, onChange, categories }: Props) {
+export function TutorFilter({
+  filters,
+  onChange,
+  categories,
+  asDrawer,
+  onClose,
+}: Props) {
   const allCategories = ["All", ...categories];
 
   const activeFilterCount = [
@@ -51,10 +59,13 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
     filters.search !== "",
   ].filter(Boolean).length;
 
-  return (
-    <div className="bg-card border border-border rounded-4xl overflow-hidden flex flex-col">
+  const content = (
+    <>
       <div className="px-4.5 py-4 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
+          {asDrawer && (
+            <div className="w-8 h-1 rounded-full bg-border absolute top-3 left-1/2 -translate-x-1/2" />
+          )}
           <p className="text-sm font-medium text-foreground">Filters</p>
           {activeFilterCount > 0 && (
             <span
@@ -65,17 +76,30 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
             </span>
           )}
         </div>
-        {activeFilterCount > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onChange(DEFAULT_FILTERS)}
-            className="h-7 text-xs text-muted-foreground hover:text-foreground gap-1 px-2"
-          >
-            <RotateCcw className="w-3 h-3" />
-            Reset
-          </Button>
-        )}
+        <div className="flex items-center gap-1">
+          {activeFilterCount > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onChange(DEFAULT_FILTERS)}
+              className="h-7 text-xs text-muted-foreground hover:text-foreground gap-1 px-2"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Reset
+            </Button>
+          )}
+          {asDrawer && onClose && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-7 text-xs font-medium px-3"
+              style={{ color: BANNER_GREEN }}
+            >
+              Done
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="px-4.5 py-3.5 flex flex-col gap-2 border-b border-border">
@@ -97,6 +121,7 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
           />
         </div>
       </div>
+
       <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
         <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Category
@@ -130,6 +155,7 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
           })}
         </div>
       </div>
+
       <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
         <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Price (৳/hr)
@@ -170,6 +196,7 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
           />
         </div>
       </div>
+
       <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
         <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Min Rating
@@ -203,6 +230,7 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
           })}
         </div>
       </div>
+
       <div className="px-4.5 py-3.5 flex items-center justify-between">
         <Label className="text-sm font-medium text-foreground cursor-pointer">
           Available only
@@ -220,6 +248,24 @@ export function TutorFilter({ filters, onChange, categories }: Props) {
           className={filters.availableOnly ? "[&>span]:bg-[#0d7a5f]" : ""}
         />
       </div>
-    </div>
+    </>
+  );
+
+  if (!asDrawer) {
+    return (
+      <div className="bg-card border border-border rounded-4xl overflow-hidden flex flex-col">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-card rounded-t-4xl overflow-hidden flex flex-col max-h-[85vh] overflow-y-auto">
+        <div className="w-9 h-1 rounded-full bg-border mx-auto mt-3 mb-1 shrink-0" />
+        {content}
+      </div>
+    </>
   );
 }

@@ -40,7 +40,7 @@ export default function BecomeTutorButton({
       toast.success("Let's get you set up!", {
         description: "Complete your tutor profile to start accepting students.",
       });
-      router.push("/dashboard/become-tutor");
+      router.push("/dashboard/create-profile");
     }
   };
 

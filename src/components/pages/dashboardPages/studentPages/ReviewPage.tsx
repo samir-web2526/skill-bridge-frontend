@@ -64,36 +64,46 @@ function TutorAvatar({ name }: { name: string }) {
     </div>
   );
 }
-
 function StatCard({
   label,
   value,
-  dotColor,
   valueColor,
   starDisplay,
+  avgRating,
 }: {
   label: string;
   value: string | number;
   dotColor?: string;
   valueColor: string;
   starDisplay?: boolean;
+  avgRating?: number;
 }) {
   return (
     <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
-      <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
-        {starDisplay ? (
-          <span className="text-amber-400 text-xs">★★★★★</span>
-        ) : (
-          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+      <div className="flex flex-col gap-0.5 mt-0.5">
+        {starDisplay && (
+          <span className="flex gap-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span
+                key={i}
+                style={{
+                  color: i < Math.round(avgRating ?? 0) ? "#fbbf24" : "#e5e7eb",
+                }}
+              >
+                ★
+              </span>
+            ))}
+          </span>
         )}
-        {label}
-      </p>
+        <p className="text-xs text-zinc-400 font-medium">{label}</p>
+      </div>
     </div>
   );
 }
+
 
 export default function StudentReviewPage() {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -128,12 +138,12 @@ export default function StudentReviewPage() {
 
   const stats = useMemo(() => {
     const total = paginations?.total ?? reviews.length;
-    const avg =
+    const avgRating =
       reviews.length > 0
         ? reviews.reduce((s, r) => s + (r.rating ?? 0), 0) / reviews.length
         : 0;
     const fiveStar = reviews.filter((r) => Math.round(r.rating) === 5).length;
-    return { total, avg, fiveStar };
+    return { total, avgRating, fiveStar };
   }, [reviews, paginations]);
 
   const openEditDialog = (review: any) => {
@@ -197,19 +207,20 @@ export default function StudentReviewPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard
             label="Total reviews"
             value={stats.total}
             dotColor="bg-zinc-300"
             valueColor="text-zinc-800"
           />
-          <StatCard
-            label="Avg rating given"
-            value={stats.avg > 0 ? stats.avg.toFixed(1) : "—"}
-            valueColor="text-amber-500"
-            starDisplay
-          />
+            <StatCard
+              label="Avg rating given"
+              value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
+              valueColor="text-amber-500"
+              starDisplay
+              avgRating={stats.avgRating}
+            />
           <StatCard
             label="5-star reviews"
             value={stats.fiveStar}
