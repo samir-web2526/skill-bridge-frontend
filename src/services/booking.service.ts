@@ -7,23 +7,24 @@ export type CreateBookingPayload = {
 };
 
 export async function createBooking(payload: CreateBookingPayload) {
-  try {
-    const res = await fetch(`${BASE_URL}/api/bookings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
+  const res = await fetch(`${BASE_URL}/api/bookings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
-    const json = await res.json();
+  const json = await res.json();
 
-    if (!res.ok) {
-      throw new Error(json.message || "Failed to create booking");
-    }
-
-    return json;
-  } catch (err: any) {
-    console.error("[createBooking]", err.message);
-    return { error: err.message || "Something went wrong" };
+  if (!res.ok) {
+    const err = new Error(json.message || "Failed to create booking") as any;
+    err.code =
+      json.message?.toLowerCase().includes("verify") ||
+      json.message?.toLowerCase().includes("email")
+        ? "EMAIL_NOT_VERIFIED"
+        : "BOOKING_FAILED";
+    throw err;
   }
+
+  return json;
 }

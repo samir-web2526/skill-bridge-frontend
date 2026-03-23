@@ -2,6 +2,7 @@
 
 "use client";
 
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+
+export type BookingError = {
+  message: string;
+  isEmailError?: boolean;
+};
 
 type Props = {
   open: boolean;
@@ -18,6 +24,7 @@ type Props = {
   onTutorChange?: (id: string) => void;
   cancelTutorName?: string;
   isSubmitting: boolean;
+  error?: BookingError | null;
   onClose: () => void;
   onSubmit: () => void;
 };
@@ -122,6 +129,35 @@ function WarnTriangle() {
   );
 }
 
+function MailIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      className="shrink-0 mt-0.5"
+    >
+      <rect
+        x="1"
+        y="3"
+        width="12"
+        height="8"
+        rx="1.5"
+        stroke="#b45309"
+        strokeWidth="1.2"
+      />
+      <path
+        d="M1 4l6 4 6-4"
+        stroke="#b45309"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function TutorAvatar({ name }: { name: string }) {
   const initials =
     name
@@ -145,12 +181,22 @@ export function BookingDialog({
   onTutorChange,
   cancelTutorName = "",
   isSubmitting,
+  error,
   onClose,
   onSubmit,
 }: Props) {
   const isCreate = mode === "create";
-
   const selectedTutor = tutors.find((t) => t.id === selectedTutorId);
+  const [resentEmail, setResentEmail] = useState(false);
+
+  const handleResendVerification = async () => {
+    try {
+      await fetch("/api/auth/resend-verification", { method: "POST" });
+      setResentEmail(true);
+    } catch {
+
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -188,9 +234,11 @@ export function BookingDialog({
                   </span>
                 </div>
               )}
+
               <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase">
                 Available tutors
               </p>
+
               {tutors.length === 0 ? (
                 <p className="text-sm text-zinc-400 py-4 text-center">
                   No available tutors at the moment.
@@ -221,7 +269,6 @@ export function BookingDialog({
                             </p>
                           </div>
                         </div>
-
                         <div className="flex items-center gap-2 shrink-0">
                           <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                             <StarIcon />
@@ -236,6 +283,30 @@ export function BookingDialog({
                       </div>
                     );
                   })}
+                </div>
+              )}
+
+              {error && (
+                <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
+                  {error.isEmailError ? <MailIcon /> : <WarnTriangle />}
+                  <div className="flex flex-col gap-1">
+                    <p className="text-xs text-amber-800 leading-relaxed">
+                      {error.isEmailError
+                        ? "Your email isn't verified yet. Please verify to book a session."
+                        : error.message}
+                    </p>
+                    {error.isEmailError && (
+                      <button
+                        onClick={handleResendVerification}
+                        disabled={resentEmail}
+                        className="text-left text-[11px] font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-900 transition-colors disabled:opacity-60 w-fit"
+                      >
+                        {resentEmail
+                          ? "Email sent — check your inbox ✓"
+                          : "Resend verification email →"}
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -258,6 +329,7 @@ export function BookingDialog({
             </div>
           )}
         </div>
+
         <div className="flex items-center justify-between px-6 py-4 bg-zinc-50 border-t border-zinc-100">
           <Button
             variant="ghost"

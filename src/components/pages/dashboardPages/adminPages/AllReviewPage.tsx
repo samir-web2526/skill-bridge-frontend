@@ -67,30 +67,6 @@ function StarRating({ rating }: { rating: number }) {
     </div>
   );
 }
-
-// function StatCard({
-//   label,
-//   value,
-//   dotColor,
-//   valueColor,
-// }: {
-//   label: string;
-//   value: string | number;
-//   dotColor: string;
-//   valueColor: string;
-// }) {
-//   return (
-//     <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
-//       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
-//         {value}
-//       </p>
-//       <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
-//         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
-//         {label}
-//       </p>
-//     </div>
-//   );
-// }
 function StatCard({
   label,
   value,
@@ -198,12 +174,14 @@ export default function AdminReviewsPage() {
       setIsLoading(false);
     };
     load();
-  }, [page,refresh]);
+  }, [page, refresh]);
 
   const handleDelete = async (reviewId: string) => {
     const result = await deleteReview(reviewId);
     if (result?.error) {
-      toast.error(result.error);
+      toast.error(
+        "Category already assigned to a tutor. Please select another category.",
+      );
     } else {
       toast.success("Review deleted.");
       setRefresh((prev) => prev + 1);

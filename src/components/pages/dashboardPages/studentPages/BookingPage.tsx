@@ -26,6 +26,11 @@ import {
 import { BookingDialog } from "./BookingDialog";
 import { ReviewDialog } from "./ReviewDialog";
 
+type BookingError = {
+  message: string;
+  isEmailError?: boolean;
+};
+
 const STATUS_CONFIG: Record<
   string,
   { pill: string; dot: string; pulse?: boolean; label: string }
@@ -107,6 +112,7 @@ export default function StudentBookingPage() {
   const [tutors, setTutors] = useState<any[]>([]);
   const [selectedTutorId, setSelectedTutorId] = useState("");
   const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
+  const [bookingError, setBookingError] = useState<BookingError | null>(null); // ← নতুন
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewTarget, setReviewTarget] = useState<any | null>(null);
@@ -131,6 +137,7 @@ export default function StudentBookingPage() {
     };
     load();
   }, [page, refresh]);
+
   const stats = useMemo(
     () => ({
       total: paginations?.total ?? bookings.length,
@@ -141,23 +148,28 @@ export default function StudentBookingPage() {
     }),
     [bookings, paginations],
   );
+
   const openCreateDialog = async () => {
     const result = await getAvailableTutors(1, 50);
     setTutors(result?.data ?? []);
     setSelectedTutorId("");
     setBookingDialogMode("create");
     setSelectedBooking(null);
+    setBookingError(null); 
     setBookingDialogOpen(true);
   };
 
   const openCancelDialog = (booking: any) => {
     setSelectedBooking(booking);
     setBookingDialogMode("cancel");
+    setBookingError(null); 
     setBookingDialogOpen(true);
   };
 
   const handleBookingSubmit = async () => {
     setIsBookingSubmitting(true);
+    setBookingError(null);
+
     if (bookingDialogMode === "create") {
       if (!selectedTutorId) return;
       const result = await createBooking({
@@ -165,17 +177,24 @@ export default function StudentBookingPage() {
         date: new Date().toISOString(),
       });
       if (result?.error) {
-        toast.error(result.error);
+        const message = result.error;
+        const isEmailError =
+          message.toLowerCase().includes("verify") ||
+          message.toLowerCase().includes("email");
+        setBookingError({ message, isEmailError }); // ← dialog এ দেখাবে
+        if (!isEmailError) toast.error(message);
       } else {
         toast.success("Booking created!");
         setBookingDialogOpen(false);
         setRefresh((prev) => prev + 1);
       }
     }
+
     if (bookingDialogMode === "cancel") {
       if (!selectedBooking) return;
       const result = await cancelBooking(selectedBooking.id);
       if (result?.error) {
+        setBookingError({ message: result.error });
         toast.error(result.error);
       } else {
         toast.success("Booking cancelled.");
@@ -183,8 +202,10 @@ export default function StudentBookingPage() {
         setRefresh((prev) => prev + 1);
       }
     }
+
     setIsBookingSubmitting(false);
   };
+
   const openReviewDialog = (booking: any) => {
     setReviewTarget(booking);
     setReviewRating(5);
@@ -483,6 +504,7 @@ export default function StudentBookingPage() {
         selectedTutorId={selectedTutorId}
         cancelTutorName={selectedBooking?.tutor?.user?.name ?? ""}
         isSubmitting={isBookingSubmitting}
+        error={bookingError} 
         onClose={() => setBookingDialogOpen(false)}
         onSubmit={handleBookingSubmit}
         onTutorChange={setSelectedTutorId}
