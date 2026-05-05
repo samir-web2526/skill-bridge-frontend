@@ -1,30 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAllReviews } from "@/lib/reviews/reviewsActions";
 import { ReviewCard } from "./ReviewCard";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
+import { getAllReviews, Review } from "@/services/review.service";
 
 export default function AllReviewPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { page, handlePageChange } = usePagination();
 
   useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      const result = await getAllReviews(page, 9);
-      if (result) {
-        setReviews(result.data);
-        setPaginations(result.paginations);
-      }
-      setIsLoading(false);
-    };
-    load();
-  }, [page]);
+  const load = async () => {
+    setIsLoading(true);
+
+    const result = await getAllReviews(page, 9);
+
+    if (result.data) {
+      setReviews(result.data.data);      // reviews array
+      setPaginations(result.data.meta);  // pagination info
+    }
+
+    setIsLoading(false);
+  };
+
+  load();
+}, [page]);
 
   return (
     <div className="min-h-screen bg-background">

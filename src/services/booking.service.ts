@@ -4,8 +4,12 @@ import { cookies } from "next/headers";
 const API = process.env.NEXT_PUBLIC_API;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-export type BookingStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
+export type BookingStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "REJECTED";
 
 export interface Booking {
   id: string;

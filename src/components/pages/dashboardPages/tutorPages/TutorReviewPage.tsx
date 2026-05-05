@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AlertCircle, CalendarDays, Inbox } from "lucide-react";
-import { getTutorReviews } from "@/lib/auth/tutorActions/actions";
+import { getAllReviews, getMyReceivedReviews, Review } from "@/services/review.service";
 
 function StarRating({ rating }: { rating: number }) {
   const rounded = Math.round(rating);
@@ -132,7 +132,7 @@ function RatingBar({
 }
 
 export default function TutorReviewPage() {
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -143,10 +143,10 @@ export default function TutorReviewPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getTutorReviews(page);
-      if (result) {
-        setReviews(result.data);
-        setPaginations(result.paginations);
+      const result = await getMyReceivedReviews(page);
+      if (result.data) {
+        setReviews(result.data.data);
+        setPaginations(result.data.meta)
       } else {
         setError("Failed to load reviews. Please try again.");
       }

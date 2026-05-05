@@ -1,12 +1,12 @@
-import { getUser } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Mail, Phone, ShieldCheck, User } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth";
 
 export default async function StudentProfilePage() {
-  const user = await getUser();
-  if (!user) redirect("/sign-in");
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
   const initials = user.name
     ?.split(" ")

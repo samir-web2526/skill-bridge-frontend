@@ -5,7 +5,6 @@ import SearchBar from "@/components/pages/homePage/SearchBar";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import CategorySection from "@/components/pages/homePage/CategorySection";
 import FeaturedTutors from "@/components/pages/homePage/FeaturedTutors";
-import BecomeTutorButton from "@/components/pages/homePage/BecomeTutorButton";
 import ReviewsSection from "@/components/pages/homePage/ReviewSection";
 import { getTutors, getTutorStats } from "@/services/tutors.service";
 import { getCategories } from "@/services/category.service";
@@ -383,13 +382,6 @@ export default async function SkillBridgeHome() {
             >
               Book a Free Class <ArrowRight size={16} className="ml-2" />
             </Button>
-
-            <BecomeTutorButton
-              role={user?.role}
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white rounded-xl px-8 font-semibold text-base bg-transparent"
-            >
-              Become a Tutor
-            </BecomeTutorButton>
           </div>
         </div>
       </section>
@@ -415,12 +407,6 @@ export default async function SkillBridgeHome() {
                 {label}
               </a>
             ))}
-            <BecomeTutorButton
-              role={user?.role}
-              className="text-xs text-zinc-500 hover:text-white transition-colors"
-            >
-              Become a Tutor
-            </BecomeTutorButton>
           </div>
           <div className="text-xs text-zinc-600">
             © 2025 SkillBridge. All rights reserved.

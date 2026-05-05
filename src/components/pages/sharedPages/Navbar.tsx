@@ -27,7 +27,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useTransition } from "react";
-import BecomeTutorButton from "../homePage/BecomeTutorButton";
 import { logout } from "@/services/auth.service";
 
 interface MenuItem {
@@ -97,13 +96,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
           <div className="flex items-center gap-2">
             {user ? (
               <div className="flex items-center gap-3">
-                <BecomeTutorButton
-                  role={user.role}
-                  className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
-                >
-                  Become a Tutor
-                </BecomeTutorButton>
-
                 <Button
                   asChild
                   size="sm"
@@ -134,10 +126,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
               </div>
             ) : (
               <>
-                <BecomeTutorButton className="inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer">
-                  Become a Tutor
-                </BecomeTutorButton>
-
                 <Button
                   asChild
                   variant="ghost"
@@ -221,13 +209,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                           <p className="text-xs text-zinc-400">{user.email}</p>
                         </div>
                       </div>
-                      <BecomeTutorButton
-                        role={user?.role}
-                        className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer"
-                      >
-                        Become a Tutor
-                      </BecomeTutorButton>
-
                       <Button
                         asChild
                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold gap-2"
@@ -241,10 +222,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                     </div>
                   ) : (
                     <>
-                      <BecomeTutorButton className="w-full inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50 font-semibold text-sm px-3 h-9 transition-colors cursor-pointer">
-                        Become a Tutor
-                      </BecomeTutorButton>
-
                       <Button
                         asChild
                         variant="outline"

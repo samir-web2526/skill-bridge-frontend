@@ -22,16 +22,19 @@ export interface Category {
 
 export interface CreateCategoryPayload {
   name: string;
+  description:string;
 }
 
 export interface UpdateCategoryPayload {
   name?: string;
+  description?:string;
 }
 
 export interface PaginationMeta {
   page: number;
   limit: number;
   total: number;
+  totalPage:number;
 }
 
 export interface CategoryFilters {
@@ -133,7 +136,8 @@ export async function createCategory(
 
 export async function getCategories(
   filters: CategoryFilters = {}
-): Promise<PaginatedResponse<Category[]>> {
+  
+): Promise<PaginatedResponse<Category>> {
   try {
     const qs = buildQueryString(filters);
 
@@ -146,17 +150,22 @@ export async function getCategories(
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, meta: null, error: json?.message ?? "Failed to fetch categories" };
+      return {
+        data: null,
+        meta: null,
+        error: json?.message ?? "Failed to fetch categories",
+      };
     }
 
     return {
-      data: json?.data?.data ?? [],      // ← was json?.data
-      meta: json?.data?.meta ?? null,    // ← was json?.meta
+      data: json?.data?.data ?? [],
+      meta: json?.data?.meta ?? null,
       error: null,
     };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
     console.error("[getCategories]", message);
+
     return { data: null, meta: null, error: message };
   }
 }

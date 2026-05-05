@@ -15,12 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, CalendarDays, AlertCircle, Inbox } from "lucide-react";
 import { toast } from "sonner";
-import {
-  deleteReview,
-  getStudentReviews,
-  updateReview,
-} from "@/lib/auth/studentActions/actions";
 import { ReviewDialog } from "./ReviewDialog";
+import { deleteReview, getMyGivenReviews, Review, updateReview } from "@/services/review.service";
 
 function StarRating({ rating }: { rating: number }) {
   const rounded = Math.round(rating);
@@ -106,7 +102,7 @@ function StatCard({
 
 
 export default function StudentReviewPage() {
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -124,10 +120,10 @@ export default function StudentReviewPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getStudentReviews(page);
-      if (result) {
-        setReviews(result.data);
-        setPaginations(result.paginations);
+      const result = await getMyGivenReviews(page);
+      if (result.data) {
+        setReviews(result.data?.data);
+        setPaginations(result.data.meta);
       } else {
         setError("Failed to load reviews. Please try again.");
       }

@@ -1,4 +1,3 @@
-import { getUser } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -11,13 +10,14 @@ import {
   Star,
   User,
 } from "lucide-react";
-import { getTutorProfile } from "@/lib/auth/tutorActions/actions";
+import { getMyTutorProfile } from "@/services/tutors.service";
+import { getCurrentUser } from "@/lib/auth";
 
 export default async function TutorProfilePage() {
-  const user = await getUser();
-  if (!user) redirect("/sign-in");
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
-  const profile = await getTutorProfile();
+  const profile = await getMyTutorProfile();
 
   const initials = user.name
     ?.split(" ")

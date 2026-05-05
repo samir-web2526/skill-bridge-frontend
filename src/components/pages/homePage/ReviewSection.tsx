@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,28 +5,39 @@ import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { ReviewCard } from "../ReviewPage/ReviewCard";
 import { Button } from "@/components/ui/button";
-import { getAllReviews } from "@/services/review.service";
+import { getAllReviews, Review } from "@/services/review.service";
 
 export default function ReviewsSection() {
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
-    async function load() {
+    const load = async () => {
+      setIsLoading(true);
+
       const result = await getAllReviews(1, 3);
-      if (result?.data) setReviews(result.data);
-    }
+
+      if (result.data) {
+        setReviews(result.data.data);
+      }
+
+      setIsLoading(false);
+    };
+
     load();
   }, []);
 
-  if (reviews.length === 0) return null;
+  if (!isLoading && reviews.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-5">
       <div className="grid md:grid-cols-3 gap-5">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
+        {Array.isArray(reviews) &&
+          reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
       </div>
 
       <div className="flex justify-center">

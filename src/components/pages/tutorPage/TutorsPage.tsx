@@ -4,13 +4,15 @@ import { useState, useEffect } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TutorFilter, TutorFilters } from "./TutorFilter";
-import { FormattedTutor } from "./TutorCard";
 import { TutorList } from "./TutorList";
 import { TutorProfile } from "./TutorProfile";
-import { getTutors, getCategories } from "@/services/tutors.service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
+import { getCategories } from "@/services/category.service";
+import { getTutors } from "@/services/tutors.service";
+
+import { formatTutor, FormattedTutor } from "./TutorCard";
 
 const DEFAULT_FILTERS: TutorFilters = {
   search: "",
@@ -56,24 +58,43 @@ export default function TutorsPage() {
   ].filter(Boolean).length;
 
   useEffect(() => {
-    getCategories().then(setCategories);
-  }, []);
+  const loadCategories = async () => {
+    const res = await getCategories();
 
-  useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      setError(null);
-      const result = await getTutors(filters, page);
-      if (result) {
-        setTutors(result.data);
-        setPaginations(result.paginations);
-      } else {
-        setError("Failed to load tutors. Please try again.");
-      }
-      setIsLoading(false);
-    };
-    load();
-  }, [filters, page]);
+    if (res.data && Array.isArray(res.data)) {
+      setCategories(res.data.map((cat) => cat.name));
+    }
+  };
+
+  loadCategories();
+}, []);
+
+useEffect(() => {
+  const load = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    const result = await getTutors({
+      searchTerm: filters.search || undefined,
+      category: filters.category !== "All" ? filters.category : undefined,
+      page,
+      limit: 10,
+    });
+
+    if (result.data) {
+      const formatted = result.data.map(formatTutor);
+      setTutors(formatted);
+      setPaginations(result.meta);
+    } else {
+      setTutors([]);
+      setError(result.error);
+    }
+
+    setIsLoading(false);
+  };
+
+  load();
+}, [filters, page]);
 
   const handleFilterChange = (newFilters: TutorFilters) => {
     setFilters(newFilters);

@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { deleteReview, getAllReviews } from "@/lib/auth/adminActions/actions";
 import {
   AlertCircle,
   CalendarDays,
@@ -22,6 +21,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { deleteReview, getAllReviews, Review } from "@/services/review.service";
 
 function InitialAvatar({
   name,
@@ -149,8 +149,7 @@ const FILTER_OPTIONS = [
 ];
 
 export default function AdminReviewsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,9 +164,9 @@ export default function AdminReviewsPage() {
       setIsLoading(true);
       setError(null);
       const result = await getAllReviews(page);
-      if (result) {
-        setReviews(result.data);
-        setPaginations(result.paginations);
+      if (result.data) {
+        setReviews(result.data.data);
+        setPaginations(result.data.meta);
       } else {
         setError("Failed to load reviews. Please try again.");
       }
@@ -220,8 +219,8 @@ export default function AdminReviewsPage() {
       const q = search.toLowerCase();
       const matchSearch =
         !q ||
-        r.user?.name?.toLowerCase().includes(q) ||
-        r.user?.email?.toLowerCase().includes(q) ||
+        r.tutor?.user?.name?.toLowerCase().includes(q) ||
+        r.tutor?.user?.email?.toLowerCase().includes(q) ||
         r.tutor?.user?.name?.toLowerCase().includes(q) ||
         r.comment?.toLowerCase().includes(q);
       return matchFilter && matchSearch;
@@ -420,15 +419,15 @@ export default function AdminReviewsPage() {
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
                         <InitialAvatar
-                          name={review.user?.name ?? "?"}
+                          name={review.tutor?.user?.name ?? "?"}
                           variant="emerald"
                         />
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-zinc-800 truncate">
-                            {review.user?.name ?? "—"}
+                            {review.tutor?.user?.name ?? "—"}
                           </p>
                           <p className="text-xs text-zinc-400 truncate">
-                            {review.user?.email ?? ""}
+                            {review.tutor?.user?.email ?? ""}
                           </p>
                         </div>
                       </div>

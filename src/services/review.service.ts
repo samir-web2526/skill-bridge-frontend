@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 import { cookies } from "next/headers";
 
@@ -13,16 +14,26 @@ export interface Review {
   tutorId: string;
   userId: string;
   createdAt: string;
+  tutor?: {
+  id: string;
+  bio: string;
+  hourlyRate: number;
   user?: {
     id: string;
     name: string;
     email: string;
   };
-  tutor?: {
-    id: string;
-    bio: string;
-    hourlyRate: number;
+};
+}
+
+export interface ReviewResponse {
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPage:number
   };
+  data: Review[];
 }
 
 export interface CreateReviewPayload {
@@ -81,107 +92,138 @@ export async function createReview(
   }
 }
 
-// GET /api/v1/reviews  (Public)
-export async function getAllReviews(): Promise<ServiceResponse<Review[]>> {
+export async function getAllReviews(
+  page = 1,
+  limit = 9
+): Promise<ServiceResponse<ReviewResponse>> {
   try {
-    const result = await fetch(`${API}/api/v1/reviews`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
+    const result = await fetch(
+      `${API}/api/v1/reviews?page=${page}&limit=${limit}`,
+      {
+        method: "GET",
+        cache: "no-store",
+      }
+    );
 
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, error: json?.message ?? "Failed to fetch reviews" };
+      return { data: null, error: json?.message };
     }
 
-    return { data: json?.data ?? [], error: null };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getAllReviews]", message);
-    return { data: null, error: message };
+    return {
+      data: {
+        meta: {
+          page: json.data.meta.page,
+          limit: json.data.meta.limit,
+          total: json.data.meta.total,
+          totalPage: json.data.meta.totalPage ?? 1, // 🔥 fallback fix
+        },
+        data: json.data.data,
+      },
+      error: null,
+    };
+  } catch (err: any) {
+    return { data: null, error: err.message };
   }
 }
-
 // GET /api/v1/reviews/my-given-reviews  (STUDENT only)
-export async function getMyGivenReviews(): Promise<ServiceResponse<Review[]>> {
+export async function getMyGivenReviews(
+  page = 1
+): Promise<ServiceResponse<ReviewResponse>> {
   try {
     const accessToken = await getAccessToken();
 
-    const result = await fetch(`${API}/api/v1/reviews/my-given-reviews`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${API}/api/v1/reviews/my-given-reviews?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
+      }
+    );
 
-    const json = await result.json();
+    const json = await res.json();
 
-    if (!result.ok) {
-      return { data: null, error: json?.message ?? "Failed to fetch your reviews" };
+    if (!res.ok) {
+      return { data: null, error: json?.message ?? "Failed to fetch reviews" };
     }
 
-    return { data: json?.data ?? [], error: null };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getMyGivenReviews]", message);
-    return { data: null, error: message };
+    return { data: json, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Something went wrong",
+    };
   }
 }
 
 // GET /api/v1/reviews/my-received-reviews  (TUTOR only)
-export async function getMyReceivedReviews(): Promise<ServiceResponse<Review[]>> {
+export async function getMyReceivedReviews(
+  page = 1
+): Promise<ServiceResponse<ReviewResponse>> {
   try {
     const accessToken = await getAccessToken();
 
-    const result = await fetch(`${API}/api/v1/reviews/my-received-reviews`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${API}/api/v1/reviews/my-received-reviews?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
+      }
+    );
 
-    const json = await result.json();
+    const json = await res.json();
 
-    if (!result.ok) {
-      return { data: null, error: json?.message ?? "Failed to fetch received reviews" };
+    if (!res.ok) {
+      return { data: null, error: json?.message ?? "Failed to fetch reviews" };
     }
 
-    return { data: json?.data ?? [], error: null };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getMyReceivedReviews]", message);
-    return { data: null, error: message };
+    return { data: json, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Something went wrong",
+    };
   }
 }
 
 // GET /api/v1/reviews/tutor/:tutorId  (Public)
 export async function getReviewsByTutorId(
-  tutorId: string
-): Promise<ServiceResponse<Review[]>> {
+  tutorId: string,
+  page = 1
+): Promise<ServiceResponse<ReviewResponse>> {
   try {
-    const result = await fetch(`${API}/api/v1/reviews/tutor/${tutorId}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${API}/api/v1/reviews/tutor/${tutorId}?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
-    const json = await result.json();
+    const json = await res.json();
 
-    if (!result.ok) {
-      return { data: null, error: json?.message ?? "Failed to fetch tutor reviews" };
+    if (!res.ok) {
+      return { data: null, error: json?.message ?? "Failed to fetch reviews" };
     }
 
-    return { data: json?.data ?? [], error: null };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getReviewsByTutorId]", message);
-    return { data: null, error: message };
+    return { data: json, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Something went wrong",
+    };
   }
 }
 

@@ -14,15 +14,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, Plus, AlertCircle, Inbox } from "lucide-react";
-import {
-  createCategory,
-  deleteCategory,
-  getAllCategories,
-  updateCategory,
-} from "@/lib/auth/adminActions/actions";
 import { CategoryDialog } from "./categoryDialog";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import { toast } from "sonner";
+import { Category, createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category.service";
 
 function StatCard({
   label,
@@ -49,7 +44,7 @@ function StatCard({
 }
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,11 +63,11 @@ export default function AdminCategoriesPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getAllCategories(page);
-      if (result) {
-        setCategories(result.data);
-        setPaginations(result.paginations);
-      } else {
+      const result = await getCategories({page});
+   if (result?.data) {
+  setCategories(Array.isArray(result.data) ? result.data : []);
+  setPaginations(result.meta);
+}else {
         setError("Failed to load categories. Please try again.");
       }
       setIsLoading(false);
@@ -114,34 +109,39 @@ export default function AdminCategoriesPage() {
     setIsSubmitting(true);
 
     if (dialogMode === "create") {
-      const result = await createCategory(
-        inputName.trim(),
-        inputDescription.trim(),
-      );
-      if (result) {
-        toast.success("Category created successfully.");
-        setCategories((prev) => [result, ...prev]);
-        setRefresh((prev) => prev + 1);
-      }
+      const result = await createCategory({
+  name: inputName.trim(),
+  description: inputDescription.trim(),
+});
+      if (result && result.data) {
+  toast.success("Category created successfully.");
+
+  setCategories((prev) => [result.data!, ...prev]);
+
+  setRefresh((prev) => prev + 1);
+}
     } else if (dialogMode === "edit" && selectedCategory) {
-      const result = await updateCategory(
-        selectedCategory.id,
-        inputName.trim(),
-        inputDescription.trim(),
-      );
+     const result = await updateCategory(selectedCategory.id, {
+  name: inputName.trim(),
+  description: inputDescription.trim(),
+});
       if (result?.error) {
         toast.error(result.error);
         setIsSubmitting(false);
         setDialogOpen(false);
         return;
       }
-      if (result) {
-        toast.success("Category updated successfully.");
-        setCategories((prev) =>
-          prev.map((c) => (c.id === selectedCategory.id ? result : c)),
-        );
-        setRefresh((prev) => prev + 1);
-      }
+     if (result?.data) {
+  toast.success("Category updated successfully.");
+
+  setCategories((prev) =>
+    prev.map((c) =>
+      c.id === selectedCategory.id ? result.data! : c
+    )
+  );
+
+  setRefresh((prev) => prev + 1);
+}
     }
 
     setIsSubmitting(false);
