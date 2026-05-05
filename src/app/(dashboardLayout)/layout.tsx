@@ -13,7 +13,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { getUser } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth";
+
 
 import { redirect } from "next/navigation";
 
@@ -27,9 +28,9 @@ export default async function DashboardLayout({
   tutor: React.ReactNode;
 }) {
  
-const user = await getUser()
+const user = await getCurrentUser()
 
-  if (!user) redirect("/sign-in");
+  if (!user) redirect("/login");
 
   const roleLabel = {
     ADMIN: "Admin Panel",

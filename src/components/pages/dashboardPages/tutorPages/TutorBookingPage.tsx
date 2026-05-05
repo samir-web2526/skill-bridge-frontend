@@ -15,10 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { AlertCircle, CalendarDays, Inbox, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  getTutorBookings,
-  updateTutorBookingStatus,
-} from "@/lib/auth/tutorActions/actions";
+import { getBookings, updateBookingStatus } from "@/services/booking.service";
 
 const STATUS_CONFIG: Record<
   string,
@@ -101,21 +98,21 @@ export default function TutorBookingPage() {
 
   const { page, handlePageChange } = usePagination();
 
-  useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      setError(null);
-      const result = await getTutorBookings(page);
-      if (result) {
-        setBookings(result.data);
-        setPaginations(result.paginations);
-      } else {
-        setError("Failed to load bookings. Please try again.");
-      }
-      setIsLoading(false);
-    };
-    load();
-  }, [page]);
+ useEffect(() => {
+  const load = async () => {
+    setIsLoading(true);
+    setError(null);
+    const result = await getBookings({ page });
+    if (result.error) {
+      setError(result.error);
+    } else {
+      setBookings(result.data ?? []);
+      setPaginations(result.meta);
+    }
+    setIsLoading(false);
+  };
+  load();
+}, [page]);
   const stats = useMemo(
     () => ({
       total: paginations?.total ?? bookings.length,
@@ -126,17 +123,17 @@ export default function TutorBookingPage() {
     [bookings, paginations],
   );
 
-  const handleStatusChange = async (bookingId: string, newStatus: string) => {
-    const result = await updateTutorBookingStatus(bookingId, newStatus);
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Status updated!");
-      setBookings((prev) =>
-        prev.map((b) => (b.id === bookingId ? { ...b, status: newStatus } : b)),
-      );
-    }
-  };
+ const handleStatusChange = async (bookingId: string, newStatus: string) => {
+  const result = await updateBookingStatus(bookingId, { status: newStatus as any });
+  if (result?.error) {
+    toast.error(result.error);
+  } else {
+    toast.success("Status updated!");
+    setBookings((prev) =>
+      prev.map((b) => (b.id === bookingId ? { ...b, status: newStatus } : b))
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#faf9f7]">

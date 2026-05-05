@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -14,16 +15,27 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle, Inbox, Search } from "lucide-react";
 import { TutorProfileDialog } from "./TutorProfile";
 import { BookingDialog } from "./BookingDialog";
-import {
-  getAvailableTutors,
-  createBooking,
-} from "@/lib/auth/studentActions/actions";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import { toast } from "sonner";
+import { createBooking } from "@/services/booking.service";
 
-function StarRating({ rating, count }: { rating: number; count?: number }) {
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function StarRating({ rating, count }: { rating: number | null; count?: number }) {
+  // null/undefined/0 হলে "No rating" দেখাও
+  if (!rating || rating === 0) {
+    return (
+      <div>
+        <p className="text-xs text-zinc-300 font-medium">No rating</p>
+        {count !== undefined && (
+          <p className="text-[11px] text-zinc-300 mt-0.5">({count} reviews)</p>
+        )}
+      </div>
+    );
+  }
+
   const rounded = Math.round(rating);
   return (
     <div>
@@ -102,6 +114,8 @@ function StatCard({
   );
 }
 
+// ─── Main Component ───────────────────────────────────────────────────────────
+
 export default function StudentTutorPage() {
   const [tutors, setTutors] = useState<any[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
@@ -109,7 +123,6 @@ export default function StudentTutorPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [selectedTutor, setSelectedTutor] = useState<any | null>(null);
-
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [selectedTutorId, setSelectedTutorId] = useState("");
   const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
@@ -119,33 +132,53 @@ export default function StudentTutorPage() {
 
   const { page, handlePageChange } = usePagination();
 
+  // ── Fetch — REST call directly, "use server" action কে client useEffect থেকে
+  //    call না করে সরাসরি API hit করা safe ──
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getAvailableTutors(page);
-      if (result) {
-        setTutors(result.data);
-        setPaginations(result.paginations);
-      } else {
-        setError("Failed to load tutors. Please try again.");
+      try {
+        const params = new URLSearchParams();
+        params.append("page", String(page));
+        params.append("limit", "10");
+        params.append("isAvailable", "true"); // backend field name
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/api/v1/tutors?${params.toString()}`,
+          { cache: "no-store" }
+        );
+        const json = await res.json();
+
+        if (!res.ok) {
+          setError(json?.message ?? "Failed to load tutors");
+          return;
+        }
+
+        setTutors(json?.data?.data ?? []);
+        setPaginations(json?.data?.meta ?? null);
+      } catch {
+        setError("Something went wrong. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     load();
   }, [page]);
 
+  // ── Stats — hourlyRate Decimal string থেকে number-এ convert করো ──
   const stats = useMemo(() => {
     const total = paginations?.total ?? tutors.length;
+    const rated = tutors.filter((t) => t.averageRating && t.averageRating > 0);
     const avgRating =
-      tutors.length > 0
-        ? tutors.reduce((s, t) => s + (Number(t.averageRating) || 0), 0) /
-          tutors.length
+      rated.length > 0
+        ? rated.reduce((s, t) => s + Number(t.averageRating), 0) / rated.length
         : 0;
     const avgRate =
       tutors.length > 0
         ? Math.round(
-            tutors.reduce((s, t) => s + (t.hourlyRate || 0), 0) / tutors.length,
+            tutors.reduce((s, t) => s + Number(t.hourlyRate ?? 0), 0) /
+              tutors.length
           )
         : 0;
     return { total, avgRating, avgRate };
@@ -162,12 +195,13 @@ export default function StudentTutorPage() {
     return tutors.filter((t) => {
       const matchCat =
         activeCategory === "All" || t.category?.name === activeCategory;
-      const q = search.toLowerCase();
+      const q = search.toLowerCase().trim();
       const matchSearch =
         !q ||
         t.user?.name?.toLowerCase().includes(q) ||
         t.user?.email?.toLowerCase().includes(q) ||
-        t.category?.name?.toLowerCase().includes(q);
+        t.category?.name?.toLowerCase().includes(q) ||
+        t.bio?.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
   }, [tutors, activeCategory, search]);
@@ -179,22 +213,23 @@ export default function StudentTutorPage() {
     setBookingDialogOpen(true);
   };
 
-  const handleBookingSubmit = async () => {
-    if (!selectedTutorId) return;
-    setIsBookingSubmitting(true);
-    const result = await createBooking({
-      tutorId: selectedTutorId,
-      date: new Date().toISOString(),
-    });
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Booking created!");
-      setBookingDialogOpen(false);
-      setSelectedTutorId("");
-    }
-    setIsBookingSubmitting(false);
-  };
+  const handleBookingSubmit = async (data: {
+  tutorId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+}) => {
+  setIsBookingSubmitting(true);
+  const result = await createBooking(data);
+  if (result?.error) {
+    toast.error(result.error);
+  } else {
+    toast.success("Booking created!");
+    setBookingDialogOpen(false);
+    setSelectedTutorId("");
+  }
+  setIsBookingSubmitting(false);
+};
 
   return (
     <div className="min-h-screen bg-[#faf9f7]">
@@ -222,27 +257,29 @@ export default function StudentTutorPage() {
             {error}
           </div>
         )}
+
+        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard
             label="Available tutors"
             value={stats.total}
-            dotColor="bg-zinc-300"
             valueColor="text-zinc-800"
           />
           <StatCard
-              label="Avg rating"
-              value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
-              valueColor="text-amber-500"
-              starDisplay
-              avgRating={stats.avgRating}
-            />
+            label="Avg rating"
+            value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
+            valueColor="text-amber-500"
+            starDisplay
+            avgRating={stats.avgRating}
+          />
           <StatCard
             label="Avg rate/hr"
             value={stats.avgRate > 0 ? `৳${stats.avgRate}` : "—"}
-            dotColor="bg-emerald-500"
             valueColor="text-emerald-700"
           />
         </div>
+
+        {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative">
             <Search
@@ -273,6 +310,8 @@ export default function StudentTutorPage() {
             ))}
           </div>
         </div>
+
+        {/* Table */}
         <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
@@ -281,11 +320,13 @@ export default function StudentTutorPage() {
                   (h, i) => (
                     <TableHead
                       key={i}
-                      className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
+                      className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${
+                        i === 0 ? "pl-6" : ""
+                      } ${i === 5 ? "text-right pr-6" : ""}`}
                     >
                       {h}
                     </TableHead>
-                  ),
+                  )
                 )}
               </TableRow>
             </TableHeader>
@@ -331,12 +372,14 @@ export default function StudentTutorPage() {
               ) : (
                 filtered.map((tutor, idx) => {
                   const { bg: catBg, text: catText } = getCategoryColor(
-                    tutor.category?.name ?? "",
+                    tutor.category?.name ?? ""
                   );
                   return (
                     <TableRow
                       key={tutor.id}
-                      className={`hover:bg-zinc-50 transition-colors ${idx % 2 === 1 ? "bg-zinc-50/50" : ""}`}
+                      className={`hover:bg-zinc-50 transition-colors ${
+                        idx % 2 === 1 ? "bg-zinc-50/50" : ""
+                      }`}
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
@@ -362,7 +405,7 @@ export default function StudentTutorPage() {
 
                       <TableCell className="py-4">
                         <span className="text-sm font-semibold text-emerald-700">
-                          ৳{tutor.hourlyRate}/hr
+                          ৳{Number(tutor.hourlyRate).toLocaleString()}/hr
                         </span>
                       </TableCell>
 
@@ -398,6 +441,7 @@ export default function StudentTutorPage() {
             </TableBody>
           </Table>
         </div>
+
         {paginations && (
           <div className="pt-2">
             <Pagination

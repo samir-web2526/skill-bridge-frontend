@@ -7,7 +7,7 @@ import { TutorFilter, TutorFilters } from "./TutorFilter";
 import { FormattedTutor } from "./TutorCard";
 import { TutorList } from "./TutorList";
 import { TutorProfile } from "./TutorProfile";
-import { getTutors, getCategories } from "@/services/tutors.services";
+import { getTutors, getCategories } from "@/services/tutors.service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";

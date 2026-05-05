@@ -1,8 +1,8 @@
 "use client";
 
+import { getMyTutorProfile } from "@/services/tutors.service";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { getTutorProfile } from "@/lib/auth/tutorActions/actions";
 
 export default function BecomeTutorButton({
   role,
@@ -29,7 +29,7 @@ export default function BecomeTutorButton({
       return;
     }
 
-    const profile = await getTutorProfile();
+    const profile = await getMyTutorProfile();
 
     if (profile) {
       toast.info("You already have a tutor profile.", {

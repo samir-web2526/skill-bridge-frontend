@@ -5,9 +5,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { getAllReviews } from "@/lib/reviews/reviewsActions";
 import { ReviewCard } from "../ReviewPage/ReviewCard";
 import { Button } from "@/components/ui/button";
+import { getAllReviews } from "@/services/review.service";
 
 export default function ReviewsSection() {
   const [reviews, setReviews] = useState<any[]>([]);

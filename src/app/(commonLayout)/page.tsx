@@ -2,14 +2,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, ArrowRight, CheckCircle } from "lucide-react";
 import SearchBar from "@/components/pages/homePage/SearchBar";
-import { getAllCategories } from "@/lib/auth/adminActions/actions";
-import { getStats, getTutors } from "@/services/tutors.services";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import CategorySection from "@/components/pages/homePage/CategorySection";
 import FeaturedTutors from "@/components/pages/homePage/FeaturedTutors";
 import BecomeTutorButton from "@/components/pages/homePage/BecomeTutorButton";
-import { getUser } from "@/lib/auth/session";
 import ReviewsSection from "@/components/pages/homePage/ReviewSection";
+import { getTutors, getTutorStats } from "@/services/tutors.service";
+import { getCategories } from "@/services/category.service";
+import { getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -64,167 +64,30 @@ function HeroBanner() {
         <rect x="68" y="290" width="88" height="20" rx="5" fill="#34d399" />
         <rect x="73" y="272" width="80" height="20" rx="5" fill="#059669" />
         <rect x="64" y="254" width="96" height="20" rx="5" fill="#10b981" />
-        <rect
-          x="88"
-          y="257"
-          width="3"
-          height="14"
-          rx="1.5"
-          fill="#fff"
-          opacity="0.3"
-        />
-        <rect
-          x="95"
-          y="257"
-          width="3"
-          height="14"
-          rx="1.5"
-          fill="#fff"
-          opacity="0.3"
-        />
-        <rect
-          x="83"
-          y="275"
-          width="3"
-          height="14"
-          rx="1.5"
-          fill="#fff"
-          opacity="0.3"
-        />
-        <rect
-          x="90"
-          y="275"
-          width="3"
-          height="14"
-          rx="1.5"
-          fill="#fff"
-          opacity="0.3"
-        />
+        <rect x="88" y="257" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
+        <rect x="95" y="257" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
+        <rect x="83" y="275" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
+        <rect x="90" y="275" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
 
-        <path
-          d="M172 308 Q218 288 258 308 Q298 288 344 308 L344 336 Q298 316 258 336 Q218 316 172 336 Z"
-          fill="#fff"
-          stroke="#d1fae5"
-          strokeWidth="1.5"
-        />
-        <line
-          x1="258"
-          y1="308"
-          x2="258"
-          y2="336"
-          stroke="#d1fae5"
-          strokeWidth="1.5"
-        />
-        <line
-          x1="190"
-          y1="318"
-          x2="246"
-          y2="313"
-          stroke="#a7f3d0"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="190"
-          y1="325"
-          x2="246"
-          y2="320"
-          stroke="#a7f3d0"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="190"
-          y1="332"
-          x2="246"
-          y2="327"
-          stroke="#a7f3d0"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="270"
-          y1="313"
-          x2="326"
-          y2="318"
-          stroke="#a7f3d0"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="270"
-          y1="320"
-          x2="326"
-          y2="325"
-          stroke="#a7f3d0"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <line
-          x1="270"
-          y1="327"
-          x2="326"
-          y2="332"
-          stroke="#a7f3d0"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
+        <path d="M172 308 Q218 288 258 308 Q298 288 344 308 L344 336 Q298 316 258 336 Q218 316 172 336 Z" fill="#fff" stroke="#d1fae5" strokeWidth="1.5" />
+        <line x1="258" y1="308" x2="258" y2="336" stroke="#d1fae5" strokeWidth="1.5" />
+        <line x1="190" y1="318" x2="246" y2="313" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="190" y1="325" x2="246" y2="320" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="190" y1="332" x2="246" y2="327" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="313" x2="326" y2="318" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="320" x2="326" y2="325" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="327" x2="326" y2="332" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
 
         <rect x="352" y="262" width="112" height="74" rx="6" fill="#1f2937" />
         <rect x="357" y="267" width="102" height="64" rx="4" fill="#064e3b" />
         <rect x="360" y="270" width="96" height="58" rx="3" fill="#065f46" />
-        <rect
-          x="367"
-          y="278"
-          width="52"
-          height="4"
-          rx="2"
-          fill="#34d399"
-          opacity="0.9"
-        />
-        <rect
-          x="367"
-          y="287"
-          width="38"
-          height="4"
-          rx="2"
-          fill="#6ee7b7"
-          opacity="0.7"
-        />
-        <rect
-          x="373"
-          y="296"
-          width="46"
-          height="4"
-          rx="2"
-          fill="#a7f3d0"
-          opacity="0.6"
-        />
-        <rect
-          x="373"
-          y="305"
-          width="30"
-          height="4"
-          rx="2"
-          fill="#6ee7b7"
-          opacity="0.7"
-        />
-        <rect
-          x="367"
-          y="314"
-          width="58"
-          height="4"
-          rx="2"
-          fill="#34d399"
-          opacity="0.5"
-        />
+        <rect x="367" y="278" width="52" height="4" rx="2" fill="#34d399" opacity="0.9" />
+        <rect x="367" y="287" width="38" height="4" rx="2" fill="#6ee7b7" opacity="0.7" />
+        <rect x="373" y="296" width="46" height="4" rx="2" fill="#a7f3d0" opacity="0.6" />
+        <rect x="373" y="305" width="30" height="4" rx="2" fill="#6ee7b7" opacity="0.7" />
+        <rect x="367" y="314" width="58" height="4" rx="2" fill="#34d399" opacity="0.5" />
         <rect x="428" y="314" width="3" height="8" rx="1" fill="#34d399">
-          <animate
-            attributeName="opacity"
-            values="1;0;1"
-            dur="1.1s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite" />
         </rect>
         <rect x="337" y="336" width="142" height="8" rx="4" fill="#374151" />
         <rect x="387" y="336" width="42" height="5" rx="2.5" fill="#1f2937" />
@@ -233,361 +96,98 @@ function HeroBanner() {
         <rect x="143" y="276" width="13" height="50" rx="6" fill="#fde68a" />
         <ellipse cx="128" cy="328" rx="11" ry="6" fill="#1f2937" />
         <ellipse cx="150" cy="328" rx="11" ry="6" fill="#1f2937" />
-
         <rect x="116" y="218" width="46" height="60" rx="12" fill="#34d399" />
-
-        <path
-          d="M116 233 Q98 253 109 267"
-          stroke="#fde68a"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M162 233 Q176 253 149 267"
-          stroke="#fde68a"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fill="none"
-        />
-
+        <path d="M116 233 Q98 253 109 267" stroke="#fde68a" strokeWidth="8" strokeLinecap="round" fill="none" />
+        <path d="M162 233 Q176 253 149 267" stroke="#fde68a" strokeWidth="8" strokeLinecap="round" fill="none" />
         <rect x="106" y="257" width="38" height="28" rx="4" fill="#059669" />
-        <line
-          x1="125"
-          y1="259"
-          x2="125"
-          y2="283"
-          stroke="#fff"
-          strokeWidth="1"
-          opacity="0.4"
-        />
-
+        <line x1="125" y1="259" x2="125" y2="283" stroke="#fff" strokeWidth="1" opacity="0.4" />
         <circle cx="139" cy="203" r="21" fill="#fde68a" />
-
-        <path
-          d="M118 196 Q121 177 139 174 Q157 177 160 196 Q153 186 139 184 Q125 186 118 196Z"
-          fill="#92400e"
-        />
-
+        <path d="M118 196 Q121 177 139 174 Q157 177 160 196 Q153 186 139 184 Q125 186 118 196Z" fill="#92400e" />
         <circle cx="132" cy="201" r="2.5" fill="#1f2937" />
         <circle cx="146" cy="201" r="2.5" fill="#1f2937" />
         <circle cx="133" cy="200" r="1" fill="#fff" />
         <circle cx="147" cy="200" r="1" fill="#fff" />
-
-        <path
-          d="M133 209 Q139 214 145 209"
-          stroke="#92400e"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          fill="none"
-        />
+        <path d="M133 209 Q139 214 145 209" stroke="#92400e" strokeWidth="1.5" strokeLinecap="round" fill="none" />
 
         <rect x="234" y="276" width="13" height="52" rx="6" fill="#fed7aa" />
         <rect x="255" y="276" width="13" height="52" rx="6" fill="#fed7aa" />
         <ellipse cx="240" cy="330" rx="11" ry="6" fill="#7c3aed" />
         <ellipse cx="261" cy="330" rx="11" ry="6" fill="#7c3aed" />
-
         <rect x="226" y="212" width="48" height="66" rx="12" fill="#6366f1" />
-
-        <path
-          d="M226 228 Q208 258 228 272"
-          stroke="#fed7aa"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M274 228 Q293 254 270 272"
-          stroke="#fed7aa"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fill="none"
-        />
-
+        <path d="M226 228 Q208 258 228 272" stroke="#fed7aa" strokeWidth="8" strokeLinecap="round" fill="none" />
+        <path d="M274 228 Q293 254 270 272" stroke="#fed7aa" strokeWidth="8" strokeLinecap="round" fill="none" />
         <circle cx="250" cy="195" r="23" fill="#fed7aa" />
-
-        <path
-          d="M227 189 Q230 166 250 163 Q270 166 273 189 Q265 177 250 175 Q235 177 227 189Z"
-          fill="#1c1917"
-        />
-
-        <rect
-          x="237"
-          y="190"
-          width="12"
-          height="8"
-          rx="3"
-          fill="none"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-        />
-        <rect
-          x="252"
-          y="190"
-          width="12"
-          height="8"
-          rx="3"
-          fill="none"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-        />
-        <line
-          x1="249"
-          y1="194"
-          x2="252"
-          y2="194"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-        />
-
+        <path d="M227 189 Q230 166 250 163 Q270 166 273 189 Q265 177 250 175 Q235 177 227 189Z" fill="#1c1917" />
+        <rect x="237" y="190" width="12" height="8" rx="3" fill="none" stroke="#6366f1" strokeWidth="1.5" />
+        <rect x="252" y="190" width="12" height="8" rx="3" fill="none" stroke="#6366f1" strokeWidth="1.5" />
+        <line x1="249" y1="194" x2="252" y2="194" stroke="#6366f1" strokeWidth="1.5" />
         <circle cx="243" cy="194" r="2" fill="#1f2937" />
         <circle cx="258" cy="194" r="2" fill="#1f2937" />
-
-        <path
-          d="M244 203 Q250 208 256 203"
-          stroke="#c2410c"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          fill="none"
-        />
+        <path d="M244 203 Q250 208 256 203" stroke="#c2410c" strokeWidth="1.5" strokeLinecap="round" fill="none" />
 
         <rect x="360" y="271" width="13" height="56" rx="6" fill="#fecaca" />
         <rect x="380" y="271" width="13" height="56" rx="6" fill="#fecaca" />
         <ellipse cx="366" cy="329" rx="11" ry="6" fill="#92400e" />
         <ellipse cx="386" cy="329" rx="11" ry="6" fill="#92400e" />
-
         <rect x="355" y="207" width="44" height="66" rx="12" fill="#f59e0b" />
-
-        <path
-          d="M399 220 Q418 193 412 172"
-          stroke="#fecaca"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M355 220 Q337 248 353 265"
-          stroke="#fecaca"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fill="none"
-        />
-
+        <path d="M399 220 Q418 193 412 172" stroke="#fecaca" strokeWidth="8" strokeLinecap="round" fill="none" />
+        <path d="M355 220 Q337 248 353 265" stroke="#fecaca" strokeWidth="8" strokeLinecap="round" fill="none" />
         <g transform="rotate(-22, 412, 158)">
           <rect x="408" y="150" width="8" height="26" rx="3" fill="#fbbf24" />
           <polygon points="408,150 416,150 412,139" fill="#fde68a" />
           <rect x="408" y="174" width="8" height="5" rx="1" fill="#f87171" />
         </g>
-
         <circle cx="377" cy="191" r="22" fill="#fecaca" />
-
-        <path
-          d="M355 184 Q362 162 377 159 Q392 162 399 184 Q393 171 377 169 Q361 171 355 184Z"
-          fill="#7f1d1d"
-        />
-
+        <path d="M355 184 Q362 162 377 159 Q392 162 399 184 Q393 171 377 169 Q361 171 355 184Z" fill="#7f1d1d" />
         <path d="M399 177 Q416 170 413 188 Q408 183 399 186Z" fill="#7f1d1d" />
-
         <circle cx="370" cy="189" r="2.5" fill="#1f2937" />
         <circle cx="384" cy="189" r="2.5" fill="#1f2937" />
         <circle cx="371" cy="188" r="1" fill="#fff" />
         <circle cx="385" cy="188" r="1" fill="#fff" />
+        <path d="M371 198 Q377 204 383 198" stroke="#9f1239" strokeWidth="1.5" strokeLinecap="round" fill="none" />
 
-        <path
-          d="M371 198 Q377 204 383 198"
-          stroke="#9f1239"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-
-        <text
-          x="48"
-          y="160"
-          fontSize="22"
-          fill="#059669"
-          opacity="0.45"
-          fontWeight="bold"
-        >
-          ∑
-        </text>
-        <text
-          x="456"
-          y="195"
-          fontSize="20"
-          fill="#6366f1"
-          opacity="0.45"
-          fontWeight="bold"
-        >
-          ∫
-        </text>
-        <text
-          x="28"
-          y="265"
-          fontSize="18"
-          fill="#f59e0b"
-          opacity="0.5"
-          fontWeight="bold"
-        >
-          π
-        </text>
-        <text
-          x="478"
-          y="148"
-          fontSize="16"
-          fill="#10b981"
-          opacity="0.5"
-          fontWeight="bold"
-        >
-          x²
-        </text>
-        <text
-          x="460"
-          y="265"
-          fontSize="18"
-          fill="#f59e0b"
-          opacity="0.4"
-          fontWeight="bold"
-        >
-          √
-        </text>
+        <text x="48" y="160" fontSize="22" fill="#059669" opacity="0.45" fontWeight="bold">∑</text>
+        <text x="456" y="195" fontSize="20" fill="#6366f1" opacity="0.45" fontWeight="bold">∫</text>
+        <text x="28" y="265" fontSize="18" fill="#f59e0b" opacity="0.5" fontWeight="bold">π</text>
+        <text x="478" y="148" fontSize="16" fill="#10b981" opacity="0.5" fontWeight="bold">x²</text>
+        <text x="460" y="265" fontSize="18" fill="#f59e0b" opacity="0.4" fontWeight="bold">√</text>
 
         <g>
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            values="0,0;0,-7;0,0"
-            dur="3s"
-            repeatCount="indefinite"
-          />
-          <rect
-            x="38"
-            y="55"
-            width="60"
-            height="34"
-            rx="10"
-            fill="#fff"
-            stroke="#d1fae5"
-            strokeWidth="1.5"
-            filter="url(#sh)"
-          />
-          <text
-            x="68"
-            y="78"
-            fontSize="16"
-            fontWeight="800"
-            fill="#059669"
-            textAnchor="middle"
-          >
-            A+
-          </text>
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="3s" repeatCount="indefinite" />
+          <rect x="38" y="55" width="60" height="34" rx="10" fill="#fff" stroke="#d1fae5" strokeWidth="1.5" filter="url(#sh)" />
+          <text x="68" y="78" fontSize="16" fontWeight="800" fill="#059669" textAnchor="middle">A+</text>
         </g>
 
         <g>
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            values="0,0;0,-6;0,0"
-            dur="3.6s"
-            repeatCount="indefinite"
-          />
-          <rect
-            x="394"
-            y="28"
-            width="72"
-            height="34"
-            rx="10"
-            fill="#fff"
-            stroke="#e0e7ff"
-            strokeWidth="1.5"
-            filter="url(#sh)"
-          />
-          <text
-            x="430"
-            y="51"
-            fontSize="13"
-            fontWeight="800"
-            fill="#6366f1"
-            textAnchor="middle"
-          >
-            98% ✓
-          </text>
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,-6;0,0" dur="3.6s" repeatCount="indefinite" />
+          <rect x="394" y="28" width="72" height="34" rx="10" fill="#fff" stroke="#e0e7ff" strokeWidth="1.5" filter="url(#sh)" />
+          <text x="430" y="51" fontSize="13" fontWeight="800" fill="#6366f1" textAnchor="middle">98% ✓</text>
         </g>
 
         <g>
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            values="0,0;0,-8;0,0"
-            dur="4s"
-            repeatCount="indefinite"
-          />
-          <rect
-            x="192"
-            y="46"
-            width="78"
-            height="28"
-            rx="14"
-            fill="#ecfdf5"
-            stroke="#a7f3d0"
-            strokeWidth="1.5"
-          />
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,-8;0,0" dur="4s" repeatCount="indefinite" />
+          <rect x="192" y="46" width="78" height="28" rx="14" fill="#ecfdf5" stroke="#a7f3d0" strokeWidth="1.5" />
           <circle cx="210" cy="60" r="5" fill="#10b981">
-            <animate
-              attributeName="opacity"
-              values="1;0.2;1"
-              dur="1.4s"
-              repeatCount="indefinite"
-            />
+            <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite" />
           </circle>
-          <text x="222" y="65" fontSize="12" fontWeight="700" fill="#065f46">
-            Live
-          </text>
+          <text x="222" y="65" fontSize="12" fontWeight="700" fill="#065f46">Live</text>
         </g>
 
         <g transform="translate(454,62)">
-          <polygon
-            points="0,-14 3.5,-5.5 13,-5.5 5.5,0.5 8.5,11 0,5.5 -8.5,11 -5.5,0.5 -13,-5.5 -3.5,-5.5"
-            fill="#fbbf24"
-            opacity="0.85"
-          >
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0"
-              to="360"
-              dur="9s"
-              repeatCount="indefinite"
-            />
+          <polygon points="0,-14 3.5,-5.5 13,-5.5 5.5,0.5 8.5,11 0,5.5 -8.5,11 -5.5,0.5 -13,-5.5 -3.5,-5.5" fill="#fbbf24" opacity="0.85">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="9s" repeatCount="indefinite" />
           </polygon>
         </g>
 
         <g transform="translate(65,118)">
-          <polygon
-            points="0,-9 2,-3.5 8,-3.5 3.5,0.5 5.5,7 0,3.5 -5.5,7 -3.5,0.5 -8,-3.5 -2,-3.5"
-            fill="#34d399"
-            opacity="0.7"
-          >
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="360"
-              to="0"
-              dur="6s"
-              repeatCount="indefinite"
-            />
+          <polygon points="0,-9 2,-3.5 8,-3.5 3.5,0.5 5.5,7 0,3.5 -5.5,7 -3.5,0.5 -8,-3.5 -2,-3.5" fill="#34d399" opacity="0.7">
+            <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="6s" repeatCount="indefinite" />
           </polygon>
         </g>
 
         <defs>
           <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow
-              dx="0"
-              dy="2"
-              stdDeviation="4"
-              floodColor="#059669"
-              floodOpacity="0.1"
-            />
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#059669" floodOpacity="0.1" />
           </filter>
         </defs>
       </svg>
@@ -596,23 +196,29 @@ function HeroBanner() {
 }
 
 export default async function SkillBridgeHome() {
-  const tutorsResult = await getTutors(
-    {
-      search: "",
-      category: "All",
-      minPrice: undefined,
-      maxPrice: undefined,
-      minRating: undefined,
-      availableOnly: false,
-    },
-    1,
-    3,
-  );
+// categories null হলে map crash করবে
+  const [tutorsResult, categoriesResult, statsResult, user] = await Promise.all([
+  getTutors({
+  searchTerm: "",
+  category: "All",
+  minPrice: undefined,
+  maxPrice: undefined,
+  minRating: undefined,
+  availableOnly: false,
+  page: 1,
+  limit: 3,
+}),
+    getCategories({ page: 1, limit: 10 }),
+    getTutorStats(),
+    getCurrentUser(),
+  ]);
+
+    console.log("categoriesResult:", JSON.stringify(categoriesResult, null, 2));
+
   const tutors = tutorsResult?.data ?? [];
-  const categoriesResult = await getAllCategories(1, 10);
   const categories = categoriesResult?.data ?? [];
-  const user = await getUser();
-  const stats = await getStats();
+  const stats = statsResult?.data ?? null;
+
   return (
     <div className="min-h-screen bg-[#faf9f7] text-zinc-900">
       <section className="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-16 items-center">
@@ -626,17 +232,8 @@ export default async function SkillBridgeHome() {
             Find the{" "}
             <span className="text-emerald-600 relative">
               perfect tutor
-              <svg
-                className="absolute -bottom-1 left-0 w-full"
-                viewBox="0 0 300 8"
-                fill="none"
-              >
-                <path
-                  d="M0 6 Q75 0 150 5 Q225 10 300 4"
-                  stroke="#6ee7b7"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
+              <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 300 8" fill="none">
+                <path d="M0 6 Q75 0 150 5 Q225 10 300 4" stroke="#6ee7b7" strokeWidth="3" strokeLinecap="round" />
               </svg>
             </span>
             ,<br />
@@ -652,9 +249,9 @@ export default async function SkillBridgeHome() {
 
           <div className="flex gap-8 pt-6 border-t border-zinc-100">
             {[
-              [`${stats?.totalStudents ?? "5,800"}+`, "Active Students"],
               [`${stats?.totalTutors ?? "640"}+`, "Verified Tutors"],
-              [`${stats?.satisfactionPercent ?? "98"}%`, "Satisfaction Rate"],
+              [`${stats?.totalBookings ?? "5,800"}+`, "Total Bookings"],
+              [`${stats?.totalCategories ?? "20"}+`, "Subjects Available"],
             ].map(([n, l]) => (
               <div key={l}>
                 <div className="text-2xl font-extrabold text-emerald-600 tracking-tight">
@@ -681,7 +278,7 @@ export default async function SkillBridgeHome() {
           <h2 className="text-3xl font-extrabold tracking-tight mb-10">
             Which class do you need help with?
           </h2>
-          <CategorySection categories={categories}></CategorySection>
+          <CategorySection categories={categories} />
         </div>
       </section>
 
@@ -728,7 +325,7 @@ export default async function SkillBridgeHome() {
             Tutors available for every subject
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {categories.map((cat) => {
+            {categories?.map((cat) => {
               const { icon: Icon, darkColor } = getCategoryColor(cat.name);
               return (
                 <div
@@ -814,11 +411,7 @@ export default async function SkillBridgeHome() {
               { label: "Contact", href: "#" },
               { label: "Privacy Policy", href: "#" },
             ].map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                className="text-xs text-zinc-500 hover:text-white transition-colors"
-              >
+              <a key={label} href={href} className="text-xs text-zinc-500 hover:text-white transition-colors">
                 {label}
               </a>
             ))}

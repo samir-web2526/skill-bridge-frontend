@@ -1,5 +1,5 @@
 import TutorDetailPage from "@/components/pages/tutorPage/TutorDetailPage";
-import { getTutorById } from "@/services/tutors.services";
+import { getTutorById } from "@/services/tutors.service";
 import { getUser } from "@/lib/auth/session";
 import { notFound } from "next/navigation";
 

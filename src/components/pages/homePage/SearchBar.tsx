@@ -6,8 +6,8 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getAllCategories } from "@/lib/auth/adminActions/actions";
 import { useRouter } from "next/navigation";
+import { getCategories } from "@/services/category.service";
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");
@@ -16,7 +16,7 @@ export default function SearchBar() {
 
   useEffect(() => {
     async function fetchPopular() {
-      const result = await getAllCategories(1, 20);
+      const result = await getCategories(1, 20);
       if (result?.data) {
         const sorted = [...result.data]
           .sort((a, b) => {

@@ -27,8 +27,8 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useTransition } from "react";
-import { logout } from "@/lib/auth/actions";
 import BecomeTutorButton from "../homePage/BecomeTutorButton";
+import { logout } from "@/services/auth.service";
 
 interface MenuItem {
   title: string;
@@ -144,14 +144,14 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                   size="sm"
                   className="text-zinc-600 hover:text-zinc-900 font-medium rounded-lg"
                 >
-                  <a href="/sign-in">Sign In</a>
+                  <a href="/login">Login</a>
                 </Button>
                 <Button
                   asChild
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4 font-semibold shadow-sm"
                 >
-                  <a href="/sign-up">Sign Up Free</a>
+                  <a href="/register">Register</a>
                 </Button>
               </>
             )}
@@ -250,13 +250,13 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                         variant="outline"
                         className="w-full rounded-lg border-zinc-200 font-medium"
                       >
-                        <a href="/sign-in">Sign In</a>
+                        <a href="/login">Login</a>
                       </Button>
                       <Button
                         asChild
                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold"
                       >
-                        <a href="/sign-up">Sign Up Free</a>
+                        <a href="/register">Register</a>
                       </Button>
                     </>
                   )}

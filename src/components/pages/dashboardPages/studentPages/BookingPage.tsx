@@ -16,13 +16,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus, Star, CalendarDays, AlertCircle, Inbox } from "lucide-react";
 import { toast } from "sonner";
-import {
-  cancelBooking,
-  createBooking,
-  createReview,
-  getAvailableTutors,
-  getMyBookings,
-} from "@/lib/auth/studentActions/actions";
+import { cancelBooking, createBooking, getBookings } from "@/services/booking.service";
+import { getTutors } from "@/services/tutors.service";
+import { createReview } from "@/services/review.service";
 import { BookingDialog } from "./BookingDialog";
 import { ReviewDialog } from "./ReviewDialog";
 
@@ -105,14 +101,12 @@ export default function StudentBookingPage() {
   const [refresh, setRefresh] = useState(0);
 
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
-  const [bookingDialogMode, setBookingDialogMode] = useState<
-    "create" | "cancel"
-  >("create");
+  const [bookingDialogMode, setBookingDialogMode] = useState<"create" | "cancel">("create");
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [tutors, setTutors] = useState<any[]>([]);
   const [selectedTutorId, setSelectedTutorId] = useState("");
   const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
-  const [bookingError, setBookingError] = useState<BookingError | null>(null); // ← নতুন
+  const [bookingError, setBookingError] = useState<BookingError | null>(null);
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewTarget, setReviewTarget] = useState<any | null>(null);
@@ -122,16 +116,17 @@ export default function StudentBookingPage() {
 
   const { page, handlePageChange } = usePagination();
 
+  // ── Bookings fetch ──
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getMyBookings(page);
-      if (result) {
-        setBookings(result.data);
-        setPaginations(result.paginations);
+      const result = await getBookings({ page });
+      if (result.error) {
+        setError(result.error);
       } else {
-        setError("Failed to load bookings. Please try again.");
+        setBookings(result.data ?? []);
+        setPaginations(result.meta);
       }
       setIsLoading(false);
     };
@@ -149,39 +144,48 @@ export default function StudentBookingPage() {
     [bookings, paginations],
   );
 
+  // ── Open create dialog — tutors fetch ──
   const openCreateDialog = async () => {
-    const result = await getAvailableTutors(1, 50);
-    setTutors(result?.data ?? []);
+    const result = await getTutors({ limit: 50 });
+    setTutors(result.data ?? []);
     setSelectedTutorId("");
     setBookingDialogMode("create");
     setSelectedBooking(null);
-    setBookingError(null); 
+    setBookingError(null);
     setBookingDialogOpen(true);
   };
 
   const openCancelDialog = (booking: any) => {
     setSelectedBooking(booking);
     setBookingDialogMode("cancel");
-    setBookingError(null); 
+    setBookingError(null);
     setBookingDialogOpen(true);
   };
 
-  const handleBookingSubmit = async () => {
+  // ── Booking submit ──
+  const handleBookingSubmit = async (data?: {
+    tutorId: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+  }) => {
     setIsBookingSubmitting(true);
     setBookingError(null);
 
     if (bookingDialogMode === "create") {
-      if (!selectedTutorId) return;
+      if (!data) return;
       const result = await createBooking({
-        tutorId: selectedTutorId,
-        date: new Date().toISOString(),
+        tutorId: data.tutorId,
+        date: data.date,
+        startTime: data.startTime,
+        endTime: data.endTime,
       });
       if (result?.error) {
         const message = result.error;
         const isEmailError =
           message.toLowerCase().includes("verify") ||
           message.toLowerCase().includes("email");
-        setBookingError({ message, isEmailError }); // ← dialog এ দেখাবে
+        setBookingError({ message, isEmailError });
         if (!isEmailError) toast.error(message);
       } else {
         toast.success("Booking created!");
@@ -206,6 +210,7 @@ export default function StudentBookingPage() {
     setIsBookingSubmitting(false);
   };
 
+  // ── Review ──
   const openReviewDialog = (booking: any) => {
     setReviewTarget(booking);
     setReviewRating(5);
@@ -269,52 +274,25 @@ export default function StudentBookingPage() {
         )}
 
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <StatCard
-            label="Total"
-            value={stats.total}
-            dotColor="bg-zinc-300"
-            valueColor="text-zinc-800"
-          />
-          <StatCard
-            label="Completed"
-            value={stats.completed}
-            dotColor="bg-emerald-500"
-            valueColor="text-emerald-700"
-          />
-          <StatCard
-            label="Confirmed"
-            value={stats.confirmed}
-            dotColor="bg-blue-400"
-            valueColor="text-blue-700"
-          />
-          <StatCard
-            label="Pending"
-            value={stats.pending}
-            dotColor="bg-amber-400"
-            valueColor="text-amber-700"
-          />
-          <StatCard
-            label="Cancelled"
-            value={stats.cancelled}
-            dotColor="bg-red-400"
-            valueColor="text-red-600"
-          />
+          <StatCard label="Total" value={stats.total} dotColor="bg-zinc-300" valueColor="text-zinc-800" />
+          <StatCard label="Completed" value={stats.completed} dotColor="bg-emerald-500" valueColor="text-emerald-700" />
+          <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-blue-400" valueColor="text-blue-700" />
+          <StatCard label="Pending" value={stats.pending} dotColor="bg-amber-400" valueColor="text-amber-700" />
+          <StatCard label="Cancelled" value={stats.cancelled} dotColor="bg-red-400" valueColor="text-red-600" />
         </div>
 
         <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-zinc-50 hover:bg-zinc-50">
-                {["Tutor", "Category", "Rate", "Status", "Date", "Actions"].map(
-                  (h, i) => (
-                    <TableHead
-                      key={i}
-                      className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
-                    >
-                      {h}
-                    </TableHead>
-                  ),
-                )}
+                {["Tutor", "Category", "Rate", "Status", "Date", "Actions"].map((h, i) => (
+                  <TableHead
+                    key={i}
+                    className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
+                  >
+                    {h}
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
 
@@ -350,9 +328,7 @@ export default function StudentBookingPage() {
                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
                         <Inbox size={22} className="text-emerald-600" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">
-                        No bookings yet
-                      </p>
+                      <p className="text-sm font-semibold text-zinc-400">No bookings yet</p>
                       <Button
                         onClick={openCreateDialog}
                         className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold px-4 mt-1"
@@ -370,10 +346,8 @@ export default function StudentBookingPage() {
                     label: booking.status,
                   };
                   const canCancel = booking.status === "PENDING";
-                  const canReview =
-                    booking.status === "COMPLETED" && !booking.review;
-                  const hasReview =
-                    booking.status === "COMPLETED" && booking.review;
+                  const canReview = booking.status === "COMPLETED" && !booking.review;
+                  const hasReview = booking.status === "COMPLETED" && booking.review;
 
                   return (
                     <TableRow
@@ -382,9 +356,7 @@ export default function StudentBookingPage() {
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
-                          <TutorAvatar
-                            name={booking.tutor?.user?.name ?? "?"}
-                          />
+                          <TutorAvatar name={booking.tutor?.user?.name ?? "?"} />
                           <div className="min-w-0">
                             <p className="text-sm font-semibold text-zinc-800 truncate">
                               {booking.tutor?.user?.name ?? "—"}
@@ -405,31 +377,22 @@ export default function StudentBookingPage() {
                       <TableCell className="py-4">
                         <span className="text-sm font-semibold text-emerald-700">
                           {booking.tutor?.hourlyRate
-                            ? `৳${booking.tutor.hourlyRate}/hr`
+                            ? `৳${Number(booking.tutor.hourlyRate).toLocaleString()}/hr`
                             : "—"}
                         </span>
                       </TableCell>
 
                       <TableCell className="py-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border ${status.pill}`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.dot} ${status.pulse ? "animate-pulse" : ""}`}
-                          />
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border ${status.pill}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.dot} ${status.pulse ? "animate-pulse" : ""}`} />
                           {status.label}
                         </span>
                       </TableCell>
 
                       <TableCell className="py-4">
                         <div className="flex items-center gap-1.5 text-sm text-zinc-400">
-                          <CalendarDays
-                            size={13}
-                            className="text-zinc-300 shrink-0"
-                          />
-                          {new Date(
-                            booking.date ?? booking.createdAt,
-                          ).toLocaleDateString("en-BD", {
+                          <CalendarDays size={13} className="text-zinc-300 shrink-0" />
+                          {new Date(booking.date ?? booking.createdAt).toLocaleDateString("en-BD", {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
@@ -456,26 +419,18 @@ export default function StudentBookingPage() {
                               className="h-7 text-xs font-semibold rounded-lg border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 shadow-none px-3 flex items-center gap-1"
                               variant="ghost"
                             >
-                              <Star
-                                size={11}
-                                className="fill-amber-500 text-amber-500"
-                              />
+                              <Star size={11} className="fill-amber-500 text-amber-500" />
                               Review
                             </Button>
                           )}
                           {hasReview && (
                             <span className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                              <Star
-                                size={11}
-                                className="fill-emerald-500 text-emerald-500"
-                              />
+                              <Star size={11} className="fill-emerald-500 text-emerald-500" />
                               Reviewed
                             </span>
                           )}
                           {!canCancel && !canReview && !hasReview && (
-                            <span className="text-xs text-zinc-300 font-medium">
-                              —
-                            </span>
+                            <span className="text-xs text-zinc-300 font-medium">—</span>
                           )}
                         </div>
                       </TableCell>
@@ -489,10 +444,7 @@ export default function StudentBookingPage() {
 
         {paginations && (
           <div className="pt-2">
-            <Pagination
-              paginations={paginations}
-              onPageChange={handlePageChange}
-            />
+            <Pagination paginations={paginations} onPageChange={handlePageChange} />
           </div>
         )}
       </div>
@@ -504,7 +456,7 @@ export default function StudentBookingPage() {
         selectedTutorId={selectedTutorId}
         cancelTutorName={selectedBooking?.tutor?.user?.name ?? ""}
         isSubmitting={isBookingSubmitting}
-        error={bookingError} 
+        error={bookingError}
         onClose={() => setBookingDialogOpen(false)}
         onSubmit={handleBookingSubmit}
         onTutorChange={setSelectedTutorId}

@@ -6,12 +6,8 @@ import { Button } from "@/components/ui/button";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { getCategoryColor } from "@/lib/category/categoryColors";
+import { Category } from "@/services/category.service";
 
-type Category = {
-  id: string;
-  name: string;
-  description: string | null;
-};
 
 export default function CategorySection({
   categories,
@@ -25,7 +21,7 @@ export default function CategorySection({
   return (
     <>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {visible.map((cat) => {
+        {visible?.map((cat) => {
           const {
             bg,
             text,

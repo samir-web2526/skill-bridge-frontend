@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, ArrowRight, Star } from "lucide-react";
 import { getCategoryColor } from "@/lib/category/categoryColors";
+import { TutorProfile } from "@/services/tutors.service";
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -31,20 +32,12 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-type Tutor = {
-  id: string;
-  hourlyRate: number;
-  averageRating: number;
-  totalReview: number;
-  category?: { name: string };
-  user: { name: string; email: string };
-};
 
 export default function FeaturedTutors({
   tutors,
   user,
 }: {
-  tutors: Tutor[];
+  tutors: TutorProfile[];
   user: { role: string } | null;
 }) {
   const router = useRouter();

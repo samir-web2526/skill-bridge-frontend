@@ -5,61 +5,43 @@ const API = process.env.NEXT_PUBLIC_API;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type BookingStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
-
-export interface Booking {
+export interface Category {
   id: string;
-  userId: string;
-  tutorId: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  status: BookingStatus;
-  isDeleted: boolean;
+  name: string;
+  description?: string;  // ← যোগ করো
   createdAt: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
+  _count?: {
+    tutor: number;
   };
-  tutor: {
+  tutor?: {
     id: string;
     bio: string;
     hourlyRate: number;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-    };
-  };
+  }[];
 }
 
-export interface CreateBookingPayload {
-  tutorId: string;
-  date: string;        // "YYYY-MM-DD"
-  startTime: string;   // "HH:MM"
-  endTime: string;     // "HH:MM"
+export interface CreateCategoryPayload {
+  name: string;
 }
 
-export interface UpdateBookingPayload {
-  status: BookingStatus;
+export interface UpdateCategoryPayload {
+  name?: string;
 }
 
 export interface PaginationMeta {
   page: number;
   limit: number;
   total: number;
-  totalPage: number;
 }
 
-export interface BookingFilters {
+export interface CategoryFilters {
   page?: number;
   limit?: number;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
 
-// Consistent response wrapper — used for ALL service functions
+// Consistent response wrapper
 export type ServiceResponse<T> =
   | { data: T; error: null }
   | { data: null; error: string };
@@ -75,7 +57,7 @@ async function getAccessToken(): Promise<string> {
   return (await cookieStore).get("accessToken")?.value ?? "";
 }
 
-function buildQueryString(filters: BookingFilters): string {
+function buildQueryString(filters: CategoryFilters): string {
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
@@ -88,14 +70,14 @@ function buildQueryString(filters: BookingFilters): string {
 
 // ─── Services ─────────────────────────────────────────────────────────────────
 
-// POST /api/v1/bookings  (STUDENT only)
-export async function createBooking(
-  payload: CreateBookingPayload
-): Promise<ServiceResponse<Booking>> {
+// POST /api/v1/categories  (ADMIN only)
+export async function createCategory(
+  payload: CreateCategoryPayload
+): Promise<ServiceResponse<Category>> {
   try {
     const accessToken = await getAccessToken();
 
-    const result = await fetch(`${API}/api/v1/bookings`, {
+    const result = await fetch(`${API}/api/v1/categories`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,120 +89,112 @@ export async function createBooking(
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, error: json?.message ?? "Booking failed" };
+      return { data: null, error: json?.message ?? "Failed to create category" };
     }
 
     return { data: json?.data ?? null, error: null };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[createBooking]", message);
+    console.error("[createCategory]", message);
     return { data: null, error: message };
   }
 }
 
-// GET /api/v1/bookings  (STUDENT, TUTOR, ADMIN)
-export async function getBookings(
-  filters: BookingFilters = {}
-): Promise<PaginatedResponse<Booking[]>> {
+// GET /api/v1/categories  (Public)
+// export async function getCategories(
+//   filters: CategoryFilters = {}
+// ): Promise<PaginatedResponse<Category[]>> {
+//   try {
+//     const qs = buildQueryString(filters);
+
+//     const result = await fetch(`${API}/api/v1/categories${qs}`, {
+//       method: "GET",
+//       headers: { "Content-Type": "application/json" },
+//       next: { revalidate: 60 },
+//     });
+
+//     const json = await result.json();
+
+//     if (!result.ok) {
+//       return { data: null, meta: null, error: json?.message ?? "Failed to fetch categories" };
+//     }
+
+//     return {
+//       data: json?.data ?? [],
+//       meta: json?.meta ?? null,
+//       error: null,
+//     };
+//   } catch (err: unknown) {
+//     const message = err instanceof Error ? err.message : "Something went wrong";
+//     console.error("[getCategories]", message);
+//     return { data: null, meta: null, error: message };
+//   }
+// }
+
+export async function getCategories(
+  filters: CategoryFilters = {}
+): Promise<PaginatedResponse<Category[]>> {
   try {
-    const accessToken = await getAccessToken();
     const qs = buildQueryString(filters);
 
-    const result = await fetch(`${API}/api/v1/bookings${qs}`, {
+    const result = await fetch(`${API}/api/v1/categories${qs}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 60 },
     });
 
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, meta: null, error: json?.message ?? "Failed to fetch bookings" };
+      return { data: null, meta: null, error: json?.message ?? "Failed to fetch categories" };
     }
 
     return {
-  data: json?.data?.data ?? [],   // ← was json?.data
-  meta: json?.data?.meta ?? null, // ← was json?.meta
-  error: null,
-};
+      data: json?.data?.data ?? [],      // ← was json?.data
+      meta: json?.data?.meta ?? null,    // ← was json?.meta
+      error: null,
+    };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getBookings]", message);
+    console.error("[getCategories]", message);
     return { data: null, meta: null, error: message };
   }
 }
 
-// GET /api/v1/bookings/:bookingId  (STUDENT, TUTOR, ADMIN)
-export async function getBookingById(
-  bookingId: string
-): Promise<ServiceResponse<Booking>> {
+// GET /api/v1/categories/:categoryId  (Public)
+export async function getCategoryById(
+  categoryId: string
+): Promise<ServiceResponse<Category>> {
   try {
-    const accessToken = await getAccessToken();
-
-    const result = await fetch(`${API}/api/v1/bookings/${bookingId}`, {
+    const result = await fetch(`${API}/api/v1/categories/${categoryId}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { "Content-Type": "application/json" },
       cache: "no-store",
     });
 
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, error: json?.message ?? "Booking not found" };
+      return { data: null, error: json?.message ?? "Category not found" };
     }
 
     return { data: json?.data ?? null, error: null };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getBookingById]", message);
+    console.error("[getCategoryById]", message);
     return { data: null, error: message };
   }
 }
 
-// PATCH /api/v1/bookings/:bookingId/cancel  (STUDENT only)
-export async function cancelBooking(
-  bookingId: string
-): Promise<ServiceResponse<Booking>> {
+// PATCH /api/v1/categories/:categoryId  (ADMIN only)
+export async function updateCategory(
+  categoryId: string,
+  payload: UpdateCategoryPayload
+): Promise<ServiceResponse<Category>> {
   try {
     const accessToken = await getAccessToken();
 
-    const result = await fetch(`${API}/api/v1/bookings/${bookingId}/cancel`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    const json = await result.json();
-
-    if (!result.ok) {
-      return { data: null, error: json?.message ?? "Cancel failed" };
-    }
-
-    return { data: json?.data ?? null, error: null };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[cancelBooking]", message);
-    return { data: null, error: message };
-  }
-}
-
-// PATCH /api/v1/bookings/:bookingId/status  (TUTOR only)
-export async function updateBookingStatus(
-  bookingId: string,
-  payload: UpdateBookingPayload
-): Promise<ServiceResponse<Booking>> {
-  try {
-    const accessToken = await getAccessToken();
-
-    const result = await fetch(`${API}/api/v1/bookings/${bookingId}/status`, {
+    const result = await fetch(`${API}/api/v1/categories/${categoryId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -232,13 +206,42 @@ export async function updateBookingStatus(
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, error: json?.message ?? "Status update failed" };
+      return { data: null, error: json?.message ?? "Update failed" };
     }
 
     return { data: json?.data ?? null, error: null };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[updateBookingStatus]", message);
+    console.error("[updateCategory]", message);
+    return { data: null, error: message };
+  }
+}
+
+// DELETE /api/v1/categories/:categoryId  (ADMIN only)
+export async function deleteCategory(
+  categoryId: string
+): Promise<ServiceResponse<null>> {
+  try {
+    const accessToken = await getAccessToken();
+
+    const result = await fetch(`${API}/api/v1/categories/${categoryId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const json = await result.json();
+
+    if (!result.ok) {
+      return { data: null, error: json?.message ?? "Delete failed" };
+    }
+
+    return { data: null, error: null };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Something went wrong";
+    console.error("[deleteCategory]", message);
     return { data: null, error: message };
   }
 }

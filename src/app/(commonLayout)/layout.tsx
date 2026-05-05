@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/pages/sharedPages/Navbar";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { getUser } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth";
 
 import React from "react";
 
@@ -9,7 +9,7 @@ export default async function CommonLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
+  const user = await getCurrentUser();
   return (
     <div className="max-w-7xl mx-auto">
       <Navbar

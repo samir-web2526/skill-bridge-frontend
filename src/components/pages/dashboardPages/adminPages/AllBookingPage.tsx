@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getAllBookings } from "@/lib/auth/adminActions/actions";
 import { AlertCircle, CalendarDays, Inbox, Search } from "lucide-react";
+import { Booking, getBookings } from "@/services/booking.service";
 
 const STATUS_CONFIG: Record<
   string,
@@ -97,8 +97,9 @@ function StatCard({
 
 export default function AdminBookingsPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState("All");
@@ -106,21 +107,27 @@ export default function AdminBookingsPage() {
 
   const { page, handlePageChange } = usePagination();
 
-  useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      setError(null);
-      const result = await getAllBookings(page);
-      if (result) {
-        setBookings(result.data);
-        setPaginations(result.paginations);
-      } else {
-        setError("Failed to load bookings. Please try again.");
-      }
-      setIsLoading(false);
-    };
-    load();
-  }, [page]);
+ useEffect(() => {
+  const load = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    const result = await getBookings({ page });
+
+    if (result.error) {
+      setError(result.error);
+      setBookings([]);
+      setPaginations(null);
+    } else {
+      setBookings(result.data ?? []);
+      setPaginations(result.meta);
+    }
+
+    setIsLoading(false);
+  };
+
+  load();
+}, [page]);
 
   const counts = useMemo(() => {
     return {

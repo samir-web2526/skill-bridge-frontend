@@ -15,8 +15,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signIn } from "@/lib/auth/actions";
 import { useRouter } from "next/navigation";
+import { login } from "@/services/auth.service";
 
 const formSchema = z.object({
   email: z.email(),
@@ -41,20 +41,16 @@ export function SignInForm() {
     resolver: zodResolver(formSchema),
     defaultValues: { email: "", password: "" },
   });
-
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    const result = await signIn(data);
+   async function onSubmit(data: z.infer<typeof formSchema>) {
+    const result = await login(data);
     if (result?.error) {
       toast.error(result.error);
       return;
     }
-    if (result?.success) {
-      toast.success("User sign in successfully");
-      router.refresh();
-      router.push("/dashboard");
-    }
+    toast.success("Signed in successfully!");
+    router.refresh();
+    router.push("/dashboard");
   }
-
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-background px-4 gap-4">
       <style>{`
