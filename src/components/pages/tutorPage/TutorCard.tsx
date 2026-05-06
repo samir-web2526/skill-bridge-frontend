@@ -4,32 +4,58 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import { TutorProfile } from "@/services/tutors.service";
 
-export type FormattedTutor = {
+export interface FormattedTutor {
   id: string;
-  name: string;
-  email: string;
   bio: string;
   hourlyRate: number;
-  isAvailable: boolean;
-  totalBookings: number;
-  rating: number;
-  category: string;
   experience: number;
-};
+
+  totalBookings: number;
+  averageRating: number;
+  totalReview:number;
+
+  availablity: boolean;
+  availableFrom: string;
+  availableTo: string;
+
+  category: {
+    id: string;
+    name: string;
+  } | null;
+
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string | null;
+    image: string | null;
+    role: string;
+    status: string;
+  };
+}
 
 export const formatTutor = (tutor: TutorProfile): FormattedTutor => ({
   id: tutor.id,
-  name: tutor.user.name,
-  email: tutor.user.email,
   bio: tutor.bio,
   hourlyRate: Number(tutor.hourlyRate),
-  isAvailable: tutor.isAvailable,
-  totalBookings: tutor.totalReview ?? 0,
-  rating: tutor.averageRating ?? 0,
-  category: tutor.category?.name ?? "N/A",
   experience: Number(tutor.experience),
-});
 
+  totalBookings: tutor.totalBookings ?? 0,
+  averageRating: tutor.averageRating ?? 0,
+  totalReview: tutor.totalReview ?? 0,
+  availablity: tutor.availability,
+  availableFrom: tutor.availableFrom ?? "",
+  availableTo: tutor.availableTo ?? "",
+
+  category: tutor.category
+    ? {
+        id: tutor.category.id,
+        name: tutor.category.name,
+      }
+    : null,
+
+  user: tutor.user,
+});
 function getInitials(name = "") {
   return name
     .split(" ")
@@ -45,8 +71,8 @@ type Props = {
 };
 
 export function TutorCard({ tutor, onSelect }: Props) {
-  const color = getCategoryColor(tutor.category);
-const initials = getInitials(tutor.name);
+  const color = getCategoryColor(tutor.category?.name ?? "default");
+  const initials = getInitials(tutor?.user?.name);
 
   return (
     <Card
@@ -60,8 +86,8 @@ const initials = getInitials(tutor.name);
           </div>
 
           <div className="flex-1">
-            <p className="font-semibold">{tutor.name}</p>
-            <p className={`text-sm ${color.text}`}>{tutor.category}</p>
+            <p className="font-semibold">{tutor?.user?.name}</p>
+            <p className={`text-sm ${color.text}`}>{tutor?.category?.name}</p>
 
             <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
               {tutor.bio}
@@ -69,8 +95,9 @@ const initials = getInitials(tutor.name);
 
             <div className="mt-3 flex justify-between text-sm">
               <span>৳{tutor.hourlyRate}/hr</span>
-              <span>⭐ {tutor.rating.toFixed(1)}</span>
+              <span>⭐ {tutor.averageRating}</span>
               <span>👥 {tutor.totalBookings}</span>
+              <span>💬 {tutor.totalReview}</span>
             </div>
           </div>
         </div>

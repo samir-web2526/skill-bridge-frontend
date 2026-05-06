@@ -1,4 +1,5 @@
 "use server";
+import { ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
@@ -33,7 +34,7 @@ export interface RegisterStudentPayload {
   phone?: string;
   image?: string;
   gender?: string;
-  dateOfBirth?: string;   // "YYYY-MM-DD"
+  dateOfBirth?: string;   
   address?: string;
   class?: string;
   group?: string;
@@ -50,10 +51,10 @@ export interface RegisterTutorPayload {
   gender?: string;
   bio?: string;
   hourlyRate: number;
-  experience: string;
+  experience: number;
   categoryId: string;
-  availableFrom: string;  // "HH:MM"
-  availableTo: string;    // "HH:MM"
+  availableFrom: string;  
+  availableTo: string;   
 }
 
 export type RegisterPayload = RegisterStudentPayload | RegisterTutorPayload;
@@ -64,9 +65,9 @@ export interface LoginPayload {
 }
 
 // Consistent response wrapper
-export type ServiceResponse<T> =
-  | { data: T; error: null }
-  | { data: null; error: string };
+// export type ServiceResponse<T> =
+//   | { data: T; error: null }
+//   | { data: null; error: string };
 
 // ─── Services ─────────────────────────────────────────────────────────────────
 

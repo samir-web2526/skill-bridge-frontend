@@ -65,7 +65,7 @@ export default async function TutorProfilePage() {
                 <div className="relative">
                   <div className="absolute -inset-0.5 rounded-full bg-emerald-500/20" />
                   <Avatar className="relative h-20 w-20 border-4 border-white shadow-md">
-                    <AvatarImage src={user.image ?? ""} alt={user.name} />
+                    <AvatarImage src={profile.data?.user.name ?? ""} alt={user.name} />
                     <AvatarFallback className="text-lg font-extrabold bg-emerald-700 text-white">
                       {initials}
                     </AvatarFallback>
@@ -74,30 +74,30 @@ export default async function TutorProfilePage() {
 
                 <Badge
                   className={`mb-1 rounded-full px-3 py-1 text-xs font-semibold border flex items-center gap-1.5 ${
-                    profile?.isAvailable
+                    profile.data?.availability
                       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                       : "bg-red-50 text-red-600 border-red-200"
                   }`}
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                      profile?.isAvailable
+                      profile?.data?.availability
                         ? "bg-emerald-500 animate-pulse"
                         : "bg-red-400"
                     }`}
                   />
-                  {profile?.isAvailable ? "Available" : "Not Available"}
+                  {profile?.data?.availability ? "Available" : "Not Available"}
                 </Badge>
               </div>
 
               <h2 className="text-xl font-extrabold tracking-tight text-zinc-900">
-                {user.name}
+                {profile?.data?.user.name}
               </h2>
-              <p className="text-sm text-zinc-400 mt-0.5">{user.email}</p>
+              <p className="text-sm text-zinc-400 mt-0.5">{profile?.data?.user.email}</p>
 
-              {profile?.bio && (
+              {profile?.data?.bio && (
                 <p className="text-sm text-zinc-500 mt-3 leading-relaxed border-t border-zinc-100 pt-3">
-                  {profile.bio}
+                  {profile.data?.bio}
                 </p>
               )}
             </div>
@@ -106,39 +106,39 @@ export default async function TutorProfilePage() {
               <InfoRow
                 icon={<Mail className="w-4 h-4" />}
                 label="Email"
-                value={user.email}
+                value={profile?.data?.user?.email ?? "_"}
               />
               <InfoRow
                 icon={<Phone className="w-4 h-4" />}
                 label="Phone"
-                value={user.phone ?? "—"}
+                value={profile?.data?.user?.phone ?? "—"}
               />
               <InfoRow
                 icon={<ShieldCheck className="w-4 h-4" />}
                 label="Role"
-                value={user.role}
+                value={profile?.data?.user?.role ?? "_"}
               />
               <InfoRow
                 icon={<User className="w-4 h-4" />}
                 label="Status"
-                value={user.status ?? "ACTIVE"}
+                value={profile?.data?.user?.status ?? "ACTIVE"}
               />
               <InfoRow
                 icon={<BookOpen className="w-4 h-4" />}
                 label="Category"
-                value={profile?.category?.name ?? "—"}
+                value={profile?.data?.category?.name ?? "—"}
               />
               <InfoRow
                 icon={<Clock className="w-4 h-4" />}
                 label="Experience"
                 value={
-                  profile?.experience ? `${profile.experience} years` : "—"
+                  profile?.data?.experience ? `${profile.data?.experience} years` : "—"
                 }
               />
               <InfoRow
                 icon={<Star className="w-4 h-4" />}
                 label="Hourly Rate"
-                value={profile?.hourlyRate ? `৳${profile.hourlyRate}/hr` : "—"}
+                value={profile?.data?.hourlyRate ? `৳${profile?.data?.hourlyRate}/hr` : "—"}
               />
             </div>
 
@@ -146,7 +146,7 @@ export default async function TutorProfilePage() {
               <div className="bg-white rounded-xl flex flex-row justify-between border border-zinc-100 px-4 py-3">
                 <div>
                   <p className="text-2xl font-extrabold text-amber-500">
-                    {Number(profile?.averageRating ?? 0).toFixed(1)}
+                    {Number(profile?.data?.averageRating ?? 0).toFixed(1)}
                   </p>
                   <p className="text-xs text-zinc-400 mt-0.5 flex flex-col gap-0.5">
                     <span className="flex gap-0.5">
@@ -155,7 +155,7 @@ export default async function TutorProfilePage() {
                           key={i}
                           style={{
                             color:
-                              i < Math.round(profile?.averageRating ?? 0)
+                              i < Math.round(profile?.data?.averageRating ?? 0)
                                 ? "#fbbf24"
                                 : "#e5e7eb",
                           }}
@@ -169,7 +169,7 @@ export default async function TutorProfilePage() {
                 </div>
                 <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3">
                   <p className="text-2xl font-extrabold text-emerald-700">
-                    {profile?.totalBookings ?? 0}
+                    {profile?.data?.totalBookings ?? 0}
                   </p>
                   <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />

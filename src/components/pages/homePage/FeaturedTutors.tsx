@@ -111,14 +111,14 @@ export default function FeaturedTutors({
                 <Separator className="mb-4" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Stars rating={t.averageRating} />
+                    <Stars rating={t?.averageRating ?? 0} />
                     <span className="text-xs text-zinc-400">
-                      {t.averageRating} ({t.totalReview})
+                      {t?.averageRating} ({t?.totalReview})
                     </span>
                   </div>
                   <div>
                     <span className="font-extrabold text-base">
-                      ৳{t.hourlyRate}
+                      ৳{t?.hourlyRate}
                     </span>
                     <span className="text-xs text-zinc-400"> /hr</span>
                   </div>

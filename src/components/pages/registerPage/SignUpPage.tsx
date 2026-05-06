@@ -32,15 +32,14 @@ const baseSchema = z.object({
 
 const tutorSchema = baseSchema.extend({
   role: z.literal("TUTOR"),
-  bio: z.string().min(10, "Bio must be at least 10 characters"),
-  hourlyRate: z.coerce.number().min(1, "Hourly rate is required"),
-experience: z.coerce.number().min(1, "Experience is required"),
-  categoryId: z.string().min(1, "Category is required"),
+  bio: z.string().min(10),
+  hourlyRate: z.number().min(1), 
+  experience: z.number().min(1),
+  categoryId: z.string().min(1),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-  availableFrom: z.string().min(1, "Available from is required"),
-  availableTo: z.string().min(1, "Available to is required"),
+  availableFrom: z.string().min(1),
+  availableTo: z.string().min(1),
 });
-
 const studentSchema = baseSchema.extend({
   role: z.literal("STUDENT"),
   dateOfBirth: z.string().optional(),
@@ -84,31 +83,21 @@ export function SignUpForm() {
   // Fetch categories once on mount
   React.useEffect(() => {
     getCategories({ limit: 100 }).then((res) => {
-      if (!res.error && res.data) setCategories(res.data);
+      if (!res.error && res.data){
+        setCategories(res.data);
+        // setCategories(Array.isArray(res.data) ? res.data : [res.data]);
+      }
     });
   }, []);
 
-  const form = useForm<FormValues>({
+const form = useForm<z.infer<typeof formSchema>>({
   resolver: zodResolver(formSchema),
   defaultValues: {
-    name: "",
-    email: "",
-    password: "",
-    role: "STUDENT",
-    gender: undefined,
-    // tutor fields
-    bio: "",
-    hourlyRate: undefined,
-    experience: "",
-    categoryId: "",
-    availableFrom: "",
-    availableTo: "",
-    // student fields
-    dateOfBirth: "",
-    address: "",
-    class: "",
-    group: "",
-  } as any,
+  name: "",
+  email: "",
+  password: "",
+  role: "STUDENT",
+}
 });
 
   async function onSubmit(values: FormValues) {
@@ -123,13 +112,13 @@ export function SignUpForm() {
   };
 
   if (values.role === "TUTOR") {
-    payload.bio = (values as any).bio;
-    payload.hourlyRate = (values as any).hourlyRate;
-    payload.experience = (values as any).experience;
-    payload.categoryId = (values as any).categoryId;
-    payload.availableFrom = (values as any).availableFrom;
-    payload.availableTo = (values as any).availableTo;
-  } else {
+  payload.bio = values.bio;
+  payload.hourlyRate = values.hourlyRate;
+  payload.experience = values.experience;
+  payload.categoryId = values.categoryId;
+  payload.availableFrom = values.availableFrom;
+  payload.availableTo = values.availableTo;
+} else {
     payload.dateOfBirth = (values as any).dateOfBirth || undefined;
     payload.address = (values as any).address || undefined;
     payload.class = (values as any).class || undefined;
@@ -380,6 +369,7 @@ const role = useWatch({ control: form.control, name: "role" });
                           {...field}
                           id="signup-rate"
                           type="number"
+                          onChange={(e) => field.onChange(Number(e.target.value))}
                           min={1}
                           placeholder="e.g. 500"
                           className={sharedInputClass}
@@ -403,6 +393,8 @@ const role = useWatch({ control: form.control, name: "role" });
                         <Input
                           {...field}
                           id="signup-experience"
+                          type="number"
+                          onChange={(e) => field.onChange(Number(e.target.value))}
                           placeholder="e.g. 3 years"
                           className={sharedInputClass}
                           style={{ boxShadow: "none" }}
@@ -587,8 +579,8 @@ const role = useWatch({ control: form.control, name: "role" });
 
         <p className="text-center text-[13px] text-muted-foreground">
           Already have an account?{" "}
-          <a href="/sign-in" className="font-medium hover:underline" style={{ color: "#0d7a5f" }}>
-            Sign in
+          <a href="/login" className="font-medium hover:underline" style={{ color: "#0d7a5f" }}>
+            login here
           </a>
         </p>
       </div>

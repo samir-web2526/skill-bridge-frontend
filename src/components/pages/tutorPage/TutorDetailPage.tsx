@@ -9,6 +9,7 @@ import { Star, Users, Clock, BookOpen, ArrowLeft } from "lucide-react";
 import { FormattedTutor } from "./TutorCard";
 import { BookingModal } from "./BookingModal";
 import { getCategoryColor } from "@/lib/category/categoryColors";
+import Image from "next/image";
 
 function getInitials(name = "") {
   return name
@@ -27,7 +28,7 @@ type Props = {
 export default function TutorDetailPage({ tutor, user }: Props) {
   const router = useRouter();
   const isStudent = user?.role === "STUDENT";
-  const color = getCategoryColor(tutor.category.name);
+  const color = getCategoryColor(tutor.category?.name ?? "default");
   const initials = getInitials(tutor.user.name);
 
   const [showBooking, setShowBooking] = useState(false);
@@ -70,12 +71,14 @@ export default function TutorDetailPage({ tutor, user }: Props) {
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
               {tutor.user.image ? (
-                <img
-                  src={tutor.user.image}
-                  alt={tutor.user.name}
-                  className="w-20 h-20 rounded-2xl object-cover"
-                />
-              ) : (
+                 <Image
+    src={tutor.user.image}
+    alt={tutor.user.name ?? "user"}
+    width={80}
+    height={80}
+    className="w-20 h-20 rounded-2xl object-cover"
+  />
+): (
                 <div
                   className={`w-20 h-20 rounded-2xl flex items-center justify-center font-bold text-2xl bg-white shadow-sm ${color.text}`}
                 >
@@ -87,19 +90,19 @@ export default function TutorDetailPage({ tutor, user }: Props) {
                   {tutor.user.name}
                 </h1>
                 <p className={`text-sm font-medium mt-1 ${color.text}`}>
-                  {tutor.category.name} · {tutor.experience} yrs exp
+                  {tutor.category?.name} · {tutor.experience} yrs exp
                 </p>
               </div>
             </div>
 
             <Badge
               className={`shrink-0 text-xs ${
-                tutor.isAvailable
+                tutor.availablity
                   ? "bg-green-100 text-green-700 hover:bg-green-100"
                   : "bg-red-100 text-red-700 hover:bg-red-100"
               }`}
             >
-              {tutor.isAvailable ? "Available" : "Unavailable"}
+              {tutor.availablity ? "Available" : "Unavailable"}
             </Badge>
           </div>
         </div>
@@ -145,12 +148,12 @@ export default function TutorDetailPage({ tutor, user }: Props) {
 
           <Button
             onClick={() => isStudent && setShowBooking(true)}
-            disabled={!tutor.isAvailable || !isStudent}
+            disabled={!tutor.availablity || !isStudent}
             className="h-11 px-6 font-semibold"
           >
             {!isStudent
               ? "Login as Student to Book"
-              : tutor.isAvailable
+              : tutor.availablity
                 ? "Book a Session"
                 : "Unavailable"}
           </Button>

@@ -1,4 +1,5 @@
 "use server";
+import { PaginatedResponse, ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
@@ -27,11 +28,14 @@ export interface TutorProfile {
   userId: string;
   bio: string;
   hourlyRate: number;
-  experience: string;
+  experience: number;
   education: string;
   availability: boolean;
-  averageRating: number | null;  // ← যোগ করো
-  totalReview: number;           // ← যোগ করো
+  availableFrom:string;
+  availableTo:string;
+  averageRating: number | null;  
+  totalBookings: number;
+  totalReview: number;    
   isDeleted: boolean;
   deletedAt: string | null;
   createdAt: string;
@@ -40,6 +44,9 @@ export interface TutorProfile {
     id: string;
     name: string;
     email: string;
+    phone: string | null;
+    image: string | null;
+    role: string;
     status: string;
   };
   category: Category;
@@ -51,13 +58,6 @@ export interface TutorStats {
   totalBookings: number;
   totalStudents:number;
   totalCategories: number;
-}
-
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPage:number
 }
 
 export interface TutorFilters {
@@ -82,17 +82,6 @@ export interface UpdateTutorPayload {
   education?: string;
   availability?: boolean;
 }
-
-// Consistent response wrapper — used for ALL service functions
-export type ServiceResponse<T> =
-  | { data: T; error: null }
-  | { data: null; error: string };
-
-export type PaginatedResponse<T> =
-  | { data: T; meta: PaginationMeta; error: null }
-  | { data: null; meta: null; error: string };
-
-// ─── Helper ───────────────────────────────────────────────────────────────────
 
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();

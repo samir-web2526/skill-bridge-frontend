@@ -10,7 +10,10 @@ export interface CurrentUser {
     name:string;
   id: string;
   email: string;
+  phone?: string | null;
+  image?: string | null;
   role: Role;
+  status:string;
 }
 
 // ─── Service ──────────────────────────────────────────────────────────────────

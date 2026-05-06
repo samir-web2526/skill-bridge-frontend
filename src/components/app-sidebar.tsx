@@ -106,11 +106,6 @@ const TUTOR_NAV = [
         icon: Star,
       },
       {
-        title: "Create Profile",
-        url: "/dashboard/create-profile",
-        icon: UserCircle,
-      },
-      {
         title: "My Profile",
         url: "/dashboard/me",
         icon: UserCircle,

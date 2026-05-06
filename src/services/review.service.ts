@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
+import { ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
@@ -39,7 +40,7 @@ export interface ReviewResponse {
 export interface CreateReviewPayload {
   bookingId: string;
   tutorId: string;
-  rating: number;       // 1 - 5
+  rating: number;      
   comment?: string;
 }
 
@@ -47,13 +48,6 @@ export interface UpdateReviewPayload {
   rating?: number;
   comment?: string;
 }
-
-// Consistent response wrapper
-export type ServiceResponse<T> =
-  | { data: T; error: null }
-  | { data: null; error: string };
-
-// ─── Helper ───────────────────────────────────────────────────────────────────
 
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();
@@ -117,7 +111,7 @@ export async function getAllReviews(
           page: json.data.meta.page,
           limit: json.data.meta.limit,
           total: json.data.meta.total,
-          totalPage: json.data.meta.totalPage ?? 1, // 🔥 fallback fix
+          totalPage: json.data.meta.totalPage ?? 1,
         },
         data: json.data.data,
       },

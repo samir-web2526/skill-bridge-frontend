@@ -96,7 +96,6 @@ function StatCard({
 }
 
 export default function AdminBookingsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bookings, setBookings] = useState<Booking[]>([]);
 const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
 

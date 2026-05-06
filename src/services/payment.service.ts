@@ -1,4 +1,5 @@
 "use server";
+import { PaginatedResponse, ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
@@ -49,29 +50,12 @@ export interface InitPaymentResponse {
   sessionId: string;
 }
 
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-}
-
 export interface PaymentFilters {
   page?: number;
   limit?: number;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
-
-// Consistent response wrapper
-export type ServiceResponse<T> =
-  | { data: T; error: null }
-  | { data: null; error: string };
-
-export type PaginatedResponse<T> =
-  | { data: T; meta: PaginationMeta; error: null }
-  | { data: null; meta: null; error: string };
-
-// ─── Helper ───────────────────────────────────────────────────────────────────
 
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();

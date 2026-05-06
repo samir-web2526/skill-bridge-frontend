@@ -39,13 +39,15 @@ export function BookingModal({ tutor, onClose, onSuccess }: Props) {
     setError(null);
 
     try {
-      await createBooking({
-        tutorId: tutor.id,
-        date: new Date(date).toISOString(),
-      });
+     await createBooking({
+  tutorId: tutor.id,
+  date: new Date(date).toISOString(),
+  startTime: tutor.availableFrom,
+  endTime: tutor.availableTo,
+});
 
       toast.success("Booking confirmed!", {
-        description: `Session with ${tutor.user.name} booked successfully.`,
+        description: `Session with ${tutor?.user?.name} booked successfully.`,
       });
 
       onSuccess();
@@ -85,7 +87,7 @@ export function BookingModal({ tutor, onClose, onSuccess }: Props) {
                 {tutor.user.name}
               </p>
               <p className="text-xs text-muted-foreground">
-                {tutor.category.name} · ৳{tutor.hourlyRate}/hr
+                {tutor.category?.name} · ৳{tutor.hourlyRate}/hr
               </p>
             </div>
           </div>

@@ -7,7 +7,6 @@ import { usePagination } from "@/hooks/usePagination";
 import { getAllReviews, Review } from "@/services/review.service";
 
 export default function AllReviewPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [reviews, setReviews] = useState<Review[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +19,8 @@ export default function AllReviewPage() {
     const result = await getAllReviews(page, 9);
 
     if (result.data) {
-      setReviews(result.data.data);      // reviews array
-      setPaginations(result.data.meta);  // pagination info
+      setReviews(result.data.data);     
+      setPaginations(result.data.meta);
     }
 
     setIsLoading(false);

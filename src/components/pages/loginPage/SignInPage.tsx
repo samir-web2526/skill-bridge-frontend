@@ -165,7 +165,7 @@ export function SignInForm() {
             className="w-full h-10.5 rounded-2xl text-sm font-medium text-white border-0 transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0"
             style={{ background: "#0d7a5f" }}
           >
-            Sign in
+            Login
           </Button>
         </form>
 
@@ -178,11 +178,11 @@ export function SignInForm() {
         <p className="text-center text-[13px] text-muted-foreground">
           Don&apos;t have an account?{" "}
           <a
-            href="/sign-up"
+            href="/register"
             className="font-medium hover:underline"
             style={{ color: "#0d7a5f" }}
           >
-            Sign up
+            Register here
           </a>
         </p>
       </div>

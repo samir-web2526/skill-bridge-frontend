@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Star, Users, Clock, BookOpen } from "lucide-react";
 import type { FormattedTutor } from "./TutorCard";
 import { getCategoryColor } from "@/lib/category/categoryColors";
+import Image from "next/image";
 
 function getInitials(name = "") {
   return name
@@ -31,7 +32,7 @@ type Props = {
 export function TutorProfile({ tutor, onClose, onBook }: Props) {
   if (!tutor) return null;
 
-  const color = getCategoryColor(tutor.category.name);
+  const color = getCategoryColor(tutor.category?.name ?? "default");
   const initials = getInitials(tutor.user.name);
 
   const stats = [
@@ -65,12 +66,14 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
                 {tutor.user.image ? (
-                  <img
-                    src={tutor.user.image}
-                    alt={tutor.user.name}
-                    className="w-16 h-16 rounded-2xl object-cover"
-                  />
-                ) : (
+                  <Image
+    src={tutor.user.image}
+    alt={tutor.user.name ?? "user"}
+    width={80}
+    height={80}
+    className="w-20 h-20 rounded-2xl object-cover"
+  />
+) : (
                   <div
                     className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl bg-white shadow-sm ${color.text}`}
                   >
@@ -84,19 +87,19 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
                   </DialogTitle>
 
                   <p className={`text-sm font-medium mt-0.5 ${color.text}`}>
-                    {tutor.category.name} · {tutor.experience} yrs exp
+                    {tutor.category?.name} · {tutor.experience} yrs exp
                   </p>
                 </div>
               </div>
 
               <Badge
                 className={`shrink-0 text-xs ${
-                  tutor.isAvailable
+                  tutor.availablity
                     ? "bg-green-100 text-green-700 hover:bg-green-100"
                     : "bg-red-100 text-red-700 hover:bg-red-100"
                 }`}
               >
-                {tutor.isAvailable ? "Available" : "Unavailable"}
+                {tutor.availablity ? "Available" : "Unavailable"}
               </Badge>
             </div>
           </DialogHeader>
@@ -137,11 +140,11 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
           </div>
 
           <Button
-            onClick={() => tutor.isAvailable && onBook(tutor)}
-            disabled={!tutor.isAvailable}
+            onClick={() => tutor.availablity && onBook(tutor)}
+            disabled={!tutor.availablity}
             className="w-full h-11 font-semibold text-sm"
           >
-            {tutor.isAvailable
+            {tutor.availablity
               ? `Book a Session — ৳${tutor.hourlyRate}/hr`
               : "Currently Unavailable"}
           </Button>

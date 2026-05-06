@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -13,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AlertCircle, CalendarDays, Inbox } from "lucide-react";
-import { getAllReviews, getMyReceivedReviews, Review } from "@/services/review.service";
+import { getMyReceivedReviews, Review } from "@/services/review.service";
 
 function StarRating({ rating }: { rating: number }) {
   const rounded = Math.round(rating);
@@ -320,13 +319,13 @@ export default function TutorReviewPage() {
                   >
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <StudentAvatar name={review.user?.name ?? "?"} />
+                        <StudentAvatar name={review.tutor?.user?.name ?? "?"} />
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-zinc-800 truncate">
-                            {review.user?.name ?? "—"}
+                            {review.tutor?.user?.name ?? "—"}
                           </p>
                           <p className="text-xs text-zinc-400 truncate">
-                            {review.user?.email ?? ""}
+                            {review.tutor?.user?.email ?? ""}
                           </p>
                         </div>
                       </div>

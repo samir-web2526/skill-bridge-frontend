@@ -1,6 +1,7 @@
+import { formatTutor } from "@/components/pages/tutorPage/TutorCard";
 import TutorDetailPage from "@/components/pages/tutorPage/TutorDetailPage";
+import { getCurrentUser } from "@/lib/auth";
 import { getTutorById } from "@/services/tutors.service";
-import { getUser } from "@/lib/auth/session";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -10,8 +11,10 @@ export default async function TutorPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const tutor = await getTutorById((await params).id);
-  const user = await getUser();
+  const result = await getTutorById((await params).id);
+  const tutor = formatTutor(result.data!);
+
+  const user = await getCurrentUser();
 
   if (!tutor) {
     return notFound();

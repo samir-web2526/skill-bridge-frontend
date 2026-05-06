@@ -101,14 +101,10 @@ function TutorAvatar({ name }: { name: string }) {
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-// আজকের তারিখ YYYY-MM-DD format-এ
 function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function BookingDialog({
   open,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -16,25 +15,19 @@ export default function SearchBar() {
 
   useEffect(() => {
     async function fetchPopular() {
-      const result = await getCategories(1, 20);
-      if (result?.data) {
-        const sorted = [...result.data]
-          .sort((a, b) => {
-            const totalBookingsA = a.tutor.reduce(
-              (sum: number, t: any) => sum + (t._count?.booking ?? 0),
-              0
-            );
-            const totalBookingsB = b.tutor.reduce(
-              (sum: number, t: any) => sum + (t._count?.booking ?? 0),
-              0
-            );
-            return totalBookingsB - totalBookingsA;
-          })
-          .slice(0, 5)
-          .map((cat: any) => cat.name);
+      const result = await getCategories({ page: 1, limit: 20 });
 
-        setPopularCategories(sorted);
-      }
+if (result.data) {
+  const sorted = [...result.data]
+    .sort(
+      (a, b) =>
+        (b.totalBookings ?? 0) - (a.totalBookings ?? 0)
+    )
+    .slice(0, 5)
+    .map((cat) => cat.name);
+
+  setPopularCategories(sorted);
+}
     }
 
     fetchPopular();

@@ -1,4 +1,5 @@
 "use server";
+import { PaginatedResponse, ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
@@ -40,20 +41,13 @@ export interface Booking {
 
 export interface CreateBookingPayload {
   tutorId: string;
-  date: string;        // "YYYY-MM-DD"
-  startTime: string;   // "HH:MM"
-  endTime: string;     // "HH:MM"
+  date: string;       
+  startTime: string;   
+  endTime: string;    
 }
 
 export interface UpdateBookingPayload {
   status: BookingStatus;
-}
-
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPage: number;
 }
 
 export interface BookingFilters {
@@ -62,17 +56,6 @@ export interface BookingFilters {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
-
-// Consistent response wrapper — used for ALL service functions
-export type ServiceResponse<T> =
-  | { data: T; error: null }
-  | { data: null; error: string };
-
-export type PaginatedResponse<T> =
-  | { data: T; meta: PaginationMeta; error: null }
-  | { data: null; meta: null; error: string };
-
-// ─── Helper ───────────────────────────────────────────────────────────────────
 
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();

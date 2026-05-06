@@ -1,23 +1,48 @@
 "use server";
+import { PaginatedResponse, ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+// export interface Category {
+//   id: string;
+//   name: string;
+//   description?: string;  // ← যোগ করো
+//   createdAt: string;
+//   _count?: {
+//     tutor: number;
+//   };
+//   tutor?: {
+//     id: string;
+//     bio: string;
+//     hourlyRate: number;
+//   }[];
+// }
+
 export interface Category {
   id: string;
   name: string;
-  description?: string;  // ← যোগ করো
+  description?: string;
   createdAt: string;
+
   _count?: {
     tutor: number;
   };
+
   tutor?: {
     id: string;
     bio: string;
     hourlyRate: number;
+
+    _count?: {
+      booking: number;
+      review: number;
+    };
   }[];
+
+  totalBookings?: number;
 }
 
 export interface CreateCategoryPayload {
@@ -30,13 +55,6 @@ export interface UpdateCategoryPayload {
   description?:string;
 }
 
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPage:number;
-}
-
 export interface CategoryFilters {
   page?: number;
   limit?: number;
@@ -45,13 +63,13 @@ export interface CategoryFilters {
 }
 
 // Consistent response wrapper
-export type ServiceResponse<T> =
-  | { data: T; error: null }
-  | { data: null; error: string };
+// export type ServiceResponse<T> =
+//   | { data: T; error: null }
+//   | { data: null; error: string };
 
-export type PaginatedResponse<T> =
-  | { data: T; meta: PaginationMeta; error: null }
-  | { data: null; meta: null; error: string };
+// export type PaginatedResponse<T> =
+//   | { data: T; meta: PaginationMeta; error: null }
+//   | { data: null; meta: null; error: string };
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -137,7 +155,7 @@ export async function createCategory(
 export async function getCategories(
   filters: CategoryFilters = {}
   
-): Promise<PaginatedResponse<Category>> {
+): Promise<PaginatedResponse<Category[]>> {
   try {
     const qs = buildQueryString(filters);
 
