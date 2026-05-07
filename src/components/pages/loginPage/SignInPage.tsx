@@ -23,6 +23,12 @@ const formSchema = z.object({
   password: z.string(),
 });
 
+const DEMO_CREDENTIALS = [
+  { role: "Student", email: "student1@gmail.com", password: "123456", color: "#166534", bg: "#f0fdf4", border: "#bbf7d0" },
+  { role: "Tutor",   email: "tutor1@gmail.com",   password: "123456", color: "#1e40af", bg: "#eff6ff", border: "#bfdbfe" },
+  { role: "Admin",   email: "admin@gmail.com",    password: "admin123", color: "#6b21a8", bg: "#faf5ff", border: "#e9d5ff" },
+];
+
 const inputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
   e.currentTarget.style.borderColor = "#0d7a5f";
   e.currentTarget.style.boxShadow = "0 0 0 3px rgba(13,122,95,0.1)";
@@ -36,12 +42,14 @@ const inputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 export function SignInForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [demoLoading, setDemoLoading] = React.useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "", password: "" },
   });
-   async function onSubmit(data: z.infer<typeof formSchema>) {
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     const result = await login(data);
     if (result?.error) {
       toast.error(result.error);
@@ -51,6 +59,20 @@ export function SignInForm() {
     router.refresh();
     router.push("/dashboard");
   }
+
+  const handleDemoLogin = async (cred: typeof DEMO_CREDENTIALS[0]) => {
+    setDemoLoading(cred.role);
+    const result = await login({ email: cred.email, password: cred.password });
+    if (result?.error) {
+      toast.error(result.error);
+      setDemoLoading(null);
+      return;
+    }
+    toast.success(`Signed in as ${cred.role}!`);
+    router.refresh();
+    router.push("/dashboard");
+  };
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-background px-4 gap-4">
       <style>{`
@@ -78,9 +100,40 @@ export function SignInForm() {
         <h1 className="text-[22px] font-medium text-foreground leading-tight">
           Welcome back
         </h1>
-        <p className="text-[13px] text-muted-foreground mt-1.5 mb-6">
+        <p className="text-[13px] text-muted-foreground mt-1.5 mb-4">
           Sign in to continue your learning journey
         </p>
+
+        {/* Demo Credentials */}
+        <div className="mb-5">
+          <p className="text-[11px] font-medium text-muted-foreground mb-2">
+            Demo accounts
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {DEMO_CREDENTIALS.map((cred) => (
+              <button
+                key={cred.role}
+                type="button"
+                disabled={demoLoading !== null}
+                onClick={() => handleDemoLogin(cred)}
+                className="flex items-center justify-center px-2 py-2 rounded-xl border text-[11px] font-medium transition-all duration-150 hover:opacity-80 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: cred.bg,
+                  borderColor: cred.border,
+                  color: cred.color,
+                }}
+              >
+                {demoLoading === cred.role ? "..." : `Login as ${cred.role}`}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 mb-5">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-[11px] text-muted-foreground">or</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
 
         <form id="signin-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>

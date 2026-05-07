@@ -1,4 +1,309 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// "use client";
+
+// import { useState } from "react";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
+// import { Button } from "@/components/ui/button";
+
+// export type BookingError = {
+//   message: string;
+//   isEmailError?: boolean;
+// };
+
+// type Props = {
+//   open: boolean;
+//   mode: "create" | "cancel";
+//   tutors?: any[];
+//   selectedTutorId?: string;
+//   onTutorChange?: (id: string) => void;
+//   cancelTutorName?: string;
+//   isSubmitting: boolean;
+//   error?: BookingError | null;
+//   onClose: () => void;
+//   onSubmit: (data?: {
+//     tutorId: string;
+//     date: string;
+//     startTime: string;
+//     endTime: string;
+//   }) => void;
+//   // ✅ existing active booking dates for this student
+//   existingBookingDates?: string[]; // ["2025-06-01", "2025-06-05"]
+// };
+
+// function todayStr() {
+//   return new Date().toISOString().split("T")[0];
+// }
+
+// // ✅ "06:00" format check helper
+// function timeToMinutes(t: string) {
+//   const [h, m] = t.split(":").map(Number);
+//   return h * 60 + m;
+// }
+
+// export function BookingDialog({
+//   open,
+//   mode,
+//   tutors = [],
+//   selectedTutorId = "",
+//   onTutorChange,
+//   cancelTutorName,
+//   isSubmitting,
+//   error,
+//   onClose,
+//   onSubmit,
+//   existingBookingDates = [],
+// }: Props) {
+//   const isCreate = mode === "create";
+//   const selectedTutor = tutors.find((t) => t.id === selectedTutorId);
+
+//   const [date, setDate] = useState("");
+//   const [startTime, setStartTime] = useState("");
+//   const [endTime, setEndTime] = useState("");
+//   const [localError, setLocalError] = useState<string | null>(null);
+
+//   const availableFrom = selectedTutor?.availableFrom ?? "06:00";
+//   const availableTo = selectedTutor?.availableTo ?? "23:00";
+
+//   const handleClose = () => {
+//     setDate("");
+//     setStartTime("");
+//     setEndTime("");
+//     setLocalError(null);
+//     onClose();
+//   };
+
+//   // ✅ Date change handler - same date booking block
+//   const handleDateChange = (val: string) => {
+//     setStartTime("");
+//     setEndTime("");
+//     setLocalError(null);
+
+//     if (existingBookingDates.includes(val)) {
+//       setLocalError(
+//         "You already have a booking on this date. Please complete or cancel it first."
+//       );
+//       setDate(val);
+//       return;
+//     }
+
+//     setDate(val);
+//   };
+
+//   // ✅ Start time change handler
+//   const handleStartTimeChange = (val: string) => {
+//     setLocalError(null);
+//     setEndTime(""); // reset end time when start changes
+
+//     const fromMin = timeToMinutes(availableFrom);
+//     const toMin = timeToMinutes(availableTo);
+//     const selectedMin = timeToMinutes(val);
+
+//     if (selectedMin < fromMin || selectedMin >= toMin) {
+//       setLocalError(`Start time must be within ${availableFrom} - ${availableTo}`);
+//     }
+
+//     setStartTime(val);
+//   };
+
+//   // ✅ End time change handler
+//   const handleEndTimeChange = (val: string) => {
+//     setLocalError(null);
+
+//     const toMin = timeToMinutes(availableTo);
+//     const startMin = timeToMinutes(startTime);
+//     const selectedMin = timeToMinutes(val);
+
+//     if (selectedMin <= startMin) {
+//       setLocalError("End time must be after start time.");
+//     } else if (selectedMin > toMin) {
+//       setLocalError(`End time must be within tutor working hours (before ${availableTo})`);
+//     }
+
+//     setEndTime(val);
+//   };
+
+//   const handleSubmit = () => {
+//     if (!isCreate) {
+//       onSubmit();
+//       return;
+//     }
+
+//     setLocalError(null);
+
+//     // ✅ Final validation before submit
+//     if (!selectedTutorId) return setLocalError("Please select a tutor.");
+//     if (!date) return setLocalError("Please select a date.");
+//     if (!startTime || !endTime) return setLocalError("Please select time.");
+
+//     // same date check
+//     if (existingBookingDates.includes(date)) {
+//       return setLocalError(
+//         "You already have a booking on this date. Please complete or cancel it first."
+//       );
+//     }
+
+//     const startMin = timeToMinutes(startTime);
+//     const endMin = timeToMinutes(endTime);
+//     const fromMin = timeToMinutes(availableFrom);
+//     const toMin = timeToMinutes(availableTo);
+
+//     if (startMin >= endMin) {
+//       return setLocalError("End time must be after start time.");
+//     }
+
+//     if (startMin < fromMin || endMin > toMin) {
+//       return setLocalError(
+//         `Time must be within tutor working hours: ${availableFrom} - ${availableTo}`
+//       );
+//     }
+
+//     // ✅ 6 AM - 11 PM global check (backend rule mirror)
+//     if (startMin < timeToMinutes("06:00") || endMin > timeToMinutes("23:00")) {
+//       return setLocalError("Booking allowed between 6 AM - 11 PM only.");
+//     }
+
+//     onSubmit({ tutorId: selectedTutorId, date, startTime, endTime });
+//   };
+
+//   const isDateAlreadyBooked = date && existingBookingDates.includes(date);
+
+//   return (
+//     <Dialog open={open} onOpenChange={handleClose}>
+//       <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border">
+//         <DialogHeader className="px-6 pt-6 pb-0">
+//           <DialogTitle className="text-base font-bold">
+//             {isCreate ? "Book a tutor" : "Cancel booking"}
+//           </DialogTitle>
+//         </DialogHeader>
+
+//         <div className="px-6 py-5 space-y-4">
+//           {/* Cancel confirmation */}
+//           {!isCreate && (
+//             <p className="text-sm text-zinc-600">
+//               Are you sure you want to cancel your booking with{" "}
+//               <span className="font-semibold text-zinc-800">{cancelTutorName}</span>?
+//               This action cannot be undone.
+//             </p>
+//           )}
+
+//           {/* Tutor list */}
+//           {isCreate && (
+//             <div className="space-y-2 max-h-48 overflow-y-auto">
+//               {tutors.map((t) => (
+//                 <div
+//                   key={t.id}
+//                   onClick={() => {
+//                     onTutorChange?.(t.id);
+//                     setStartTime("");
+//                     setEndTime("");
+//                     setDate("");
+//                     setLocalError(null);
+//                   }}
+//                   className={`p-2 border rounded cursor-pointer transition-colors ${
+//                     selectedTutorId === t.id
+//                       ? "bg-emerald-50 border-emerald-400"
+//                       : "hover:bg-zinc-50"
+//                   }`}
+//                 >
+//                   {t.user?.name}
+//                   {/* ✅ Show tutor working hours */}
+//                   {selectedTutorId === t.id && (
+//                     <span className="ml-2 text-xs text-zinc-400">
+//                       ({t.availableFrom} - {t.availableTo})
+//                     </span>
+//                   )}
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+
+//           {/* Date */}
+//           {isCreate && selectedTutor && (
+//             <div className="space-y-1">
+//               <label className="text-xs text-zinc-500">Select Date</label>
+//               <input
+//                 type="date"
+//                 value={date}
+//                 min={todayStr()}
+//                 onChange={(e) => handleDateChange(e.target.value)}
+//                 className={`border p-2 w-full rounded ${
+//                   isDateAlreadyBooked ? "border-red-400 bg-red-50" : ""
+//                 }`}
+//               />
+//               {/* ✅ Inline date warning */}
+//               {isDateAlreadyBooked && (
+//                 <p className="text-xs text-red-500">
+//                   You already have a booking on this date.
+//                 </p>
+//               )}
+//             </div>
+//           )}
+
+//           {/* Time — only show if date is valid */}
+//           {isCreate && selectedTutor && date && !isDateAlreadyBooked && (
+//             <div className="space-y-1">
+//               <label className="text-xs text-zinc-500">
+//                 Select Time ({availableFrom} - {availableTo})
+//               </label>
+//               <div className="flex gap-2">
+//                 <input
+//                   type="time"
+//                   value={startTime}
+//                   min={availableFrom}
+//                   max={availableTo}
+//                   onChange={(e) => handleStartTimeChange(e.target.value)}
+//                   className="border p-2 w-full rounded"
+//                 />
+//                 <input
+//                   type="time"
+//                   value={endTime}
+//                   min={startTime || availableFrom}
+//                   max={availableTo}
+//                   onChange={(e) => handleEndTimeChange(e.target.value)}
+//                   className="border p-2 w-full rounded"
+//                   disabled={!startTime} // ✅ end time disable if no start
+//                 />
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Error */}
+//           {(localError || error) && (
+//             <p className="text-red-500 text-sm">
+//               {localError || error?.message}
+//             </p>
+//           )}
+//         </div>
+
+//         {/* Footer */}
+//         <div className="flex justify-end gap-2 p-4 border-t">
+//           <Button variant="ghost" onClick={handleClose} disabled={isSubmitting}>
+//             Close
+//           </Button>
+//           <Button
+//             disabled={
+//               isSubmitting ||
+//               (isCreate && (!selectedTutorId || !!isDateAlreadyBooked))
+//             }
+//             onClick={handleSubmit}
+//             className={!isCreate ? "bg-red-600 hover:bg-red-500 text-white" : ""}
+//           >
+//             {isSubmitting
+//               ? "Please wait..."
+//               : isCreate
+//               ? "Confirm Booking"
+//               : "Yes, Cancel"}
+//           </Button>
+//         </div>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// }
 
 "use client";
 
@@ -26,85 +331,23 @@ type Props = {
   isSubmitting: boolean;
   error?: BookingError | null;
   onClose: () => void;
-  onSubmit: (data: { tutorId: string; date: string; startTime: string; endTime: string }) => void;
+  onSubmit: (data?: {
+    tutorId: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+  }) => void;
+  existingBookingDates?: string[];
 };
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
-function CalendarIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <rect x="2" y="4" width="12" height="10" rx="2" stroke="#059669" strokeWidth="1.3" />
-      <path d="M5 2v3M11 2v3M2 8h12" stroke="#059669" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function AlertIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="6" stroke="#ef4444" strokeWidth="1.3" />
-      <path d="M8 5v3.5M8 11v.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function StarIcon() {
-  return (
-    <svg width="11" height="11" viewBox="0 0 12 12">
-      <polygon points="6,1 7.5,4.5 11,4.5 8.5,7 9.5,11 6,9 2.5,11 3.5,7 1,4.5 4.5,4.5" fill="#d97706" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-      <path d="M1.5 4.5l2 2 4-4" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ConfirmIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
-      <path d="M2 6l2.5 2.5 5.5-5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function WarnTriangle() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 mt-0.5">
-      <path d="M7 2L13 12H1L7 2z" stroke="#d97706" strokeWidth="1.2" strokeLinejoin="round" />
-      <path d="M7 6v2.5M7 10v.5" stroke="#d97706" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 mt-0.5">
-      <rect x="1" y="3" width="12" height="8" rx="1.5" stroke="#b45309" strokeWidth="1.2" />
-      <path d="M1 4l6 4 6-4" stroke="#b45309" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function TutorAvatar({ name }: { name: string }) {
-  const initials =
-    name?.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) ?? "?";
-  return (
-    <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold flex items-center justify-center shrink-0">
-      {initials}
-    </div>
-  );
-}
 
 function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
 
+function timeToMinutes(t: string) {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+}
 
 export function BookingDialog({
   open,
@@ -112,11 +355,12 @@ export function BookingDialog({
   tutors = [],
   selectedTutorId = "",
   onTutorChange,
-  cancelTutorName = "",
+  cancelTutorName,
   isSubmitting,
   error,
   onClose,
   onSubmit,
+  existingBookingDates = [],
 }: Props) {
   const isCreate = mode === "create";
   const selectedTutor = tutors.find((t) => t.id === selectedTutorId);
@@ -125,18 +369,9 @@ export function BookingDialog({
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
-  const [resentEmail, setResentEmail] = useState(false);
 
-  // tutor-এর available time range
   const availableFrom = selectedTutor?.availableFrom ?? "06:00";
   const availableTo = selectedTutor?.availableTo ?? "23:00";
-
-  const handleResendVerification = async () => {
-    try {
-      await fetch("/api/auth/resend-verification", { method: "POST" });
-      setResentEmail(true);
-    } catch {}
-  };
 
   const handleClose = () => {
     setDate("");
@@ -146,282 +381,217 @@ export function BookingDialog({
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleDateChange = (val: string) => {
+    setStartTime("");
+    setEndTime("");
     setLocalError(null);
 
-    if (!selectedTutorId) {
-      setLocalError("Please select a tutor.");
-      return;
+    if (existingBookingDates.includes(val)) {
+      setLocalError(
+        "You already have a booking on this date. Please complete or cancel it first."
+      );
     }
-    if (!date) {
-      setLocalError("Please select a date.");
-      return;
+
+    setDate(val);
+  };
+
+  const handleStartTimeChange = (val: string) => {
+    setLocalError(null);
+    setEndTime("");
+
+    const fromMin = timeToMinutes(availableFrom);
+    const toMin = timeToMinutes(availableTo);
+    const selectedMin = timeToMinutes(val);
+
+    if (selectedMin < fromMin || selectedMin >= toMin) {
+      setLocalError(`Start time must be within ${availableFrom} - ${availableTo}`);
     }
-    if (!startTime) {
-      setLocalError("Please select a start time.");
-      return;
-    }
-    if (!endTime) {
-      setLocalError("Please select an end time.");
-      return;
-    }
-    if (startTime >= endTime) {
+
+    setStartTime(val);
+  };
+
+  const handleEndTimeChange = (val: string) => {
+    setLocalError(null);
+
+    const toMin = timeToMinutes(availableTo);
+    const startMin = timeToMinutes(startTime);
+    const selectedMin = timeToMinutes(val);
+
+    if (selectedMin <= startMin) {
       setLocalError("End time must be after start time.");
+    } else if (selectedMin > toMin) {
+      setLocalError(`End time must be before ${availableTo}`);
+    }
+
+    setEndTime(val);
+  };
+
+  const handleSubmit = () => {
+    if (!isCreate) {
+      onSubmit();
       return;
+    }
+
+    setLocalError(null);
+
+    if (!selectedTutorId) return setLocalError("Please select a tutor.");
+    if (!date) return setLocalError("Please select a date.");
+    if (!startTime || !endTime) return setLocalError("Please select time.");
+
+    if (existingBookingDates.includes(date)) {
+      return setLocalError(
+        "You already have a booking on this date. Please complete or cancel it first."
+      );
+    }
+
+    const startMin = timeToMinutes(startTime);
+    const endMin = timeToMinutes(endTime);
+    const fromMin = timeToMinutes(availableFrom);
+    const toMin = timeToMinutes(availableTo);
+
+    if (startMin >= endMin) {
+      return setLocalError("End time must be after start time.");
+    }
+
+    if (startMin < fromMin || endMin > toMin) {
+      return setLocalError(
+        `Time must be within tutor working hours: ${availableFrom} - ${availableTo}`
+      );
+    }
+
+    if (startMin < timeToMinutes("06:00") || endMin > timeToMinutes("23:00")) {
+      return setLocalError("Booking allowed between 6 AM - 11 PM only.");
     }
 
     onSubmit({ tutorId: selectedTutorId, date, startTime, endTime });
   };
 
+  const isDateAlreadyBooked = !!date && existingBookingDates.includes(date);
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border border-zinc-100">
+      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border">
         <DialogHeader className="px-6 pt-6 pb-0">
-          <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 shrink-0 ${
-              isCreate ? "bg-emerald-50" : "bg-red-50"
-            }`}
-          >
-            {isCreate ? <CalendarIcon /> : <AlertIcon />}
-          </div>
-          <DialogTitle className="text-base font-extrabold tracking-tight text-zinc-900">
+          <DialogTitle className="text-base font-bold">
             {isCreate ? "Book a tutor" : "Cancel booking"}
           </DialogTitle>
-          <p className="text-sm text-zinc-400 mt-1 font-normal">
-            {isCreate
-              ? "Pick a tutor, choose your slot, and confirm."
-              : "This action cannot be undone."}
-          </p>
-          <div className="h-px bg-zinc-100 mt-4" />
         </DialogHeader>
 
-        <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
-          {isCreate ? (
-            <>
-              {/* ── Tutor selection ── */}
-              {selectedTutor && (
-                <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
-                  <span className="text-[11px] font-bold tracking-widest text-emerald-600 uppercase">
-                    Selected
-                  </span>
-                  <span className="text-xs font-semibold text-emerald-700">
-                    {selectedTutor.user?.name} · ৳{Number(selectedTutor.hourlyRate).toLocaleString()}/hr
-                  </span>
-                </div>
-              )}
+        <div className="px-6 py-5 space-y-4">
+          {/* Cancel confirmation */}
+          {!isCreate && (
+            <p className="text-sm text-zinc-600">
+              Are you sure you want to cancel your booking with{" "}
+              <span className="font-semibold text-zinc-800">{cancelTutorName}</span>?
+              This action cannot be undone.
+            </p>
+          )}
 
-              <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase">
-                Available tutors
-              </p>
-
-              {tutors.length === 0 ? (
-                <p className="text-sm text-zinc-400 py-4 text-center">
-                  No available tutors at the moment.
-                </p>
-              ) : (
-                <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-0.5">
-                  {tutors.map((t) => {
-                    const isSelected = selectedTutorId === t.id;
-                    return (
-                      <div
-                        key={t.id}
-                        onClick={() => {
-                          onTutorChange?.(t.id);
-                          // tutor change হলে time reset করো
-                          setStartTime("");
-                          setEndTime("");
-                          setLocalError(null);
-                        }}
-                        className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl border cursor-pointer transition-colors ${
-                          isSelected
-                            ? "border-emerald-300 bg-emerald-50"
-                            : "border-zinc-100 hover:bg-zinc-50 hover:border-zinc-200"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <TutorAvatar name={t.user?.name ?? "?"} />
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold text-zinc-800 truncate">
-                              {t.user?.name}
-                            </p>
-                            <p className="text-xs text-zinc-400 truncate">
-                              {t.category?.name ?? "General"} · ৳{Number(t.hourlyRate).toLocaleString()}/hr
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          {t.averageRating && Number(t.averageRating) > 0 && (
-                            <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
-                              <StarIcon />
-                              {Number(t.averageRating).toFixed(1)}
-                            </span>
-                          )}
-                          {isSelected && (
-                            <div className="w-4 h-4 rounded-full bg-emerald-600 flex items-center justify-center">
-                              <CheckIcon />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* ── Date & Time selection ── */}
-              {selectedTutor && (
-                <div className="space-y-3 pt-1">
-                  <div className="h-px bg-zinc-100" />
-                  <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase">
-                    Session details
-                  </p>
-
-                  {/* Tutor availability info */}
-                  <div className="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-50 rounded-lg px-3 py-2">
-                    <CalendarIcon />
-                    <span>
-                      Tutor available:{" "}
-                      <span className="font-semibold text-zinc-600">
-                        {availableFrom} – {availableTo}
-                      </span>
+          {/* Tutor list */}
+          {isCreate && (
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {tutors.map((t) => (
+                <div
+                  key={t.id}
+                  onClick={() => {
+                    onTutorChange?.(t.id);
+                    setStartTime("");
+                    setEndTime("");
+                    setDate("");
+                    setLocalError(null);
+                  }}
+                  className={`p-2 border rounded cursor-pointer transition-colors ${
+                    selectedTutorId === t.id
+                      ? "bg-emerald-50 border-emerald-400"
+                      : "hover:bg-zinc-50"
+                  }`}
+                >
+                  <span>{t.user?.name}</span>
+                  {selectedTutorId === t.id && (
+                    <span className="ml-2 text-xs text-zinc-400">
+                      ({t.availableFrom} - {t.availableTo})
                     </span>
-                  </div>
-
-                  {/* Date */}
-                  <div>
-                    <label className="text-xs font-semibold text-zinc-500 block mb-1">
-                      Date <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      value={date}
-                      min={todayStr()}
-                      onChange={(e) => setDate(e.target.value)}
-                      className="w-full h-9 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-800 outline-none focus:border-emerald-400 transition-colors"
-                    />
-                  </div>
-
-                  {/* Start & End Time */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-semibold text-zinc-500 block mb-1">
-                        Start time <span className="text-red-400">*</span>
-                      </label>
-                      <input
-                        type="time"
-                        value={startTime}
-                        min={availableFrom}
-                        max={availableTo}
-                        onChange={(e) => {
-                          setStartTime(e.target.value);
-                          setLocalError(null);
-                        }}
-                        className="w-full h-9 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-800 outline-none focus:border-emerald-400 transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-semibold text-zinc-500 block mb-1">
-                        End time <span className="text-red-400">*</span>
-                      </label>
-                      <input
-                        type="time"
-                        value={endTime}
-                        min={startTime || availableFrom}
-                        max={availableTo}
-                        onChange={(e) => {
-                          setEndTime(e.target.value);
-                          setLocalError(null);
-                        }}
-                        className="w-full h-9 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-800 outline-none focus:border-emerald-400 transition-colors"
-                      />
-                    </div>
-                  </div>
+                  )}
                 </div>
-              )}
+              ))}
+            </div>
+          )}
 
-              {/* ── Errors ── */}
-              {(localError || error) && (
-                <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
-                  {error?.isEmailError ? <MailIcon /> : <WarnTriangle />}
-                  <div className="flex flex-col gap-1">
-                    <p className="text-xs text-amber-800 leading-relaxed">
-                      {localError ??
-                        (error?.isEmailError
-                          ? "Your email isn't verified yet. Please verify to book a session."
-                          : error?.message)}
-                    </p>
-                    {error?.isEmailError && (
-                      <button
-                        onClick={handleResendVerification}
-                        disabled={resentEmail}
-                        className="text-left text-[11px] font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-900 transition-colors disabled:opacity-60 w-fit"
-                      >
-                        {resentEmail
-                          ? "Email sent — check your inbox ✓"
-                          : "Resend verification email →"}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="space-y-3">
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                Are you sure you want to cancel your session with{" "}
-                <span className="font-semibold text-zinc-800">{cancelTutorName}</span>? Your slot
-                will be released.
-              </p>
-              <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
-                <WarnTriangle />
-                <p className="text-xs text-amber-800 leading-relaxed">
-                  Only <span className="font-semibold">Pending</span> bookings can be cancelled.
-                  Confirmed sessions require tutor approval.
+          {/* Date */}
+          {isCreate && selectedTutor && (
+            <div className="space-y-1">
+              <label className="text-xs text-zinc-500">Select Date</label>
+              <input
+                type="date"
+                value={date}
+                min={todayStr()}
+                onChange={(e) => handleDateChange(e.target.value)}
+                className={`border p-2 w-full rounded ${
+                  isDateAlreadyBooked ? "border-red-400 bg-red-50" : ""
+                }`}
+              />
+              {isDateAlreadyBooked && (
+                <p className="text-xs text-red-500">
+                  You already have a booking on this date.
                 </p>
+              )}
+            </div>
+          )}
+
+          {/* Time — শুধু valid date থাকলে দেখাবে */}
+          {isCreate && selectedTutor && date && !isDateAlreadyBooked && (
+            <div className="space-y-1">
+              <label className="text-xs text-zinc-500">
+                Select Time ({availableFrom} - {availableTo})
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="time"
+                  value={startTime}
+                  min={availableFrom}
+                  max={availableTo}
+                  onChange={(e) => handleStartTimeChange(e.target.value)}
+                  className="border p-2 w-full rounded"
+                />
+                <input
+                  type="time"
+                  value={endTime}
+                  min={startTime || availableFrom}
+                  max={availableTo}
+                  onChange={(e) => handleEndTimeChange(e.target.value)}
+                  className="border p-2 w-full rounded"
+                  disabled={!startTime}
+                />
               </div>
             </div>
           )}
+
+          {/* Error */}
+          {(localError || error) && (
+            <p className="text-red-500 text-sm">
+              {localError || error?.message}
+            </p>
+          )}
         </div>
 
-        <div className="flex items-center justify-between px-6 py-4 bg-zinc-50 border-t border-zinc-100">
-          <Button
-            variant="ghost"
-            onClick={handleClose}
-            disabled={isSubmitting}
-            className="text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-xl text-sm font-semibold"
-          >
-            {isCreate ? "Cancel" : "Keep it"}
+        {/* Footer */}
+        <div className="flex justify-end gap-2 p-4 border-t">
+          <Button variant="ghost" onClick={handleClose} disabled={isSubmitting}>
+            Close
           </Button>
-
           <Button
-            onClick={isCreate ? handleSubmit : onSubmit as any}
-            disabled={isSubmitting || (isCreate && !selectedTutorId)}
-            className={`rounded-xl text-sm font-semibold px-5 flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-              isCreate
-                ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-100"
-                : "bg-red-500 hover:bg-red-400 text-white shadow-red-100"
-            }`}
+            disabled={
+              isSubmitting ||
+              (isCreate && (!selectedTutorId || isDateAlreadyBooked))
+            }
+            onClick={handleSubmit}
+            className={!isCreate ? "bg-red-600 hover:bg-red-500 text-white" : ""}
           >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin w-3.5 h-3.5 shrink-0" viewBox="0 0 14 14" fill="none">
-                  <circle
-                    cx="7" cy="7" r="5"
-                    stroke="#fff" strokeWidth="1.5"
-                    strokeDasharray="20" strokeDashoffset="10"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                Saving…
-              </>
-            ) : isCreate ? (
-              <>
-                <ConfirmIcon />
-                Confirm booking
-              </>
-            ) : (
-              "Yes, cancel"
-            )}
+            {isSubmitting
+              ? "Please wait..."
+              : isCreate
+              ? "Confirm Booking"
+              : "Yes, Cancel"}
           </Button>
         </div>
       </DialogContent>

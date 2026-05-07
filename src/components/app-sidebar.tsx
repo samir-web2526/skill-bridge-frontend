@@ -33,6 +33,16 @@ const ADMIN_NAV = [
     isActive: true,
     items: [
       {
+        title:"All Tutors",
+        url:"/dashboard/all-tutors",
+        icon: Search,
+      },
+      {
+        title: "Manage Tutors",
+        url: "/dashboard/manage-tutors",
+        icon: Search,
+      },
+      {
         title: "Bookings",
         url: "/dashboard/bookings",
         icon: CalendarDays,

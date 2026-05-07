@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 import { PaginatedResponse, ServiceResponse } from "@/types/sharedTypes";
 import { cookies } from "next/headers";
@@ -5,6 +6,7 @@ import { cookies } from "next/headers";
 const API = process.env.NEXT_PUBLIC_API;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+export type userStatus = "ACTIVE" | "BANNED" | "PENDING";
 
 export interface Category {
   id: string;
@@ -47,7 +49,7 @@ export interface TutorProfile {
     phone: string | null;
     image: string | null;
     role: string;
-    status: string;
+    status: userStatus;
   };
   category: Category;
   review?: Review[];
@@ -68,6 +70,7 @@ export interface TutorFilters {
   maxPrice?: number;
   minRating?: number;
   availableOnly?: boolean;
+  isDeleted?: boolean;
   page?: number;
   limit?: number;
   sortBy?: string;
@@ -82,6 +85,7 @@ export interface UpdateTutorPayload {
   education?: string;
   availability?: boolean;
 }
+
 
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();
@@ -184,7 +188,34 @@ export async function getMyTutorProfile(): Promise<ServiceResponse<TutorProfile>
 }
 
 // GET /api/v1/tutors/deleted  (ADMIN only)
-export async function getDeletedTutors(): Promise<ServiceResponse<TutorProfile[]>> {
+// export async function getDeletedTutors(): Promise<ServiceResponse<TutorProfile[]>> {
+//   try {
+//     const accessToken = await getAccessToken();
+
+//     const result = await fetch(`${API}/api/v1/tutors/deleted`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       cache: "no-store",
+//     });
+
+//     const json = await result.json();
+
+//     if (!result.ok) {
+//       return { data: null, error: json?.message ?? "Failed to fetch deleted tutors" };
+//     }
+
+//     return { data: json?.data ?? [], error: null };
+//   } catch (err: unknown) {
+//     const message = err instanceof Error ? err.message : "Something went wrong";
+//     console.error("[getDeletedTutors]", message);
+//     return { data: null, error: message };
+//   }
+// }
+
+export async function getDeletedTutors(): Promise<PaginatedResponse<TutorProfile[]>> {
   try {
     const accessToken = await getAccessToken();
 
@@ -200,14 +231,21 @@ export async function getDeletedTutors(): Promise<ServiceResponse<TutorProfile[]
     const json = await result.json();
 
     if (!result.ok) {
-      return { data: null, error: json?.message ?? "Failed to fetch deleted tutors" };
+      return { data: null, meta: null, error: json?.message ?? "Failed to fetch deleted tutors" };
     }
 
-    return { data: json?.data ?? [], error: null };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Something went wrong";
-    console.error("[getDeletedTutors]", message);
-    return { data: null, error: message };
+    return {
+      data: json?.data ?? [],  
+      meta: {
+        page: 1,
+        limit: 10,
+        total: json?.data?.length ?? 0,
+        totalPage: 1,
+      },
+      error: null,
+    };
+  } catch (err) {
+    return { data: null, meta: null, error: "Something went wrong" };
   }
 }
 
@@ -270,8 +308,8 @@ export async function updateTutor(
 // PATCH /api/v1/tutors/update-status/:id  (ADMIN only)
 export async function updateTutorStatus(
   tutorId: string,
-  status: string
-): Promise<ServiceResponse<null>> {
+  status: userStatus
+): Promise<ServiceResponse<TutorProfile>> {
   try {
     const accessToken = await getAccessToken();
 
@@ -290,7 +328,7 @@ export async function updateTutorStatus(
       return { data: null, error: json?.message ?? "Status update failed" };
     }
 
-    return { data: null, error: null };
+    return { data: json?.data ?? null, error: null };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
     console.error("[updateTutorStatus]", message);

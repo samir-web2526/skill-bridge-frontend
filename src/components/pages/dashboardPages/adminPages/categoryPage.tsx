@@ -1,23 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, Plus, AlertCircle, Inbox } from "lucide-react";
-import { CategoryDialog } from "./categoryDialog";
-import { getCategoryColor } from "@/lib/category/categoryColors";
 import { toast } from "sonner";
 import { Category, createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category.service";
+import { PaginationMeta } from "@/types/sharedTypes";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, Inbox, Pencil, Plus, Trash2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getCategoryColor } from "@/lib/category/categoryColors";
+import { CategoryDialog } from "./categoryDialog";
+import { Pagination } from "@/components/ui/Pagination";
 
 function StatCard({
   label,
@@ -104,49 +99,64 @@ export default function AdminCategoriesPage() {
     setDialogOpen(true);
   };
 
-  const handleSubmit = async () => {
-    if (!inputName.trim()) return;
-    setIsSubmitting(true);
+const handleSubmit = async () => {
+  if (!inputName.trim()) return;
 
+  setIsSubmitting(true);
+
+  try {
     if (dialogMode === "create") {
       const result = await createCategory({
-  name: inputName.trim(),
-  description: inputDescription.trim(),
-});
-      if (result && result.data) {
-  toast.success("Category created successfully.");
+        name: inputName.trim(),
+        description: inputDescription.trim(),
+      });
 
-  setCategories((prev) => [result.data!, ...prev]);
-
-  setRefresh((prev) => prev + 1);
-}
-    } else if (dialogMode === "edit" && selectedCategory) {
-     const result = await updateCategory(selectedCategory.id, {
-  name: inputName.trim(),
-  description: inputDescription.trim(),
-});
-      if (result?.error) {
+      if (result.error) {
         toast.error(result.error);
-        setIsSubmitting(false);
-        setDialogOpen(false);
         return;
       }
-     if (result?.data) {
-  toast.success("Category updated successfully.");
 
-  setCategories((prev) =>
-    prev.map((c) =>
-      c.id === selectedCategory.id ? result.data! : c
-    )
-  );
+      if (result.data) {
+        toast.success("Category created successfully.");
 
-  setRefresh((prev) => prev + 1);
-}
+        setCategories((prev) => [result.data, ...prev]);
+      }
     }
 
-    setIsSubmitting(false);
+    if (dialogMode === "edit" && selectedCategory) {
+      const result = await updateCategory(selectedCategory.id, {
+        name: inputName.trim(),
+        description: inputDescription.trim(),
+      });
+
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      if (result.data) {
+        const updated = {
+          ...selectedCategory,
+          ...result.data,
+        };
+
+        setCategories((prev) =>
+          prev.map((c) =>
+            c.id === selectedCategory.id ? updated : c
+          )
+        );
+
+        toast.success("Category updated successfully.");
+      }
+    }
+
     setDialogOpen(false);
-  };
+  } catch (err) {
+    toast.error("Something went wrong");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleDelete = async (categoryId: string) => {
     const result = await deleteCategory(categoryId);
@@ -276,7 +286,7 @@ export default function AdminCategoriesPage() {
                     icon: Icon,
                     bg: bgColor,
                     text: color,
-                  } = getCategoryColor(category.name);
+                  } = getCategoryColor(category?.name ?? "default" );
                   return (
                     <TableRow
                       key={category.id}
@@ -296,8 +306,8 @@ export default function AdminCategoriesPage() {
                               {category.name}
                             </p>
                             <p className="text-xs text-zinc-400 mt-0.5">
-                              {category._count?.tutor ?? 0} tutor
-                              {(category._count?.tutor ?? 0) !== 1 ? "s" : ""}
+                              {category?.tutor?.length ?? 0} tutor
+                              {(category?.tutor?.length ?? 0) !== 1 ? "s" : ""}
                             </p>
                           </div>
                         </div>
