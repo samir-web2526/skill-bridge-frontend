@@ -33,6 +33,11 @@ const ADMIN_NAV = [
     isActive: true,
     items: [
       {
+        title:"Dashboard",
+        url:"/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
         title:"All Tutors",
         url:"/dashboard/all-tutors",
         icon: Search,
@@ -75,6 +80,11 @@ const STUDENT_NAV = [
     isActive: true,
     items: [
       {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
         title: "Find Tutors",
         url: "/dashboard/tutors",
         icon: Search,
@@ -106,6 +116,11 @@ const TUTOR_NAV = [
     isActive: true,
     items: [
       {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
         title: "My Bookings",
         url: "/dashboard/bookings",
         icon: CalendarDays,
@@ -114,6 +129,11 @@ const TUTOR_NAV = [
         title: "My Reviews",
         url: "/dashboard/reviews",
         icon: Star,
+      },
+      {
+        title: "My Students",
+        url: "/dashboard/students",
+        icon: UserCircle,
       },
       {
         title: "My Profile",

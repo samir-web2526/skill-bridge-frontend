@@ -15,6 +15,11 @@ export interface Review {
   tutorId: string;
   userId: string;
   createdAt: string;
+  user:{
+  id: string;
+  name: string;
+  email: string;
+  };
   tutor?: {
   id: string;
   bio: string;

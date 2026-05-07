@@ -319,13 +319,13 @@ export default function TutorReviewPage() {
                   >
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <StudentAvatar name={review.tutor?.user?.name ?? "?"} />
+                        <StudentAvatar name={review?.user?.name ?? "?"} />
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-zinc-800 truncate">
-                            {review.tutor?.user?.name ?? "—"}
+                            {review?.user?.name ?? "—"}
                           </p>
                           <p className="text-xs text-zinc-400 truncate">
-                            {review.tutor?.user?.email ?? ""}
+                            {review?.user?.email ?? ""}
                           </p>
                         </div>
                       </div>

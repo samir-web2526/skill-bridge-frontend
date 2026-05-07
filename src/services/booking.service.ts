@@ -31,6 +31,11 @@ export interface Booking {
     id: string;
     bio: string;
     hourlyRate: number;
+    averageRating: number;
+    category: {
+      id: string;
+      name: string;
+    }
     user: {
       id: string;
       name: string;

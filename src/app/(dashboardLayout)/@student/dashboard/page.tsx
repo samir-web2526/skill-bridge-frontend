@@ -1,7 +1,11 @@
+
+import StudentDashboard from '@/components/pages/dashboardPages/studentPages/StudentDashboardPage'
 import React from 'react'
 
-export default function StudentDashboardPage() {
+export default function DashboardPage() {
   return (
-    <div>StudentDashboardPage</div>
+    <div>
+      <StudentDashboard></StudentDashboard>
+    </div>
   )
 }

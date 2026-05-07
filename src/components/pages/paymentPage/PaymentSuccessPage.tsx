@@ -1,8 +1,7 @@
-// src/components/Pages/PaymentSuccessPage.tsx
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function PaymentSuccessPage() {
@@ -10,20 +9,44 @@ export default function PaymentSuccessPage() {
   const sessionId = searchParams.get("session_id");
 
   return (
-    <div className="min-h-screen bg-[#050d1a] flex items-center justify-center p-6">
-      <div className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center max-w-md w-full">
-        <CheckCircle className="w-20 h-20 text-green-400 mx-auto mb-6" />
-        <h1 className="text-3xl font-black text-white mb-3">Payment Successful!</h1>
-        <p>Session ID: {sessionId}</p>
-        <p className="text-slate-400 mb-8">
-          Your payment has been processed successfully.
+    <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center p-6">
+      <div className="bg-white border border-zinc-100 rounded-3xl p-12 text-center max-w-md w-full shadow-sm">
+
+        {/* Icon */}
+        <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+        </div>
+        {/* Title */}
+        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 mb-3">
+          Payment Successful!
+        </h1>
+
+        {/* Description */}
+        <p className="text-sm text-zinc-400 mb-6">
+          Your payment has been processed successfully. You can view your booking details or return to the homepage.
         </p>
-        <Link
-          href="/"
-          className="inline-block bg-amber-400 hover:bg-amber-300 text-black font-bold px-8 py-3 rounded-xl transition-colors"
-        >
-          Back to Home
-        </Link>
+
+        {/* Session ID */}
+        {sessionId && (
+          <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-3 mb-8">
+            <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase mb-1">
+              Session ID
+            </p>
+            <p className="text-xs font-mono text-zinc-600 break-all">{sessionId}</p>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div>
+          <Link
+            href="/"
+            className="w-full flex items-center justify-center gap-2 bg-emerald-400 hover:bg-zinc-50 text-zinc-600 font-semibold text-sm px-8 py-3 rounded-xl border border-zinc-200 transition-colors"
+          >
+            <ArrowLeft size={15} />
+            Back to Home
+          </Link>
+        </div>
+
       </div>
     </div>
   );
