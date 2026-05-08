@@ -46,7 +46,7 @@ export default function TutorStudentsPage() {
           {students.map((student) => (
             <div
               key={student.id}
-              className="border rounded-lg p-4 shadow-sm bg-white"
+              className="border rounded-lg p-4 shadow-sm bg-card"
             >
               <h2 className="text-lg font-semibold">
                 {student.user.name}

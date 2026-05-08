@@ -123,7 +123,7 @@ useEffect(() => {
             <SlidersHorizontal className="w-4 h-4" />
             {showFilter ? "Hide Filters" : "Filters"}
             {activeFilterCount > 0 && (
-              <span className="bg-white text-[#0d7a5f] text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="bg-emerald-600 dark:bg-emerald-500 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -145,7 +145,7 @@ useEffect(() => {
             <SlidersHorizontal className="w-4 h-4" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="bg-white text-[#0d7a5f] text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="bg-card text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -153,7 +153,7 @@ useEffect(() => {
         </div>
 
         {error && (
-          <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             {error}
           </div>
         )}

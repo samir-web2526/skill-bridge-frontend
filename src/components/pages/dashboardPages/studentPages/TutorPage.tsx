@@ -53,7 +53,7 @@ function StarRating({ rating, count }: { rating: number | null; count?: number }
         </span>
       </div>
       {count !== undefined && (
-        <p className="text-[11px] text-zinc-400 mt-0.5">({count} reviews)</p>
+        <p className="text-[11px] text-muted-foreground mt-0.5">({count} reviews)</p>
       )}
     </div>
   );
@@ -89,7 +89,7 @@ function StatCard({
   avgRating?: number;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+    <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
@@ -108,7 +108,7 @@ function StatCard({
             ))}
           </span>
         )}
-        <p className="text-xs text-zinc-400 font-medium">{label}</p>
+        <p className="text-xs text-muted-foreground font-medium">{label}</p>
       </div>
     </div>
   );
@@ -213,12 +213,13 @@ export default function StudentTutorPage() {
     setBookingDialogOpen(true);
   };
 
-  const handleBookingSubmit = async (data: {
+  const handleBookingSubmit = async (data?: {
   tutorId: string;
   date: string;
   startTime: string;
   endTime: string;
 }) => {
+  if (!data) return;
   setIsBookingSubmitting(true);
   const result = await createBooking(data);
   if (result?.error) {
@@ -238,11 +239,11 @@ export default function StudentTutorPage() {
           My Learning
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
             Find Tutors
           </h1>
           {paginations && (
-            <p className="text-sm text-zinc-400 font-medium mb-0.5">
+            <p className="text-sm text-muted-foreground font-medium mb-0.5">
               {paginations.total} tutor
               {paginations.total !== 1 ? "s" : ""} available
             </p>
@@ -263,7 +264,7 @@ export default function StudentTutorPage() {
           <StatCard
             label="Available tutors"
             value={stats.total}
-            valueColor="text-zinc-800"
+            valueColor="text-foreground"
           />
           <StatCard
             label="Avg rating"
@@ -291,7 +292,7 @@ export default function StudentTutorPage() {
               placeholder="Search tutors…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-zinc-200 bg-white text-zinc-800 placeholder:text-zinc-300 outline-none focus:border-emerald-400 transition-colors w-52"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-zinc-300 outline-none focus:border-emerald-400 transition-colors w-52"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -302,7 +303,7 @@ export default function StudentTutorPage() {
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   activeCategory === cat
                     ? "bg-emerald-600 text-white border-emerald-600"
-                    : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-300 hover:text-zinc-700"
+                    : "bg-card text-muted-foreground border-border hover:border-zinc-300 hover:text-zinc-700"
                 }`}
               >
                 {cat}
@@ -312,7 +313,7 @@ export default function StudentTutorPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-zinc-50 hover:bg-zinc-50">
@@ -320,7 +321,7 @@ export default function StudentTutorPage() {
                   (h, i) => (
                     <TableHead
                       key={i}
-                      className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${
+                      className={`text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 ${
                         i === 0 ? "pl-6" : ""
                       } ${i === 5 ? "text-right pr-6" : ""}`}
                     >
@@ -363,7 +364,7 @@ export default function StudentTutorPage() {
                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
                         <Inbox size={22} className="text-emerald-600" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         No tutors found
                       </p>
                     </div>
@@ -385,10 +386,10 @@ export default function StudentTutorPage() {
                         <div className="flex items-center gap-3">
                           <TutorAvatar name={tutor.user?.name ?? "?"} />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-zinc-800 truncate">
+                            <p className="text-sm font-semibold text-foreground truncate">
                               {tutor.user?.name ?? "—"}
                             </p>
-                            <p className="text-xs text-zinc-400 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {tutor.user?.email ?? ""}
                             </p>
                           </div>
@@ -417,7 +418,7 @@ export default function StudentTutorPage() {
                       </TableCell>
 
                       <TableCell className="py-4">
-                        <span className="text-sm text-zinc-400">
+                        <span className="text-sm text-muted-foreground">
                           {tutor.experience ? `${tutor.experience} yrs` : "—"}
                         </span>
                       </TableCell>

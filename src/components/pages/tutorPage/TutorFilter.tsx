@@ -68,10 +68,7 @@ export function TutorFilter({
           )}
           <p className="text-sm font-medium text-foreground">Filters</p>
           {activeFilterCount > 0 && (
-            <span
-              className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
-              style={{ background: BANNER_GREEN }}
-            >
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white bg-emerald-600 dark:bg-emerald-500">
               {activeFilterCount}
             </span>
           )}
@@ -93,8 +90,7 @@ export function TutorFilter({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-7 text-xs font-medium px-3"
-              style={{ color: BANNER_GREEN }}
+              className="h-7 text-xs font-medium px-3 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300"
             >
               Done
             </Button>
@@ -112,11 +108,10 @@ export function TutorFilter({
             placeholder="Name or subject..."
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
-            className="pl-9 h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0"
+            className={`pl-9 h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 ${filters.search ? "border-emerald-500/50" : ""}`}
             style={{
               outline: "none",
               boxShadow: "none",
-              borderColor: filters.search ? BANNER_GREEN : undefined,
             }}
           />
         </div>
@@ -133,21 +128,11 @@ export function TutorFilter({
               <button
                 key={c}
                 onClick={() => onChange({ ...filters, category: c })}
-                className="px-3 py-1 rounded-full text-xs font-medium transition-all border"
-                style={
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
                   isActive
-                    ? {
-                        background: BANNER_GREEN,
-                        color: "#fff",
-                        borderColor: BANNER_GREEN,
-                        boxShadow: `0 4px 12px -2px ${BANNER_GREEN}66`,
-                      }
-                    : {
-                        background: "transparent",
-                        color: "var(--color-text-secondary)",
-                        borderColor: "var(--color-border-tertiary)",
-                      }
-                }
+                    ? "bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-600 dark:border-emerald-500 shadow-lg shadow-emerald-600/20"
+                    : "bg-transparent text-muted-foreground border-border hover:border-emerald-500/50"
+                }`}
               >
                 {c}
               </button>
@@ -171,10 +156,9 @@ export function TutorFilter({
                 minPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className="h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center"
+            className={`h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center ${filters.minPrice ? "border-emerald-500/50" : ""}`}
             style={{
               boxShadow: "none",
-              borderColor: filters.minPrice ? BANNER_GREEN : undefined,
             }}
           />
           <span className="text-muted-foreground text-sm shrink-0">—</span>
@@ -188,10 +172,9 @@ export function TutorFilter({
                 maxPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className="h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center"
+            className={`h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center ${filters.maxPrice ? "border-emerald-500/50" : ""}`}
             style={{
               boxShadow: "none",
-              borderColor: filters.maxPrice ? BANNER_GREEN : undefined,
             }}
           />
         </div>
@@ -208,21 +191,11 @@ export function TutorFilter({
               <button
                 key={r.label}
                 onClick={() => onChange({ ...filters, minRating: r.value })}
-                className="px-3 py-1 rounded-full text-xs font-medium transition-all border"
-                style={
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
                   isActive
-                    ? {
-                        background: BANNER_GREEN,
-                        color: "#fff",
-                        borderColor: BANNER_GREEN,
-                        boxShadow: `0 4px 12px -2px ${BANNER_GREEN}66`,
-                      }
-                    : {
-                        background: "transparent",
-                        color: "var(--color-text-secondary)",
-                        borderColor: "var(--color-border-tertiary)",
-                      }
-                }
+                    ? "bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-600 dark:border-emerald-500 shadow-lg shadow-emerald-600/20"
+                    : "bg-transparent text-muted-foreground border-border hover:border-emerald-500/50"
+                }`}
               >
                 {r.label}
               </button>
@@ -240,12 +213,7 @@ export function TutorFilter({
           onCheckedChange={(checked) =>
             onChange({ ...filters, availableOnly: checked })
           }
-          style={
-            filters.availableOnly
-              ? ({ "--switch-bg": BANNER_GREEN } as React.CSSProperties)
-              : undefined
-          }
-          className={filters.availableOnly ? "[&>span]:bg-[#0d7a5f]" : ""}
+          className="data-[state=checked]:bg-emerald-600 dark:data-[state=checked]:bg-emerald-500"
         />
       </div>
     </>

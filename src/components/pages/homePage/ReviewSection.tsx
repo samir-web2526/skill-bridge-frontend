@@ -44,7 +44,7 @@ export default function ReviewsSection() {
         <Button
           variant="outline"
           onClick={() => router.push("/reviews")}
-          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 text-emerald-700 hover:bg-emerald-50 shadow-md shadow-emerald-100 animate-[bounce_2s_ease-in-out_infinite]"
+          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 shadow-sm animate-[bounce_2s_ease-in-out_infinite]"
         >
           View all reviews
           <ArrowRight className="w-4 h-4" />

@@ -26,11 +26,11 @@ function StatCard({
   valueColor: string;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+    <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
-      <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
+      <p className="text-xs text-muted-foreground font-medium mt-0.5 flex items-center gap-1.5">
         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
         {label}
       </p>
@@ -170,18 +170,18 @@ const handleSubmit = async () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
         <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
           Admin
         </p>
         <div className="flex items-end justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+            <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
               Categories
             </h1>
             {paginations && (
-              <p className="text-sm text-zinc-400 font-medium mt-0.5">
+              <p className="text-sm text-muted-foreground font-medium mt-0.5">
                 {paginations.total} categor
                 {paginations.total !== 1 ? "ies" : "y"} total
               </p>
@@ -190,7 +190,7 @@ const handleSubmit = async () => {
 
           <Button
             onClick={openCreateDialog}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold px-4 flex items-center gap-2 shadow-sm shadow-emerald-100"
+            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold px-4 flex items-center gap-2 shadow-sm"
           >
             <Plus size={15} />
             Add new
@@ -200,7 +200,7 @@ const handleSubmit = async () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -210,34 +210,34 @@ const handleSubmit = async () => {
           <StatCard
             label="Total categories"
             value={stats.total}
-            dotColor="bg-zinc-300"
-            valueColor="text-zinc-800"
+            dotColor="bg-muted-foreground/30"
+            valueColor="text-foreground"
           />
           <StatCard
             label="Total tutors"
             value={stats.totalTutors}
             dotColor="bg-emerald-500"
-            valueColor="text-emerald-700"
+            valueColor="text-emerald-700 dark:text-emerald-400"
           />
           <StatCard
             label="Avg per category"
             value={stats.avg}
             dotColor="bg-blue-400"
-            valueColor="text-blue-700"
+            valueColor="text-blue-700 dark:text-blue-400"
           />
         </div>
 
-        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
-                <TableHead className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 pl-6">
+              <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
+                <TableHead className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 pl-6">
                   Category
                 </TableHead>
-                <TableHead className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3">
+                <TableHead className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3">
                   Description
                 </TableHead>
-                <TableHead className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 text-right pr-6">
+                <TableHead className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 text-right pr-6">
                   Actions
                 </TableHead>
               </TableRow>
@@ -249,20 +249,20 @@ const handleSubmit = async () => {
                   <TableRow key={i} className="animate-pulse">
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-xl bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-24 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-14 rounded bg-zinc-100" />
+                          <div className="h-3 w-24 rounded bg-muted" />
+                          <div className="h-2.5 w-14 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-3 w-48 rounded bg-zinc-100" />
+                      <div className="h-3 w-48 rounded bg-muted" />
                     </TableCell>
                     <TableCell className="py-4 pr-6">
                       <div className="flex gap-2 justify-end">
-                        <div className="h-7 w-7 rounded-lg bg-zinc-100" />
-                        <div className="h-7 w-7 rounded-lg bg-zinc-100" />
+                        <div className="h-7 w-7 rounded-lg bg-muted" />
+                        <div className="h-7 w-7 rounded-lg bg-muted" />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -271,10 +271,10 @@ const handleSubmit = async () => {
                 <TableRow>
                   <TableCell colSpan={3} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
+                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         No categories found
                       </p>
                     </div>
@@ -290,9 +290,7 @@ const handleSubmit = async () => {
                   return (
                     <TableRow
                       key={category.id}
-                      className={`hover:bg-zinc-50 transition-colors ${
-                        idx % 2 === 1 ? "bg-zinc-50/50" : ""
-                      }`}
+                      className="hover:bg-muted/50 transition-colors"
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
@@ -302,10 +300,10 @@ const handleSubmit = async () => {
                             <Icon size={15} className={color} />
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-zinc-800">
+                            <p className="text-sm font-semibold text-foreground">
                               {category.name}
                             </p>
-                            <p className="text-xs text-zinc-400 mt-0.5">
+                            <p className="text-xs text-muted-foreground mt-0.5">
                               {category?.tutor?.length ?? 0} tutor
                               {(category?.tutor?.length ?? 0) !== 1 ? "s" : ""}
                             </p>
@@ -314,7 +312,7 @@ const handleSubmit = async () => {
                       </TableCell>
 
                       <TableCell className="py-4 max-w-65">
-                        <p className="text-sm text-zinc-400 truncate">
+                        <p className="text-sm text-muted-foreground truncate">
                           {category.description ?? "—"}
                         </p>
                       </TableCell>
@@ -325,7 +323,7 @@ const handleSubmit = async () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => openEditDialog(category)}
-                            className="h-8 w-8 rounded-lg border border-zinc-200 bg-white text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 transition-colors"
+                            className="h-8 w-8 rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                           >
                             <Pencil size={13} />
                           </Button>
@@ -333,7 +331,7 @@ const handleSubmit = async () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDelete(category.id)}
-                            className="h-8 w-8 rounded-lg border border-red-100 bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+                            className="h-8 w-8 rounded-lg border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60 hover:text-red-600 transition-colors"
                           >
                             <Trash2 size={13} />
                           </Button>

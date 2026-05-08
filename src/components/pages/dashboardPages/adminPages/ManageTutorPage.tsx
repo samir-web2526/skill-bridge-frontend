@@ -99,10 +99,10 @@ setTotal(res.data?.length || 0);
 
   // 🔥 STATUS COLOR
   const getStatusColor = (status: userStatus) => {
-    if (status === "ACTIVE") return "bg-green-500";
-    if (status === "PENDING") return "bg-yellow-500";
-    if (status === "BANNED") return "bg-red-500";
-    return "bg-gray-400";
+    if (status === "ACTIVE") return "bg-emerald-500 dark:bg-emerald-600";
+    if (status === "PENDING") return "bg-amber-500 dark:bg-amber-600";
+    if (status === "BANNED") return "bg-red-500 dark:bg-red-600";
+    return "bg-muted-foreground";
   };
 
   const totalPages = Math.ceil(total / limit);
@@ -143,12 +143,12 @@ setTotal(res.data?.length || 0);
               return (
                 <div
                   key={tutor.id}
-                  className="border p-4 rounded-lg flex justify-between items-center"
+                  className="border border-border p-4 rounded-lg flex justify-between items-center bg-card shadow-sm hover:shadow-md transition"
                 >
                   {/* LEFT */}
                   <div>
                     <p className="font-semibold">{tutor.user?.name}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       {tutor.category?.name}
                     </p>
 
@@ -179,7 +179,7 @@ setTotal(res.data?.length || 0);
                               e.target.value as userStatus
                             )
                           }
-                          className="border px-2 py-1 rounded"
+                          className="border border-border bg-card text-foreground px-2 py-1 rounded text-sm outline-none focus:border-emerald-500"
                         >
                           <option value="ACTIVE">Active</option>
 

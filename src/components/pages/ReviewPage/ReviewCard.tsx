@@ -71,7 +71,7 @@ export function ReviewCard({ review }: { review: any }) {
               className={
                 i < review.rating
                   ? "fill-amber-400 text-amber-400"
-                  : "fill-zinc-200 text-zinc-200"
+                  : "fill-zinc-200 text-zinc-200 dark:fill-zinc-800 dark:text-zinc-800"
               }
             />
           ))}
@@ -85,7 +85,7 @@ export function ReviewCard({ review }: { review: any }) {
 
         <div className="flex items-center gap-2">
           <Avatar className="h-7 w-7 shrink-0">
-            <AvatarFallback className="text-[11px] font-medium bg-zinc-100 text-zinc-600">
+            <AvatarFallback className="text-[11px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
               {studentInitials}
             </AvatarFallback>
           </Avatar>

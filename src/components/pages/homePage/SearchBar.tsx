@@ -44,8 +44,8 @@ if (result.data) {
 
   return (
     <div>
-      <div className="flex gap-2 p-1.5 bg-white border border-zinc-200 rounded-xl shadow-sm mb-4 max-w-lg">
-        <Search size={15} className="ml-2 self-center text-zinc-400 shrink-0" />
+      <div className="flex gap-2 p-1.5 bg-card border border-border rounded-xl shadow-sm mb-4 max-w-lg">
+        <Search size={15} className="ml-2 self-center text-muted-foreground shrink-0" />
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -55,21 +55,21 @@ if (result.data) {
         />
         <Button
           onClick={handleSearch}
-          className="bg-emerald-600 hover:bg-emerald-700 rounded-lg text-sm px-5 shrink-0"
+          className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-400 rounded-lg text-sm px-5 shrink-0 text-white"
         >
           Search
         </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-10">
-        <span className="text-xs text-zinc-400 font-medium">Popular:</span>
+        <span className="text-xs text-muted-foreground font-medium">Popular:</span>
         {popularCategories.length > 0 ? (
           popularCategories.map((t) => (
             <Badge
               key={t}
               onClick={() => handleBadgeClick(t)}
               variant="outline"
-              className="cursor-pointer text-xs rounded-full px-3 py-1 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
+              className="cursor-pointer text-xs rounded-full px-3 py-1 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 dark:border-zinc-800 transition-colors"
             >
               {t}
             </Badge>
@@ -78,7 +78,7 @@ if (result.data) {
           Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="h-6 w-20 rounded-full bg-zinc-100 animate-pulse"
+              className="h-6 w-20 rounded-full bg-zinc-100 dark:bg-zinc-800 animate-pulse"
             />
           ))
         )}

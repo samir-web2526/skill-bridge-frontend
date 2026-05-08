@@ -42,7 +42,7 @@ function InitialAvatar({
       className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
         variant === "emerald"
           ? "bg-emerald-700 text-white"
-          : "bg-zinc-100 text-zinc-600"
+          : "bg-muted text-muted-foreground"
       }`}
     >
       {initials}
@@ -57,11 +57,11 @@ function StarRating({ rating }: { rating: number }) {
         <Star
           key={i}
           className="w-3 h-3"
-          fill={i < Math.round(rating) ? "#fbbf24" : "#e5e7eb"}
-          stroke={i < Math.round(rating) ? "#fbbf24" : "#e5e7eb"}
+          fill={i < Math.round(rating) ? "#fbbf24" : "var(--muted)"}
+          stroke={i < Math.round(rating) ? "#fbbf24" : "var(--muted)"}
         />
       ))}
-      <span className="text-xs font-semibold text-zinc-700 ml-1">
+      <span className="text-xs font-semibold text-foreground/80 ml-1">
         {Number(rating).toFixed(1)}
       </span>
     </div>
@@ -82,7 +82,7 @@ function StatCard({
   avgRating?: number;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+    <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
@@ -93,7 +93,7 @@ function StatCard({
               <span
                 key={i}
                 style={{
-                  color: i < Math.round(avgRating ?? 0) ? "#fbbf24" : "#e5e7eb",
+                  color: i < Math.round(avgRating ?? 0) ? "#fbbf24" : "var(--muted)",
                 }}
               >
                 ★
@@ -101,7 +101,7 @@ function StatCard({
             ))}
           </span>
         )}
-        <p className="text-xs text-zinc-400 font-medium">{label}</p>
+        <p className="text-xs text-muted-foreground font-medium">{label}</p>
       </div>
     </div>
   );
@@ -127,14 +127,14 @@ function RatingBar({
           : "bg-red-300";
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[11px] text-zinc-400 w-3 shrink-0">{star}</span>
-      <div className="flex-1 h-1.5 rounded-full bg-zinc-100">
+      <span className="text-[11px] text-muted-foreground w-3 shrink-0">{star}</span>
+      <div className="flex-1 h-1.5 rounded-full bg-muted">
         <div
           className={`h-1.5 rounded-full ${barColor} transition-all`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[11px] text-zinc-400 w-4 text-right shrink-0">
+      <span className="text-[11px] text-muted-foreground w-4 text-right shrink-0">
         {count}
       </span>
     </div>
@@ -228,17 +228,17 @@ export default function AdminReviewsPage() {
   }, [reviews, activeFilter, search]);
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
         <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
           Admin
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
             All Reviews
           </h1>
           {paginations && (
-            <p className="text-sm text-zinc-400 font-medium mb-0.5">
+            <p className="text-sm text-muted-foreground font-medium mb-0.5">
               {paginations.total} review
               {paginations.total !== 1 ? "s" : ""} total
             </p>
@@ -248,7 +248,7 @@ export default function AdminReviewsPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -259,8 +259,8 @@ export default function AdminReviewsPage() {
             <StatCard
               label="Total reviews"
               value={paginations?.total ?? stats.total}
-              dotColor="bg-zinc-300"
-              valueColor="text-zinc-800"
+              dotColor="bg-muted-foreground/30"
+              valueColor="text-foreground"
             />
             <StatCard
               label="Avg rating"
@@ -273,17 +273,17 @@ export default function AdminReviewsPage() {
               label="5-star reviews"
               value={stats.fiveStar}
               dotColor="bg-emerald-400"
-              valueColor="text-emerald-700"
+              valueColor="text-emerald-700 dark:text-emerald-400"
             />
             <StatCard
               label="Below 4 stars"
               value={stats.belowFour}
               dotColor="bg-amber-400"
-              valueColor="text-amber-700"
+              valueColor="text-amber-700 dark:text-amber-400"
             />
           </div>
-          <div className="bg-white rounded-xl border border-zinc-100 shadow-sm px-4 py-3 w-full sm:w-44 shrink-0">
-            <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase mb-3">
+          <div className="bg-card rounded-xl border border-border shadow-sm px-4 py-3 w-full sm:w-44 shrink-0">
+            <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase mb-3">
               Breakdown
             </p>
             <div className="space-y-2">
@@ -315,14 +315,14 @@ export default function AdminReviewsPage() {
           <div className="relative">
             <Search
               size={13}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-300"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <input
               type="text"
               placeholder="Search reviews…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-zinc-200 bg-white text-zinc-800 placeholder:text-zinc-300 outline-none focus:border-emerald-400 transition-colors w-52"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-emerald-400 transition-colors w-52"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -333,7 +333,7 @@ export default function AdminReviewsPage() {
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   activeFilter === f.value
                     ? "bg-emerald-600 text-white border-emerald-600"
-                    : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-300 hover:text-zinc-700"
+                    : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
                 }`}
               >
                 {f.label}
@@ -342,15 +342,15 @@ export default function AdminReviewsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+              <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
                 {["Student", "Tutor", "Rating", "Comment", "Date", ""].map(
                   (h, i) => (
                     <TableHead
                       key={i}
-                      className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 first:pl-6"
+                      className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 first:pl-6"
                     >
                       {h}
                     </TableHead>
@@ -365,33 +365,33 @@ export default function AdminReviewsPage() {
                   <TableRow key={i} className="animate-pulse">
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-28 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-20 rounded bg-zinc-100" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                          <div className="h-2.5 w-20 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-28 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-20 rounded bg-zinc-100" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                          <div className="h-2.5 w-20 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-3 w-20 rounded bg-zinc-100" />
+                      <div className="h-3 w-20 rounded bg-muted" />
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-3 w-40 rounded bg-zinc-100" />
+                      <div className="h-3 w-40 rounded bg-muted" />
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-3 w-20 rounded bg-zinc-100" />
+                      <div className="h-3 w-20 rounded bg-muted" />
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-7 w-7 rounded-lg bg-zinc-100" />
+                      <div className="h-7 w-7 rounded-lg bg-muted" />
                     </TableCell>
                   </TableRow>
                 ))
@@ -399,10 +399,10 @@ export default function AdminReviewsPage() {
                 <TableRow>
                   <TableCell colSpan={6} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
+                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         No reviews found
                       </p>
                     </div>
@@ -412,9 +412,7 @@ export default function AdminReviewsPage() {
                 filtered.map((review, idx) => (
                   <TableRow
                     key={review.id}
-                    className={`hover:bg-zinc-50 transition-colors ${
-                      idx % 2 === 1 ? "bg-zinc-50/50" : ""
-                    }`}
+                    className="hover:bg-muted/50 transition-colors"
                   >
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
@@ -423,10 +421,10 @@ export default function AdminReviewsPage() {
                           variant="emerald"
                         />
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-zinc-800 truncate">
+                          <p className="text-sm font-semibold text-foreground truncate">
                             {review?.user?.name ?? "—"}
                           </p>
-                          <p className="text-xs text-zinc-400 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             {review?.user?.email ?? ""}
                           </p>
                         </div>
@@ -440,10 +438,10 @@ export default function AdminReviewsPage() {
                           variant="zinc"
                         />
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-zinc-800 truncate">
+                          <p className="text-sm font-semibold text-foreground truncate">
                             {review.tutor?.user?.name ?? "—"}
                           </p>
-                          <p className="text-xs text-zinc-400 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             {review.tutor?.user?.email ?? ""}
                           </p>
                         </div>
@@ -455,16 +453,16 @@ export default function AdminReviewsPage() {
                     </TableCell>
 
                     <TableCell className="py-4 max-w-50">
-                      <p className="text-sm text-zinc-500 truncate">
+                      <p className="text-sm text-muted-foreground truncate">
                         {review.comment ?? "—"}
                       </p>
                     </TableCell>
 
                     <TableCell className="py-4">
-                      <div className="flex items-center gap-1.5 text-sm text-zinc-400">
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                         <CalendarDays
                           size={13}
-                          className="text-zinc-300 shrink-0"
+                          className="text-muted-foreground shrink-0"
                         />
                         {new Date(review.createdAt).toLocaleDateString(
                           "en-BD",
@@ -482,7 +480,7 @@ export default function AdminReviewsPage() {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(review.id)}
-                        className="h-8 w-8 rounded-lg border border-red-100 bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+                        className="h-8 w-8 rounded-lg border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60 hover:text-red-600 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>

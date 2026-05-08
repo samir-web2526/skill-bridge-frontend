@@ -71,7 +71,7 @@ function StatCard({
   avgRating?: number;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+    <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
@@ -90,7 +90,7 @@ function StatCard({
             ))}
           </span>
         )}
-        <p className="text-xs text-zinc-400 font-medium">{label}</p>
+        <p className="text-xs text-muted-foreground font-medium">{label}</p>
       </div>
     </div>
   );
@@ -116,14 +116,14 @@ function RatingBar({
           : "bg-red-300";
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[11px] text-zinc-400 w-3 shrink-0">{star}</span>
+      <span className="text-[11px] text-muted-foreground w-3 shrink-0">{star}</span>
       <div className="flex-1 h-1.5 rounded-full bg-zinc-100">
         <div
           className={`h-1.5 rounded-full ${barColor}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[11px] text-zinc-400 w-4 text-right shrink-0">
+      <span className="text-[11px] text-muted-foreground w-4 text-right shrink-0">
         {count}
       </span>
     </div>
@@ -183,11 +183,11 @@ export default function TutorReviewPage() {
           Tutor Dashboard
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
             My Reviews
           </h1>
           {paginations && (
-            <p className="text-sm text-zinc-400 font-medium mb-0.5">
+            <p className="text-sm text-muted-foreground font-medium mb-0.5">
               {paginations.total} review
               {paginations.total !== 1 ? "s" : ""} total
             </p>
@@ -209,7 +209,7 @@ export default function TutorReviewPage() {
               label="Total reviews"
               value={stats.total}
               dotColor="bg-zinc-300"
-              valueColor="text-zinc-800"
+              valueColor="text-foreground"
             />
             <StatCard
               label="Avg rating"
@@ -227,8 +227,8 @@ export default function TutorReviewPage() {
             />
           </div>
 
-          <div className="bg-white rounded-xl border border-zinc-100 shadow-sm px-4 py-3 w-full sm:w-44 shrink-0">
-            <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase mb-3">
+          <div className="bg-card rounded-xl border border-border shadow-sm px-4 py-3 w-full sm:w-44 shrink-0">
+            <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase mb-3">
               Breakdown
             </p>
             <div className="space-y-2">
@@ -256,14 +256,14 @@ export default function TutorReviewPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-zinc-50 hover:bg-zinc-50">
                 {["Student", "Rating", "Comment", "Date"].map((h, i) => (
                   <TableHead
                     key={i}
-                    className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${i === 0 ? "pl-6" : ""}`}
+                    className={`text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 ${i === 0 ? "pl-6" : ""}`}
                   >
                     {h}
                   </TableHead>
@@ -302,7 +302,7 @@ export default function TutorReviewPage() {
                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
                         <Inbox size={22} className="text-emerald-600" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         No reviews yet
                       </p>
                       <p className="text-xs text-zinc-300">
@@ -321,10 +321,10 @@ export default function TutorReviewPage() {
                       <div className="flex items-center gap-3">
                         <StudentAvatar name={review?.user?.name ?? "?"} />
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-zinc-800 truncate">
+                          <p className="text-sm font-semibold text-foreground truncate">
                             {review?.user?.name ?? "—"}
                           </p>
-                          <p className="text-xs text-zinc-400 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             {review?.user?.email ?? ""}
                           </p>
                         </div>
@@ -336,13 +336,13 @@ export default function TutorReviewPage() {
                     </TableCell>
 
                     <TableCell className="py-4 max-w-60">
-                      <p className="text-sm text-zinc-400 truncate">
+                      <p className="text-sm text-muted-foreground truncate">
                         {review.comment ?? "—"}
                       </p>
                     </TableCell>
 
                     <TableCell className="py-4">
-                      <div className="flex items-center gap-1.5 text-sm text-zinc-400">
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                         <CalendarDays
                           size={13}
                           className="text-zinc-300 shrink-0"

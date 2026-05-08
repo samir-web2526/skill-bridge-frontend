@@ -13,11 +13,14 @@ import {
 import { getMyTutorProfile } from "@/services/tutors.service";
 import { getCurrentUser } from "@/lib/auth";
 
+
+
 export default async function TutorProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   const profile = await getMyTutorProfile();
+
 
   const initials = user.name
     ?.split(" ")
@@ -27,19 +30,19 @@ export default async function TutorProfilePage() {
     .slice(0, 2);
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
         <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
           Tutor Dashboard
         </p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
           My Profile
         </h1>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="max-w-2xl">
-          <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+          <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
             <div className="relative h-28 bg-emerald-700 overflow-hidden">
               <svg
                 className="absolute inset-0 w-full h-full opacity-10"
@@ -51,7 +54,7 @@ export default async function TutorProfilePage() {
                 <circle cx="260" cy="-10" r="60" fill="#fff" />
               </svg>
               <div className="absolute top-4 right-5 flex items-center gap-1.5 opacity-30">
-                <div className="w-6 h-6 rounded-md bg-white/30 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-card/30 flex items-center justify-center">
                   <BookOpen size={12} className="text-white" />
                 </div>
                 <span className="font-bold text-white text-sm">
@@ -64,9 +67,9 @@ export default async function TutorProfilePage() {
               <div className="-mt-10 mb-4 flex items-end justify-between">
                 <div className="relative">
                   <div className="absolute -inset-0.5 rounded-full bg-emerald-500/20" />
-                  <Avatar className="relative h-20 w-20 border-4 border-white shadow-md">
+                  <Avatar className="relative h-20 w-20 border-4 border-white dark:border-zinc-900 shadow-md">
                     <AvatarImage src={profile.data?.user.name ?? ""} alt={user.name} />
-                    <AvatarFallback className="text-lg font-extrabold bg-emerald-700 text-white">
+                    <AvatarFallback className="text-lg font-extrabold bg-emerald-700 dark:bg-emerald-600 text-white">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -75,8 +78,8 @@ export default async function TutorProfilePage() {
                 <Badge
                   className={`mb-1 rounded-full px-3 py-1 text-xs font-semibold border flex items-center gap-1.5 ${
                     profile.data?.availability
-                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                      : "bg-red-50 text-red-600 border-red-200"
+                      ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900"
+                      : "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900"
                   }`}
                 >
                   <span
@@ -90,19 +93,19 @@ export default async function TutorProfilePage() {
                 </Badge>
               </div>
 
-              <h2 className="text-xl font-extrabold tracking-tight text-zinc-900">
+              <h2 className="text-xl font-extrabold tracking-tight text-foreground">
                 {profile?.data?.user.name}
               </h2>
-              <p className="text-sm text-zinc-400 mt-0.5">{profile?.data?.user.email}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">{profile?.data?.user.email}</p>
 
               {profile?.data?.bio && (
-                <p className="text-sm text-zinc-500 mt-3 leading-relaxed border-t border-zinc-100 pt-3">
+                <p className="text-sm text-muted-foreground mt-3 leading-relaxed border-t border-border pt-3">
                   {profile.data?.bio}
                 </p>
               )}
             </div>
 
-            <div className="border-t border-zinc-100 divide-y divide-zinc-100">
+            <div className="border-t border-border divide-y divide-border">
               <InfoRow
                 icon={<Mail className="w-4 h-4" />}
                 label="Email"
@@ -143,12 +146,12 @@ export default async function TutorProfilePage() {
             </div>
 
             {profile && (
-              <div className="bg-white rounded-xl flex flex-row justify-between border border-zinc-100 px-4 py-3">
+              <div className="bg-card rounded-xl flex flex-row justify-between border border-border px-4 py-3">
                 <div>
                   <p className="text-2xl font-extrabold text-amber-500">
                     {Number(profile?.data?.averageRating ?? 0).toFixed(1)}
                   </p>
-                  <p className="text-xs text-zinc-400 mt-0.5 flex flex-col gap-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5 flex flex-col gap-0.5">
                     <span className="flex gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <span
@@ -157,7 +160,7 @@ export default async function TutorProfilePage() {
                             color:
                               i < Math.round(profile?.data?.averageRating ?? 0)
                                 ? "#fbbf24"
-                                : "#e5e7eb",
+                                : "var(--muted-foreground)",
                           }}
                         >
                           ★
@@ -167,11 +170,11 @@ export default async function TutorProfilePage() {
                     <span>Avg rating</span>
                   </p>
                 </div>
-                <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3">
-                  <p className="text-2xl font-extrabold text-emerald-700">
+                <div className="bg-card rounded-xl border border-border px-4 py-3">
+                  <p className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-500">
                     {profile?.data?.totalBookings ?? 0}
                   </p>
-                  <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1.5">
+                  <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                     Total sessions
                   </p>
@@ -194,15 +197,15 @@ function InfoRow({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-4 px-6 py-4 hover:bg-zinc-50 transition-colors">
-      <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-emerald-100">
+    <div className="flex items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors">
+      <div className="w-9 h-9 rounded-xl bg-emerald-600 dark:bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm shadow-emerald-600/10 dark:shadow-none">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase">
+        <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
           {label}
         </p>
-        <p className="text-sm font-semibold text-zinc-800 truncate">{value}</p>
+        <p className="text-sm font-semibold text-foreground truncate">{value}</p>
       </div>
     </div>
   );

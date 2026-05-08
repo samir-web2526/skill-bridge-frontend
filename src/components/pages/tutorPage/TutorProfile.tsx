@@ -75,7 +75,7 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
   />
 ) : (
                   <div
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl bg-white shadow-sm ${color.text}`}
+                    className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl bg-card shadow-sm ${color.text}`}
                   >
                     {initials}
                   </div>
@@ -95,8 +95,8 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
               <Badge
                 className={`shrink-0 text-xs ${
                   tutor.availablity
-                    ? "bg-green-100 text-green-700 hover:bg-green-100"
-                    : "bg-red-100 text-red-700 hover:bg-red-100"
+                    ? "bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-950/50"
+                    : "bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/50"
                 }`}
               >
                 {tutor.availablity ? "Available" : "Unavailable"}

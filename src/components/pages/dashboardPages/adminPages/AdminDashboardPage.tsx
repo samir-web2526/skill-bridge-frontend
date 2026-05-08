@@ -50,8 +50,8 @@ function Avatar({
     <div
       className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${
         variant === "emerald"
-          ? "bg-emerald-100 text-emerald-800"
-          : "bg-zinc-100 text-zinc-600"
+          ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400"
+          : "bg-muted text-muted-foreground"
       }`}
     >
       {initials}
@@ -67,7 +67,7 @@ function StarRow({ rating }: { rating: number }) {
         <svg key={i} width="11" height="11" viewBox="0 0 12 12">
           <polygon
             points="6,1 7.5,4.5 11,4.5 8.5,7 9.5,11 6,9 2.5,11 3.5,7 1,4.5 4.5,4.5"
-            fill={i < r ? "#f59e0b" : "#e5e7eb"}
+            fill={i < r ? "#f59e0b" : "var(--muted-foreground)"}
           />
         </svg>
       ))}
@@ -91,23 +91,23 @@ function StatCard({
   loading?: boolean;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-zinc-100 p-4 shadow-sm flex items-start gap-3">
+    <div className="bg-card rounded-2xl border border-border p-4 shadow-sm flex items-start gap-3">
       <div className={`p-2 rounded-xl ${accent} shrink-0`}>
         <Icon size={16} className="opacity-80" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-widest">
+        <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
           {label}
         </p>
         {loading ? (
-          <div className="h-7 w-16 rounded bg-zinc-100 animate-pulse mt-1" />
+          <div className="h-7 w-16 rounded bg-muted animate-pulse mt-1" />
         ) : (
-          <p className="text-2xl font-extrabold tracking-tight text-zinc-900 leading-tight">
+          <p className="text-2xl font-extrabold tracking-tight text-foreground leading-tight">
             {value}
           </p>
         )}
         {sub && !loading && (
-          <p className="text-[11px] text-zinc-400 mt-0.5">{sub}</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
         )}
       </div>
     </div>
@@ -125,7 +125,7 @@ function SectionHeader({
 }) {
   return (
     <div className="flex items-center justify-between mb-3">
-      <h2 className="text-sm font-bold text-zinc-700 tracking-tight">{title}</h2>
+      <h2 className="text-sm font-bold text-foreground tracking-tight">{title}</h2>
       {action && (
         <button
           onClick={onAction}
@@ -146,25 +146,25 @@ const STATUS_CONFIG: Record<
 > = {
   PENDING: {
     label: "Pending",
-    bg: "bg-amber-50 text-amber-700 border-amber-200",
+    bg: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900",
     dot: "bg-amber-400",
     Icon: Clock,
   },
   CONFIRMED: {
     label: "Confirmed",
-    bg: "bg-blue-50 text-blue-700 border-blue-200",
+    bg: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900",
     dot: "bg-blue-400",
     Icon: CheckCircle2,
   },
   COMPLETED: {
     label: "Completed",
-    bg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    bg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900",
     dot: "bg-emerald-400",
     Icon: CheckCircle2,
   },
   CANCELLED: {
     label: "Cancelled",
-    bg: "bg-red-50 text-red-600 border-red-200",
+    bg: "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900",
     dot: "bg-red-400",
     Icon: XCircle,
   },
@@ -187,7 +187,7 @@ function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
               }}
             />
           </div>
-          <span className="text-[9px] text-zinc-400 font-medium">{d.label}</span>
+          <span className="text-[9px] text-muted-foreground font-medium">{d.label}</span>
         </div>
       ))}
     </div>
@@ -256,7 +256,7 @@ function StatusDonut({
   return (
     <div className="flex items-center gap-4">
       <svg width="88" height="88" viewBox="0 0 88 88" className="shrink-0">
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#f4f4f5" strokeWidth="10" />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="currentColor" className="text-muted/30" strokeWidth="10" />
         {segments.map((seg, i) => {
           const pct = seg.value / total;
           const dash = pct * circumference;
@@ -286,7 +286,8 @@ function StatusDonut({
           dominantBaseline="central"
           fontSize="14"
           fontWeight="800"
-          fill="#18181b"
+          fill="currentColor"
+          className="text-foreground"
         >
           {total}
         </text>
@@ -295,8 +296,8 @@ function StatusDonut({
         {segments.map((seg) => (
           <div key={seg.label} className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-sm shrink-0" style={{ background: seg.color }} />
-            <span className="text-xs text-zinc-500 w-20">{seg.label}</span>
-            <span className="text-xs font-bold text-zinc-700">{seg.value}</span>
+            <span className="text-xs text-muted-foreground w-20">{seg.label}</span>
+            <span className="text-xs font-bold text-foreground">{seg.value}</span>
           </div>
         ))}
       </div>
@@ -466,8 +467,8 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-zinc-400">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-muted-foreground">
           <Loader2 size={28} className="animate-spin text-emerald-500" />
           <p className="text-sm font-medium">Loading dashboard…</p>
         </div>
@@ -476,7 +477,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-6 pt-10 pb-12 space-y-6">
 
         {/* ── Page header ── */}
@@ -485,10 +486,10 @@ export default function AdminDashboard() {
             <p className="text-[11px] font-bold tracking-widest text-emerald-600 uppercase mb-1">
               Admin
             </p>
-            <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+            <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
               Dashboard
             </h1>
-            <p className="text-sm text-zinc-400 mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Platform overview &amp; analytics
             </p>
           </div>
@@ -496,7 +497,7 @@ export default function AdminDashboard() {
 
         {/* ── Error ── */}
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -504,7 +505,7 @@ export default function AdminDashboard() {
 
         {/* ── Platform stats — /api/v1/tutors/stats থেকে ── */}
         <div>
-          <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
             Platform stats
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -512,7 +513,7 @@ export default function AdminDashboard() {
               label="Total tutors"
               value={platformStats?.totalTutors ?? "—"}
               icon={UserCheck}
-              accent="bg-emerald-50 text-emerald-600"
+              accent="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
               sub="registered tutors"
               loading={statsLoading}
             />
@@ -520,7 +521,7 @@ export default function AdminDashboard() {
               label="Total students"
               value={platformStats?.totalStudents ?? "—"}
               icon={GraduationCap}
-              accent="bg-blue-50 text-blue-600"
+              accent="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400"
               sub="registered students"
               loading={statsLoading}
             />
@@ -528,7 +529,7 @@ export default function AdminDashboard() {
               label="Total bookings"
               value={platformStats?.totalBookings ?? "—"}
               icon={BookOpen}
-              accent="bg-amber-50 text-amber-600"
+              accent="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400"
               sub="all time"
               loading={statsLoading}
             />
@@ -536,7 +537,7 @@ export default function AdminDashboard() {
               label="Categories"
               value={platformStats?.totalCategories ?? "—"}
               icon={LayoutGrid}
-              accent="bg-purple-50 text-purple-600"
+              accent="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400"
               sub="subject categories"
               loading={statsLoading}
             />
@@ -549,21 +550,21 @@ export default function AdminDashboard() {
             label="Total revenue"
             value={stats.totalRevenue > 0 ? `৳${stats.totalRevenue.toLocaleString()}` : "—"}
             icon={CreditCard}
-            accent="bg-blue-50 text-blue-600"
+            accent="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400"
             sub="from completed sessions"
           />
           <StatCard
             label="Avg platform rating"
             value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
             icon={Star}
-            accent="bg-amber-50 text-amber-600"
+            accent="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400"
             sub={`${stats.totalReviews} review${stats.totalReviews !== 1 ? "s" : ""} total`}
           />
         </div>
 
         {/* ── Donut + Monthly bookings ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Booking status" />
             <StatusDonut
               completed={stats.completed}
@@ -573,10 +574,10 @@ export default function AdminDashboard() {
             />
           </div>
 
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Bookings — last 6 months" />
             {bookings.length === 0 ? (
-              <p className="text-xs text-zinc-300 mt-4">No data yet</p>
+              <p className="text-xs text-muted-foreground mt-4">No data yet</p>
             ) : (
               <MiniBarChart data={stats.monthlyData} />
             )}
@@ -585,25 +586,25 @@ export default function AdminDashboard() {
 
         {/* ── Revenue sparkline + Category breakdown ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Revenue trend — last 6 months" />
             {stats.totalRevenue === 0 ? (
-              <p className="text-xs text-zinc-300 mt-4">No revenue data yet</p>
+              <p className="text-xs text-muted-foreground mt-4">No revenue data yet</p>
             ) : (
               <div className="mt-2">
-                <p className="text-2xl font-extrabold text-emerald-700 tracking-tight">
+                <p className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-500 tracking-tight">
                   ৳{stats.totalRevenue.toLocaleString()}
                 </p>
-                <p className="text-xs text-zinc-400 mb-3">total revenue</p>
+                <p className="text-xs text-muted-foreground mb-3">total revenue</p>
                 <RevenueSparkline data={stats.monthlyRevenue} />
               </div>
             )}
           </div>
 
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Bookings by category" />
             {stats.categories.length === 0 ? (
-              <p className="text-xs text-zinc-300 mt-4">No bookings yet</p>
+              <p className="text-xs text-muted-foreground mt-4">No bookings yet</p>
             ) : (
               <div className="space-y-2.5 mt-1">
                 {stats.categories.map(([cat, count]) => {
@@ -611,12 +612,12 @@ export default function AdminDashboard() {
                   return (
                     <div key={cat}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="font-medium text-zinc-600">{cat}</span>
-                        <span className="text-zinc-400">
+                        <span className="font-medium text-foreground/80">{cat}</span>
+                        <span className="text-muted-foreground">
                           {count} booking{count !== 1 ? "s" : ""}
                         </span>
                       </div>
-                      <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                         <div
                           className="h-full bg-emerald-400 rounded-full"
                           style={{ width: `${pct}%` }}
@@ -634,7 +635,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           {/* Recent bookings */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Recent bookings"
               action="View all"
@@ -642,8 +643,8 @@ export default function AdminDashboard() {
             />
             {stats.recentBookings.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
-                <BookOpen size={22} className="text-zinc-200" />
-                <p className="text-xs text-zinc-300">No bookings yet</p>
+                <BookOpen size={22} className="text-muted" />
+                <p className="text-xs text-muted-foreground">No bookings yet</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -659,12 +660,12 @@ export default function AdminDashboard() {
                         size="sm"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-zinc-800 truncate">
+                        <p className="text-sm font-semibold text-foreground truncate">
                           {booking.user?.name ?? "—"}
                         </p>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <CalendarDays size={10} className="text-zinc-300" />
-                          <span className="text-[11px] text-zinc-400">
+                          <CalendarDays size={10} className="text-muted-foreground" />
+                          <span className="text-[11px] text-muted-foreground">
                             {new Date(booking.createdAt).toLocaleDateString("en-BD", {
                               day: "numeric",
                               month: "short",
@@ -672,8 +673,8 @@ export default function AdminDashboard() {
                           </span>
                           {booking.tutor?.user?.name && (
                             <>
-                              <span className="text-zinc-200">·</span>
-                              <span className="text-[11px] text-zinc-400 truncate">
+                              <span className="text-muted">·</span>
+                              <span className="text-[11px] text-muted-foreground truncate">
                                 {booking.tutor.user.name}
                               </span>
                             </>
@@ -693,7 +694,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Recent reviews */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Recent reviews"
               action="View all"
@@ -701,19 +702,19 @@ export default function AdminDashboard() {
             />
             {stats.recentReviews.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
-                <Star size={22} className="text-zinc-200" />
-                <p className="text-xs text-zinc-300">No reviews yet</p>
+                <Star size={22} className="text-muted" />
+                <p className="text-xs text-muted-foreground">No reviews yet</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {stats.avgRating > 0 && (
-                  <div className="flex items-center gap-3 pb-3 border-b border-zinc-50">
+                  <div className="flex items-center gap-3 pb-3 border-b border-border">
                     <p className="text-3xl font-extrabold text-amber-500">
                       {stats.avgRating.toFixed(1)}
                     </p>
                     <div>
                       <StarRow rating={stats.avgRating} />
-                      <p className="text-[11px] text-zinc-400 mt-0.5">
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
                         avg across {stats.totalReviews} review
                         {stats.totalReviews !== 1 ? "s" : ""}
                       </p>
@@ -730,17 +731,17 @@ export default function AdminDashboard() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-zinc-800 truncate">
+                          <p className="text-sm font-semibold text-foreground truncate">
                             {review?.user?.name ?? "—"}
                           </p>
-                          <p className="text-[11px] text-zinc-400 truncate">
+                          <p className="text-[11px] text-muted-foreground truncate">
                             → {review?.tutor?.user?.name ?? "—"}
                           </p>
                         </div>
                         <StarRow rating={review.rating} />
                       </div>
                       {review.comment && (
-                        <p className="text-[11px] text-zinc-400 truncate mt-0.5">
+                        <p className="text-[11px] text-muted-foreground truncate mt-0.5">
                           {review.comment}
                         </p>
                       )}
@@ -756,7 +757,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           {/* Top tutors */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Top tutors by bookings"
               action="View all"
@@ -764,28 +765,28 @@ export default function AdminDashboard() {
             />
             {stats.topTutors.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
-                <Users size={22} className="text-zinc-200" />
-                <p className="text-xs text-zinc-300">No tutor data yet</p>
+                <Users size={22} className="text-muted" />
+                <p className="text-xs text-muted-foreground">No tutor data yet</p>
               </div>
             ) : (
               <div className="space-y-0">
                 {stats.topTutors.map((tutor, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 py-2.5 border-b border-zinc-50 last:border-0"
+                    className="flex items-center gap-3 py-2.5 border-b border-border last:border-0"
                   >
-                    <span className="text-[11px] font-extrabold text-zinc-300 w-4 shrink-0">
+                    <span className="text-[11px] font-extrabold text-muted w-4 shrink-0">
                       {i + 1}
                     </span>
                     <Avatar name={tutor.name} variant="emerald" size="sm" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-zinc-800 truncate">
+                      <p className="text-sm font-semibold text-foreground truncate">
                         {tutor.name}
                       </p>
-                      <p className="text-[11px] text-zinc-400 truncate">{tutor.email}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">{tutor.email}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-sm font-bold text-zinc-800">{tutor.count}</p>
+                      <p className="text-sm font-bold text-foreground">{tutor.count}</p>
                       {tutor.rating > 0 && (
                         <p className="text-[10px] text-amber-500">
                           ★ {tutor.rating.toFixed(1)}
@@ -799,7 +800,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Quick actions */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-5 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Quick actions" />
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -807,31 +808,31 @@ export default function AdminDashboard() {
                   label: "All tutors",
                   icon: Users,
                   path: "/dashboard/all-tutors",
-                  bg: "bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100",
+                  bg: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900 hover:bg-emerald-100 dark:hover:bg-emerald-900/40",
                 },
                 {
                   label: "Manage tutors",
                   icon: UserCheck,
                   path: "/dashboard/manage-tutors",
-                  bg: "bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100",
+                  bg: "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900 hover:bg-blue-100 dark:hover:bg-blue-900/40",
                 },
                 {
                   label: "All bookings",
                   icon: CalendarDays,
                   path: "/dashboard/bookings",
-                  bg: "bg-amber-50 text-amber-700 border-amber-100 hover:bg-amber-100",
+                  bg: "bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900 hover:bg-amber-100 dark:hover:bg-amber-900/40",
                 },
                 {
                   label: "All reviews",
                   icon: Star,
                   path: "/dashboard/reviews",
-                  bg: "bg-purple-50 text-purple-700 border-purple-100 hover:bg-purple-100",
+                  bg: "bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-900 hover:bg-purple-100 dark:hover:bg-purple-900/40",
                 },
                 {
                   label: "Categories",
                   icon: Tag,
                   path: "/dashboard/categories",
-                  bg: "bg-rose-50 text-rose-700 border-rose-100 hover:bg-rose-100",
+                  bg: "bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-100 dark:border-rose-900 hover:bg-rose-100 dark:hover:bg-rose-900/40",
                 },
               ].map(({ label, icon: Icon, bg, path }) => (
                 <button

@@ -58,7 +58,7 @@ export default function CategorySection({
           <Button
             variant="outline"
             onClick={() => setShowAll(!showAll)}
-            className="gap-2 text-sm font-semibold border-emerald-300 text-emerald-700 hover:bg-emerald-50 shadow-md shadow-emerald-100 animate-[bounce_2s_ease-in-out_infinite]"
+            className="gap-2 text-sm font-semibold border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 shadow-sm animate-[bounce_2s_ease-in-out_infinite]"
           >
             {showAll ? (
               <>

@@ -41,11 +41,11 @@ function MiniStat({
   valueClass?: string;
 }) {
   return (
-    <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-3 py-2.5 text-center">
-      <p className={`text-sm font-extrabold ${valueClass ?? "text-zinc-800"}`}>
+    <div className="bg-zinc-50 border border-border rounded-xl px-3 py-2.5 text-center">
+      <p className={`text-sm font-extrabold ${valueClass ?? "text-foreground"}`}>
         {value}
       </p>
-      <p className="text-[10px] text-zinc-400 mt-0.5">{label}</p>
+      <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
@@ -57,22 +57,22 @@ export function TutorProfileDialog({ open, tutor, onClose, onBook }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border border-zinc-100">
+      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border border-border">
         <DialogHeader className="px-5 pt-5 pb-0">
           <div className="flex items-center gap-3 mb-3">
             <TutorAvatar name={tutor.user?.name ?? "?"} />
             <div className="min-w-0">
-              <DialogTitle className="text-base font-extrabold tracking-tight text-zinc-900">
+              <DialogTitle className="text-base font-extrabold tracking-tight text-foreground">
                 {tutor.user?.name}
               </DialogTitle>
-              <p className="text-xs text-zinc-400 truncate">
+              <p className="text-xs text-muted-foreground truncate">
                 {tutor.user?.email}
               </p>
               <span
                 className={`mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
                   isAvailable
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : "bg-zinc-100 text-zinc-500 border-zinc-200"
+                    : "bg-zinc-100 text-muted-foreground border-border"
                 }`}
               >
                 <span
@@ -128,8 +128,8 @@ export function TutorProfileDialog({ open, tutor, onClose, onBook }: Props) {
           </div>
 
           {tutor.totalBookings !== undefined && (
-            <div className="flex items-center justify-between bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-2.5">
-              <span className="text-xs text-zinc-400 font-medium">
+            <div className="flex items-center justify-between bg-zinc-50 border border-border rounded-xl px-4 py-2.5">
+              <span className="text-xs text-muted-foreground font-medium">
                 Total sessions completed
               </span>
               <span className="text-sm font-extrabold text-zinc-700">
@@ -140,21 +140,21 @@ export function TutorProfileDialog({ open, tutor, onClose, onBook }: Props) {
 
           {tutor.bio && (
             <div>
-              <p className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase mb-1.5">
+              <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">
                 About
               </p>
-              <p className="text-sm text-zinc-500 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {tutor.bio}
               </p>
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between px-5 py-4 bg-zinc-50 border-t border-zinc-100">
+        <div className="flex items-center justify-between px-5 py-4 bg-zinc-50 border-t border-border">
           <Button
             variant="ghost"
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-xl text-sm font-semibold"
+            className="text-muted-foreground hover:text-zinc-600 hover:bg-zinc-100 rounded-xl text-sm font-semibold"
           >
             Close
           </Button>

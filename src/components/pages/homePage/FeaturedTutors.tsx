@@ -24,7 +24,7 @@ function Stars({ rating }: { rating: number }) {
           className={
             s <= Math.floor(rating)
               ? "fill-amber-400 text-amber-400"
-              : "fill-zinc-200 text-zinc-200"
+              : "fill-zinc-200 text-zinc-200 dark:fill-zinc-800 dark:text-zinc-800"
           }
         />
       ))}
@@ -56,7 +56,7 @@ export default function FeaturedTutors({
         <Button
           variant="ghost"
           onClick={() => router.push("/tutors")}
-          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 text-emerald-700 hover:bg-emerald-50 shadow-md shadow-emerald-100 animate-[bounce_2s_ease-in-out_infinite]"
+          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 shadow-sm animate-[bounce_2s_ease-in-out_infinite]"
         >
           View all tutors
           <ArrowRight
@@ -78,7 +78,7 @@ export default function FeaturedTutors({
           return (
             <Card
               key={t.id}
-              className="group border border-zinc-100 transition-all duration-200 hover:-translate-y-1"
+              className="group border border-border transition-all duration-200 hover:-translate-y-1"
               onMouseEnter={(e) =>
                 (e.currentTarget.style.boxShadow = `0 4px 14px 0 ${shadowHex}`)
               }
@@ -87,7 +87,7 @@ export default function FeaturedTutors({
               <CardHeader className="p-5 pb-4">
                 <div className="flex gap-3 items-start">
                   <Avatar className="h-12 w-12 rounded-xl shrink-0">
-                    <AvatarFallback className="font-bold text-base rounded-xl bg-emerald-100 text-emerald-700">
+                    <AvatarFallback className="font-bold text-base rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -95,12 +95,12 @@ export default function FeaturedTutors({
                     <div className="font-bold text-base leading-tight">
                       {t.user.name}
                     </div>
-                    <div className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1">
+                    <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                       <MapPin size={11} /> {t.user.email}
                     </div>
                     <Badge
                       variant="outline"
-                      className="mt-1.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700 border-emerald-200"
+                      className="mt-1.5 text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900"
                     >
                       {t.category?.name ?? "Tutor"}
                     </Badge>
@@ -112,7 +112,7 @@ export default function FeaturedTutors({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Stars rating={t?.averageRating ?? 0} />
-                    <span className="text-xs text-zinc-400">
+                    <span className="text-xs text-muted-foreground">
                       {t?.averageRating} ({t?.totalReview})
                     </span>
                   </div>
@@ -120,7 +120,7 @@ export default function FeaturedTutors({
                     <span className="font-extrabold text-base">
                       ৳{t?.hourlyRate}
                     </span>
-                    <span className="text-xs text-zinc-400"> /hr</span>
+                    <span className="text-xs text-muted-foreground"> /hr</span>
                   </div>
                 </div>
               </CardContent>

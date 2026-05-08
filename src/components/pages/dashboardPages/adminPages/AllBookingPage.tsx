@@ -19,23 +19,23 @@ const STATUS_CONFIG: Record<
   { pill: string; dot: string; pulse?: boolean; label: string }
 > = {
   PENDING: {
-    pill: "bg-amber-50 text-amber-800 border-amber-200",
+    pill: "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-900",
     dot: "bg-amber-400",
     pulse: true,
     label: "Pending",
   },
   CONFIRMED: {
-    pill: "bg-blue-50 text-blue-800 border-blue-200",
+    pill: "bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-400 border-blue-200 dark:border-blue-900",
     dot: "bg-blue-400",
     label: "Confirmed",
   },
   COMPLETED: {
-    pill: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    pill: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900",
     dot: "bg-emerald-500",
     label: "Completed",
   },
   CANCELLED: {
-    pill: "bg-red-50 text-red-800 border-red-200",
+    pill: "bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-400 border-red-200 dark:border-red-900",
     dot: "bg-red-400",
     label: "Cancelled",
   },
@@ -63,7 +63,7 @@ function InitialAvatar({
       className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
         variant === "emerald"
           ? "bg-emerald-700 text-white"
-          : "bg-zinc-100 text-zinc-600"
+          : "bg-muted text-muted-foreground"
       }`}
     >
       {initials}
@@ -83,11 +83,11 @@ function StatCard({
   valueColor: string;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+    <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
-      <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
+      <p className="text-xs text-muted-foreground font-medium mt-0.5 flex items-center gap-1.5">
         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
         {label}
       </p>
@@ -153,17 +153,17 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   }, [bookings, activeFilter, search]);
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
         <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
           Admin
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
             All Bookings
           </h1>
           {paginations && (
-            <p className="text-sm text-zinc-400 font-medium mb-0.5">
+            <p className="text-sm text-muted-foreground font-medium mb-0.5">
               {paginations.total} booking
               {paginations.total !== 1 ? "s" : ""} total
             </p>
@@ -173,7 +173,7 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -183,32 +183,32 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
           <StatCard
             label="Total"
             value={paginations?.total ?? counts.total}
-            dotColor="bg-zinc-300"
-            valueColor="text-zinc-800"
+            dotColor="bg-muted-foreground/30"
+            valueColor="text-foreground"
           />
           <StatCard
             label="Completed"
             value={counts.completed}
             dotColor="bg-emerald-500"
-            valueColor="text-emerald-700"
+            valueColor="text-emerald-700 dark:text-emerald-400"
           />
           <StatCard
             label="Confirmed"
             value={counts.confirmed}
             dotColor="bg-blue-400"
-            valueColor="text-blue-700"
+            valueColor="text-blue-700 dark:text-blue-400"
           />
           <StatCard
             label="Pending"
             value={counts.pending}
             dotColor="bg-amber-400"
-            valueColor="text-amber-700"
+            valueColor="text-amber-700 dark:text-amber-400"
           />
           <StatCard
             label="Cancelled"
             value={counts.cancelled}
             dotColor="bg-red-400"
-            valueColor="text-red-700"
+            valueColor="text-red-700 dark:text-red-400"
           />
         </div>
 
@@ -216,14 +216,14 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
           <div className="relative">
             <Search
               size={13}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-300"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <input
               type="text"
               placeholder="Search student or tutor…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-zinc-200 bg-white text-zinc-800 placeholder:text-zinc-300 outline-none focus:border-emerald-400 transition-colors w-52"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-emerald-400 transition-colors w-52"
             />
           </div>
 
@@ -235,7 +235,7 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   activeFilter === s
                     ? "bg-emerald-600 text-white border-emerald-600"
-                    : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-300 hover:text-zinc-700"
+                    : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
                 }`}
               >
                 {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
@@ -244,14 +244,14 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
           </div>
         </div>
 
-        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+              <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
                 {["Student", "Tutor", "Status", "Date"].map((h) => (
                   <TableHead
                     key={h}
-                    className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 first:pl-6"
+                    className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 first:pl-6"
                   >
                     {h}
                   </TableHead>
@@ -265,27 +265,27 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                   <TableRow key={i} className="animate-pulse">
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-28 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-20 rounded bg-zinc-100" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                          <div className="h-2.5 w-20 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-28 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-20 rounded bg-zinc-100" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                          <div className="h-2.5 w-20 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-5 w-20 rounded-full bg-zinc-100" />
+                      <div className="h-5 w-20 rounded-full bg-muted" />
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="h-3 w-24 rounded bg-zinc-100" />
+                      <div className="h-3 w-24 rounded bg-muted" />
                     </TableCell>
                   </TableRow>
                 ))
@@ -293,10 +293,10 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                 <TableRow>
                   <TableCell colSpan={4} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
+                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">
+                      <p className="text-sm font-semibold text-muted-foreground">
                         No bookings found
                       </p>
                     </div>
@@ -305,16 +305,14 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
               ) : (
                 filtered.map((booking, idx) => {
                   const status = STATUS_CONFIG[booking.status] ?? {
-                    pill: "bg-zinc-100 text-zinc-600 border-zinc-200",
-                    dot: "bg-zinc-400",
+                    pill: "bg-muted text-muted-foreground border-border",
+                    dot: "bg-muted-foreground/50",
                     label: booking.status,
                   };
                   return (
                     <TableRow
                       key={booking.id}
-                      className={`hover:bg-zinc-50 transition-colors ${
-                        idx % 2 === 1 ? "bg-zinc-50/50" : ""
-                      }`}
+                      className="hover:bg-muted/50 transition-colors"
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
@@ -323,10 +321,10 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                             variant="emerald"
                           />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-zinc-800 truncate">
+                            <p className="text-sm font-semibold text-foreground truncate">
                               {booking.user?.name ?? "—"}
                             </p>
-                            <p className="text-xs text-zinc-400 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {booking.user?.email ?? ""}
                             </p>
                           </div>
@@ -340,10 +338,10 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                             variant="zinc"
                           />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-zinc-800 truncate">
+                            <p className="text-sm font-semibold text-foreground truncate">
                               {booking.tutor?.user?.name ?? "—"}
                             </p>
-                            <p className="text-xs text-zinc-400 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {booking.tutor?.user?.email ?? ""}
                             </p>
                           </div>
@@ -364,10 +362,10 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                       </TableCell>
 
                       <TableCell className="py-4">
-                        <div className="flex items-center gap-1.5 text-sm text-zinc-400">
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                           <CalendarDays
                             size={13}
-                            className="text-zinc-300 shrink-0"
+                            className="text-muted-foreground shrink-0"
                           />
                           {new Date(booking.createdAt).toLocaleDateString(
                             "en-BD",

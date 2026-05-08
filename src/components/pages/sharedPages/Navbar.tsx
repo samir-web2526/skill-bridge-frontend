@@ -28,6 +28,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useTransition } from "react";
 import { logout } from "@/services/auth.service";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface MenuItem {
   title: string;
@@ -47,7 +48,8 @@ const defaultMenu: MenuItem[] = [
   { title: "Home", url: "/" },
   { title: "Find Tutors", url: "/tutors" },
   { title: "Student Reviews", url: "/reviews" },
-
+  { title: "About", url: "/about" },
+  { title: "Contact", url: "/contact" },
 ];
 
 function LogoutButton() {
@@ -58,7 +60,7 @@ function LogoutButton() {
       size="sm"
       disabled={isPending}
       onClick={() => startTransition(() => logout())}
-      className="rounded-lg border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 text-sm font-medium"
+      className="rounded-lg border-border text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:bg-muted text-sm font-medium"
     >
       {isPending ? "Logging out..." : "Log Out"}
     </Button>
@@ -69,7 +71,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/90 backdrop-blur-md",
+        "sticky top-0 z-50 w-full border-b border-border bg-card/90 backdrop-blur-md",
         className,
       )}
     >
@@ -81,7 +83,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center shadow-sm">
                 <BookOpen size={15} className="text-white" />
               </div>
-              <span className="text-base font-bold tracking-tight text-zinc-900">
+              <span className="text-base font-bold tracking-tight text-foreground">
                 Skill<span className="text-emerald-600">Bridge</span>
               </span>
             </Link>
@@ -94,6 +96,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
           </div>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center gap-3">
                 <Button
@@ -109,15 +112,15 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
 
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-emerald-100 text-emerald-700 text-xs font-bold">
+                    <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
                       {user.name?.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden xl:block">
-                    <p className="text-xs font-semibold text-zinc-900 leading-tight">
+                    <p className="text-xs font-semibold text-foreground leading-tight">
                       {user.name}
                     </p>
-                    <p className="text-[11px] text-zinc-400 leading-tight">
+                    <p className="text-[11px] text-muted-foreground leading-tight">
                       {user.email}
                     </p>
                   </div>
@@ -130,7 +133,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                   asChild
                   variant="ghost"
                   size="sm"
-                  className="text-zinc-600 hover:text-zinc-900 font-medium rounded-lg"
+                  className="text-muted-foreground hover:text-foreground font-medium rounded-lg"
                 >
                   <a href="/login">Login</a>
                 </Button>
@@ -152,26 +155,28 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
             <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
               <BookOpen size={13} className="text-white" />
             </div>
-            <span className="text-base font-bold tracking-tight text-zinc-900">
+            <span className="text-base font-bold tracking-tight text-foreground">
               Skill<span className="text-emerald-600">Bridge</span>
             </span>
           </Link>
 
-          <Sheet>
-            <SheetTrigger asChild>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Sheet>
+              <SheetTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9 rounded-lg border-zinc-200"
+                className="h-9 w-9 rounded-lg border-border"
               >
-                <Menu className="size-4 text-zinc-600" />
+                <Menu className="size-4 text-muted-foreground" />
               </Button>
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-75 overflow-y-auto border-l border-zinc-100 p-0"
+              className="w-75 overflow-y-auto border-l border-border p-0"
             >
-              <SheetHeader className="px-5 pt-5 pb-4 border-b border-zinc-100">
+              <SheetHeader className="px-5 pt-5 pb-4 border-b border-border">
                 <SheetTitle className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
                     <BookOpen size={13} className="text-white" />
@@ -191,22 +196,22 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                   {menu.map((item) => renderMobileMenuItem(item))}
                 </Accordion>
 
-                <div className="h-px bg-zinc-100" />
+                <div className="h-px bg-border" />
 
                 <div className="flex flex-col gap-2">
                   {user ? (
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-3 px-1">
                         <Avatar className="h-9 w-9">
-                          <AvatarFallback className="bg-emerald-100 text-emerald-700 text-xs font-bold">
+                          <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
                             {user.name?.slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-semibold text-zinc-900">
+                          <p className="text-sm font-semibold text-foreground">
                             {user.name}
                           </p>
-                          <p className="text-xs text-zinc-400">{user.email}</p>
+                          <p className="text-xs text-muted-foreground">{user.email}</p>
                         </div>
                       </div>
                       <Button
@@ -225,7 +230,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                       <Button
                         asChild
                         variant="outline"
-                        className="w-full rounded-lg border-zinc-200 font-medium"
+                        className="w-full rounded-lg border-border font-medium"
                       >
                         <a href="/login">Login</a>
                       </Button>
@@ -241,6 +246,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
               </div>
             </SheetContent>
           </Sheet>
+          </div>
         </div>
       </div>
     </header>
@@ -252,10 +258,10 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-sm font-medium text-zinc-500 hover:text-zinc-900 bg-transparent hover:bg-zinc-50 rounded-lg h-9 px-3">
+        <NavigationMenuTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground bg-transparent hover:bg-muted rounded-lg h-9 px-3">
           {item.title}
         </NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-white border border-zinc-100 shadow-lg rounded-xl p-2">
+        <NavigationMenuContent className="bg-card border border-border shadow-lg rounded-xl p-2">
           {item.items.map((subItem) => (
             <NavigationMenuLink asChild key={subItem.title} className="w-80">
               <SubMenuLink item={subItem} />
@@ -269,7 +275,7 @@ const renderMenuItem = (item: MenuItem) => {
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
         href={item.url}
-        className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 hover:bg-zinc-50"
+        className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
       >
         {item.title}
       </NavigationMenuLink>
@@ -282,7 +288,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <AccordionItem key={item.title} value={item.title} className="border-b-0">
-        <AccordionTrigger className="py-2 px-3 text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:no-underline rounded-lg hover:bg-zinc-50">
+        <AccordionTrigger className="py-2 px-3 text-sm font-semibold text-foreground/80 hover:text-foreground hover:no-underline rounded-lg hover:bg-muted">
           {item.title}
         </AccordionTrigger>
         <AccordionContent className="mt-1 pl-2">
@@ -297,7 +303,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
     <a
       key={item.title}
       href={item.url}
-      className="flex items-center px-3 py-2 text-sm font-semibold text-zinc-700 hover:text-emerald-600 hover:bg-zinc-50 rounded-lg transition-colors"
+      className="flex items-center px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-emerald-600 hover:bg-muted rounded-lg transition-colors"
     >
       {item.title}
     </a>
@@ -309,17 +315,17 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <a
       href={item.url}
-      className="flex flex-row gap-3 rounded-lg p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-zinc-50 hover:text-zinc-900 group"
+      className="flex flex-row gap-3 rounded-lg p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-foreground group"
     >
       {item.icon && (
-        <div className="mt-0.5 w-8 h-8 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0 group-hover:bg-emerald-100 transition-colors">
+        <div className="mt-0.5 w-8 h-8 rounded-md bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900 transition-colors">
           {item.icon}
         </div>
       )}
       <div>
-        <div className="text-sm font-semibold text-zinc-900">{item.title}</div>
+        <div className="text-sm font-semibold text-foreground">{item.title}</div>
         {item.description && (
-          <p className="text-xs leading-snug text-zinc-400 mt-0.5">
+          <p className="text-xs leading-snug text-muted-foreground mt-0.5">
             {item.description}
           </p>
         )}

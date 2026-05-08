@@ -68,11 +68,11 @@
 //   valueColor: string;
 // }) {
 //   return (
-//     <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+//     <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
 //       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
 //         {value}
 //       </p>
-//       <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
+//       <p className="text-xs text-muted-foreground font-medium mt-0.5 flex items-center gap-1.5">
 //         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
 //         {label}
 //       </p>
@@ -281,11 +281,11 @@
 //         </p>
 //         <div className="flex items-end justify-between flex-wrap gap-3">
 //           <div>
-//             <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+//             <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
 //               My Bookings
 //             </h1>
 //             {paginations && (
-//               <p className="text-sm text-zinc-400 font-medium mt-0.5">
+//               <p className="text-sm text-muted-foreground font-medium mt-0.5">
 //                 {paginations.total} booking
 //                 {paginations.total !== 1 ? "s" : ""} total
 //               </p>
@@ -310,21 +310,21 @@
 //         )}
 
 //         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-//           <StatCard label="Total" value={stats.total} dotColor="bg-zinc-300" valueColor="text-zinc-800" />
+//           <StatCard label="Total" value={stats.total} dotColor="bg-zinc-300" valueColor="text-foreground" />
 //           <StatCard label="Completed" value={stats.completed} dotColor="bg-emerald-500" valueColor="text-emerald-700" />
 //           <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-blue-400" valueColor="text-blue-700" />
 //           <StatCard label="Pending" value={stats.pending} dotColor="bg-amber-400" valueColor="text-amber-700" />
 //           <StatCard label="Cancelled" value={stats.cancelled} dotColor="bg-red-400" valueColor="text-red-600" />
 //         </div>
 
-//         <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+//         <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
 //           <Table>
 //             <TableHeader>
 //               <TableRow className="bg-zinc-50 hover:bg-zinc-50">
 //                 {["Tutor", "Category", "Rate", "Status", "Date", "Actions"].map((h, i) => (
 //                   <TableHead
 //                     key={i}
-//                     className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
+//                     className={`text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
 //                   >
 //                     {h}
 //                   </TableHead>
@@ -364,7 +364,7 @@
 //                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
 //                         <Inbox size={22} className="text-emerald-600" />
 //                       </div>
-//                       <p className="text-sm font-semibold text-zinc-400">No bookings yet</p>
+//                       <p className="text-sm font-semibold text-muted-foreground">No bookings yet</p>
 //                       <Button
 //                         onClick={openCreateDialog}
 //                         className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold px-4 mt-1"
@@ -377,7 +377,7 @@
 //               ) : (
 //                 bookings.map((booking, idx) => {
 //                   const status = STATUS_CONFIG[booking.status] ?? {
-//                     pill: "bg-zinc-100 text-zinc-600 border-zinc-200",
+//                     pill: "bg-zinc-100 text-zinc-600 border-border",
 //                     dot: "bg-zinc-400",
 //                     label: booking.status,
 //                   };
@@ -397,10 +397,10 @@
 //                         <div className="flex items-center gap-3">
 //                           <TutorAvatar name={booking.tutor?.user?.name ?? "?"} />
 //                           <div className="min-w-0">
-//                             <p className="text-sm font-semibold text-zinc-800 truncate">
+//                             <p className="text-sm font-semibold text-foreground truncate">
 //                               {booking.tutor?.user?.name ?? "—"}
 //                             </p>
-//                             <p className="text-xs text-zinc-400 truncate">
+//                             <p className="text-xs text-muted-foreground truncate">
 //                               {booking.tutor?.user?.email ?? ""}
 //                             </p>
 //                           </div>
@@ -408,7 +408,7 @@
 //                       </TableCell>
 
 //                       <TableCell className="py-4">
-//                         <span className="text-sm text-zinc-500">
+//                         <span className="text-sm text-muted-foreground">
 //                           {booking.tutor?.category?.name ?? "—"}
 //                         </span>
 //                       </TableCell>
@@ -429,7 +429,7 @@
 //                       </TableCell>
 
 //                       <TableCell className="py-4">
-//                         <div className="flex items-center gap-1.5 text-sm text-zinc-400">
+//                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
 //                           <CalendarDays size={13} className="text-zinc-300 shrink-0" />
 //                           {new Date(booking.date ?? booking.createdAt).toLocaleDateString("en-BD", {
 //                             day: "numeric",
@@ -545,15 +545,15 @@
 //     </DialogHeader>
 
 //     <div className="px-6 py-5 space-y-4">
-//       <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 space-y-2">
+//       <div className="rounded-xl bg-zinc-50 border border-border p-4 space-y-2">
 //         <div className="flex justify-between text-sm">
-//           <span className="text-zinc-500">Tutor</span>
-//           <span className="font-semibold text-zinc-800">
+//           <span className="text-muted-foreground">Tutor</span>
+//           <span className="font-semibold text-foreground">
 //             {paymentTarget?.tutor?.user?.name ?? "—"}
 //           </span>
 //         </div>
 //         <div className="flex justify-between text-sm">
-//           <span className="text-zinc-500">Date</span>
+//           <span className="text-muted-foreground">Date</span>
 //           <span className="text-zinc-700">
 //             {paymentTarget?.date
 //               ? new Date(paymentTarget.date).toLocaleDateString("en-BD", {
@@ -563,13 +563,13 @@
 //           </span>
 //         </div>
 //         <div className="flex justify-between text-sm">
-//           <span className="text-zinc-500">Time</span>
+//           <span className="text-muted-foreground">Time</span>
 //           <span className="text-zinc-700">
 //             {paymentTarget?.startTime} - {paymentTarget?.endTime}
 //           </span>
 //         </div>
 //         <div className="flex justify-between text-sm border-t pt-2 mt-1">
-//           <span className="text-zinc-500 font-medium">Amount</span>
+//           <span className="text-muted-foreground font-medium">Amount</span>
 //           <span className="font-extrabold text-emerald-700 text-base">
 //             {paymentTarget?.tutor?.hourlyRate
 //               ? `৳${Number(paymentTarget.tutor.hourlyRate).toLocaleString()}`
@@ -578,7 +578,7 @@
 //         </div>
 //       </div>
 
-//       <p className="text-xs text-zinc-400 text-center">
+//       <p className="text-xs text-muted-foreground text-center">
 //         You will be redirected to Stripe to complete the payment securely.
 //       </p>
 //     </div>
@@ -654,23 +654,23 @@ const STATUS_CONFIG: Record<
   { pill: string; dot: string; pulse?: boolean; label: string }
 > = {
   PENDING: {
-    pill: "bg-amber-50 text-amber-800 border-amber-200",
+    pill: "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-900",
     dot: "bg-amber-400",
     pulse: true,
     label: "Pending",
   },
   CONFIRMED: {
-    pill: "bg-blue-50 text-blue-800 border-blue-200",
+    pill: "bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-400 border-blue-200 dark:border-blue-900",
     dot: "bg-blue-400",
     label: "Confirmed",
   },
   COMPLETED: {
-    pill: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    pill: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900",
     dot: "bg-emerald-500",
     label: "Completed",
   },
   CANCELLED: {
-    pill: "bg-red-50 text-red-800 border-red-200",
+    pill: "bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-400 border-red-200 dark:border-red-900",
     dot: "bg-red-400",
     label: "Cancelled",
   },
@@ -688,11 +688,11 @@ function StatCard({
   valueColor: string;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-100 px-4 py-3 shadow-sm">
+    <div className="bg-card rounded-xl border border-border px-4 py-3 shadow-sm">
       <p className={`text-2xl font-extrabold tracking-tight ${valueColor}`}>
         {value}
       </p>
-      <p className="text-xs text-zinc-400 font-medium mt-0.5 flex items-center gap-1.5">
+      <p className="text-xs text-muted-foreground font-medium mt-0.5 flex items-center gap-1.5">
         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
         {label}
       </p>
@@ -709,7 +709,7 @@ function TutorAvatar({ name }: { name: string }) {
       .toUpperCase()
       .slice(0, 2) ?? "?";
   return (
-    <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center shrink-0">
+    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 text-xs font-extrabold flex items-center justify-center shrink-0">
       {initials}
     </div>
   );
@@ -890,7 +890,7 @@ export default function StudentBookingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       {/* ── Header ── */}
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
         <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
@@ -898,11 +898,11 @@ export default function StudentBookingPage() {
         </p>
         <div className="flex items-end justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+            <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
               My Bookings
             </h1>
             {paginations && (
-              <p className="text-sm text-zinc-400 font-medium mt-0.5">
+              <p className="text-sm text-muted-foreground font-medium mt-0.5">
                 {paginations.total} booking
                 {paginations.total !== 1 ? "s" : ""} total
               </p>
@@ -920,7 +920,7 @@ export default function StudentBookingPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -928,22 +928,22 @@ export default function StudentBookingPage() {
 
         {/* ── Stat cards ── */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <StatCard label="Total" value={stats.total} dotColor="bg-zinc-300" valueColor="text-zinc-800" />
-          <StatCard label="Completed" value={stats.completed} dotColor="bg-emerald-500" valueColor="text-emerald-700" />
-          <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-blue-400" valueColor="text-blue-700" />
-          <StatCard label="Pending" value={stats.pending} dotColor="bg-amber-400" valueColor="text-amber-700" />
-          <StatCard label="Cancelled" value={stats.cancelled} dotColor="bg-red-400" valueColor="text-red-600" />
+          <StatCard label="Total" value={stats.total} dotColor="bg-muted-foreground/30" valueColor="text-foreground" />
+          <StatCard label="Completed" value={stats.completed} dotColor="bg-emerald-500" valueColor="text-emerald-700 dark:text-emerald-400" />
+          <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-blue-400" valueColor="text-blue-700 dark:text-blue-400" />
+          <StatCard label="Pending" value={stats.pending} dotColor="bg-amber-400" valueColor="text-amber-700 dark:text-amber-400" />
+          <StatCard label="Cancelled" value={stats.cancelled} dotColor="bg-red-400" valueColor="text-red-600 dark:text-red-400" />
         </div>
 
         {/* ── Table ── */}
-        <div className="rounded-2xl border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+              <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
                 {["Tutor", "Category", "Rate", "Status", "Date", "Actions"].map((h, i) => (
                   <TableHead
                     key={i}
-                    className={`text-[11px] font-bold tracking-widest text-zinc-400 uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
+                    className={`text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 ${i === 0 ? "pl-6" : ""} ${i === 5 ? "text-right pr-6" : ""}`}
                   >
                     {h}
                   </TableHead>
@@ -957,21 +957,21 @@ export default function StudentBookingPage() {
                   <TableRow key={i} className="animate-pulse">
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-28 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-20 rounded bg-zinc-100" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                          <div className="h-2.5 w-20 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     {Array.from({ length: 4 }).map((_, j) => (
                       <TableCell key={j} className="py-4">
-                        <div className="h-3 w-20 rounded bg-zinc-100" />
+                        <div className="h-3 w-20 rounded bg-muted" />
                       </TableCell>
                     ))}
                     <TableCell className="py-4 pr-6">
                       <div className="flex justify-end">
-                        <div className="h-7 w-16 rounded-lg bg-zinc-100" />
+                        <div className="h-7 w-16 rounded-lg bg-muted" />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -980,10 +980,10 @@ export default function StudentBookingPage() {
                 <TableRow>
                   <TableCell colSpan={6} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
+                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <p className="text-sm font-semibold text-zinc-400">No bookings yet</p>
+                      <p className="text-sm font-semibold text-muted-foreground">No bookings yet</p>
                       <Button
                         onClick={openCreateDialog}
                         className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold px-4 mt-1"
@@ -996,8 +996,8 @@ export default function StudentBookingPage() {
               ) : (
                 bookings.map((booking, idx) => {
                   const statusCfg = STATUS_CONFIG[booking.status] ?? {
-                    pill: "bg-zinc-100 text-zinc-600 border-zinc-200",
-                    dot: "bg-zinc-400",
+                    pill: "bg-muted text-muted-foreground border-border",
+                    dot: "bg-muted-foreground/50",
                     label: booking.status,
                   };
 
@@ -1019,10 +1019,10 @@ export default function StudentBookingPage() {
                         <div className="flex items-center gap-3">
                           <TutorAvatar name={booking.tutor?.user?.name ?? "?"} />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-zinc-800 truncate">
+                            <p className="text-sm font-semibold text-foreground truncate">
                               {booking.tutor?.user?.name ?? "—"}
                             </p>
-                            <p className="text-xs text-zinc-400 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {booking.tutor?.user?.email ?? ""}
                             </p>
                           </div>
@@ -1031,7 +1031,7 @@ export default function StudentBookingPage() {
 
                       {/* Category */}
                       <TableCell className="py-4">
-                        <span className="text-sm text-zinc-500">
+                        <span className="text-sm text-muted-foreground">
                           {booking.tutor?.category?.name ?? "—"}
                         </span>
                       </TableCell>
@@ -1055,7 +1055,7 @@ export default function StudentBookingPage() {
 
                       {/* Date */}
                       <TableCell className="py-4">
-                        <div className="flex items-center gap-1.5 text-sm text-zinc-400">
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                           <CalendarDays size={13} className="text-zinc-300 shrink-0" />
                           {new Date(booking.date ?? booking.createdAt).toLocaleDateString("en-BD", {
                             day: "numeric",
@@ -1174,15 +1174,15 @@ export default function StudentBookingPage() {
           </DialogHeader>
 
           <div className="px-6 py-5 space-y-4">
-            <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 space-y-2">
+            <div className="rounded-xl bg-zinc-50 border border-border p-4 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-zinc-500">Tutor</span>
-                <span className="font-semibold text-zinc-800">
+                <span className="text-muted-foreground">Tutor</span>
+                <span className="font-semibold text-foreground">
                   {paymentTarget?.tutor?.user?.name ?? "—"}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-zinc-500">Date</span>
+                <span className="text-muted-foreground">Date</span>
                 <span className="text-zinc-700">
                   {paymentTarget?.date
                     ? new Date(paymentTarget.date).toLocaleDateString("en-BD", {
@@ -1194,13 +1194,13 @@ export default function StudentBookingPage() {
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-zinc-500">Time</span>
+                <span className="text-muted-foreground">Time</span>
                 <span className="text-zinc-700">
                   {paymentTarget?.startTime} – {paymentTarget?.endTime}
                 </span>
               </div>
               <div className="flex justify-between text-sm border-t pt-2 mt-1">
-                <span className="text-zinc-500 font-medium">Amount</span>
+                <span className="text-muted-foreground font-medium">Amount</span>
                 <span className="font-extrabold text-emerald-700 text-base">
                   {paymentTarget?.tutor?.hourlyRate
                     ? `৳${Number(paymentTarget.tutor.hourlyRate).toLocaleString()}`
@@ -1209,7 +1209,7 @@ export default function StudentBookingPage() {
               </div>
             </div>
 
-            <p className="text-xs text-zinc-400 text-center">
+            <p className="text-xs text-muted-foreground text-center">
               You will be redirected to Stripe to complete the payment securely.
             </p>
           </div>

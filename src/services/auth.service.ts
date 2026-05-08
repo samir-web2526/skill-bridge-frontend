@@ -16,8 +16,8 @@ export interface AuthUser {
   image: string | null;
   role: Role;
   status: string;
-  isDeleted: boolean;
-  createdAt: string;
+  isDeleted?: boolean;
+  createdAt?: string;
 }
 
 export interface AuthTokens {
@@ -34,7 +34,7 @@ export interface RegisterStudentPayload {
   phone?: string;
   image?: string;
   gender?: string;
-  dateOfBirth?: string;   
+  dateOfBirth?: string;
   address?: string;
   class?: string;
   group?: string;
@@ -53,8 +53,8 @@ export interface RegisterTutorPayload {
   hourlyRate: number;
   experience: number;
   categoryId: string;
-  availableFrom: string;  
-  availableTo: string;   
+  availableFrom: string;
+  availableTo: string;
 }
 
 export type RegisterPayload = RegisterStudentPayload | RegisterTutorPayload;

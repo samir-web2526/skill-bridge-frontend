@@ -38,27 +38,27 @@ const STEPS = [
 function HeroBanner() {
   return (
     <div className="relative w-full max-w-135 mx-auto">
-      <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-emerald-50 via-teal-50 to-sky-50" />
+      <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-emerald-50 via-teal-50 to-sky-50 dark:from-emerald-950/20 dark:via-emerald-900/10 dark:to-background" />
       <svg
         viewBox="0 0 520 460"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="relative w-full"
+        className="relative w-full hero-banner-svg"
       >
-        <circle cx="400" cy="75" r="85" fill="#d1fae5" opacity="0.55" />
-        <circle cx="75" cy="370" r="65" fill="#a7f3d0" opacity="0.4" />
-        <circle cx="460" cy="350" r="50" fill="#6ee7b7" opacity="0.22" />
+        <circle cx="400" cy="75" r="85" className="fill-emerald-100 dark:fill-emerald-950/40" opacity="0.55" />
+        <circle cx="75" cy="370" r="65" className="fill-emerald-200 dark:fill-emerald-900/30" opacity="0.4" />
+        <circle cx="460" cy="350" r="50" className="fill-emerald-300 dark:fill-emerald-800/20" opacity="0.22" />
         <ellipse
           cx="260"
           cy="430"
           rx="185"
           ry="26"
-          fill="#bbf7d0"
+          className="fill-emerald-100 dark:fill-emerald-950/20"
           opacity="0.45"
         />
-        <rect x="55" y="335" width="410" height="16" rx="8" fill="#a7f3d0" />
-        <rect x="95" y="351" width="14" height="55" rx="7" fill="#6ee7b7" />
-        <rect x="411" y="351" width="14" height="55" rx="7" fill="#6ee7b7" />
+        <rect x="55" y="335" width="410" height="16" rx="8" className="fill-emerald-200 dark:fill-emerald-900/30" />
+        <rect x="95" y="351" width="14" height="55" rx="7" className="fill-emerald-300 dark:fill-emerald-800/40" />
+        <rect x="411" y="351" width="14" height="55" rx="7" className="fill-emerald-300 dark:fill-emerald-800/40" />
 
         <rect x="68" y="290" width="88" height="20" rx="5" fill="#34d399" />
         <rect x="73" y="272" width="80" height="20" rx="5" fill="#059669" />
@@ -68,14 +68,14 @@ function HeroBanner() {
         <rect x="83" y="275" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
         <rect x="90" y="275" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
 
-        <path d="M172 308 Q218 288 258 308 Q298 288 344 308 L344 336 Q298 316 258 336 Q218 316 172 336 Z" fill="#fff" stroke="#d1fae5" strokeWidth="1.5" />
-        <line x1="258" y1="308" x2="258" y2="336" stroke="#d1fae5" strokeWidth="1.5" />
-        <line x1="190" y1="318" x2="246" y2="313" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="190" y1="325" x2="246" y2="320" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="190" y1="332" x2="246" y2="327" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="270" y1="313" x2="326" y2="318" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="270" y1="320" x2="326" y2="325" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="270" y1="327" x2="326" y2="332" stroke="#a7f3d0" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M172 308 Q218 288 258 308 Q298 288 344 308 L344 336 Q298 316 258 336 Q218 316 172 336 Z" fill="white" className="dark:fill-muted/20" stroke="currentColor" className="text-emerald-100 dark:text-emerald-900" strokeWidth="1.5" />
+        <line x1="258" y1="308" x2="258" y2="336" stroke="currentColor" className="text-emerald-100 dark:text-emerald-900" strokeWidth="1.5" />
+        <line x1="190" y1="318" x2="246" y2="313" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="190" y1="325" x2="246" y2="320" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="190" y1="332" x2="246" y2="327" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="313" x2="326" y2="318" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="320" x2="326" y2="325" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="327" x2="326" y2="332" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
 
         <rect x="352" y="262" width="112" height="74" rx="6" fill="#1f2937" />
         <rect x="357" y="267" width="102" height="64" rx="4" fill="#064e3b" />
@@ -219,10 +219,10 @@ export default async function SkillBridgeHome() {
   const stats = statsResult?.data ?? null;
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] text-zinc-900">
+    <div className="min-h-screen bg-background text-foreground">
       <section className="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-16 items-center">
         <div>
-          <Badge className="mb-6 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1 text-xs font-semibold">
+          <Badge className="mb-6 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1 text-xs font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse inline-block" />
             Bangladesh&apos;s #1 Tutor Platform
           </Badge>
@@ -236,17 +236,17 @@ export default async function SkillBridgeHome() {
               </svg>
             </span>
             ,<br />
-            <span className="text-zinc-400">ace every exam.</span>
+            <span className="text-muted-foreground">ace every exam.</span>
           </h1>
 
-          <p className="text-zinc-500 text-lg leading-relaxed mb-8 max-w-lg">
+          <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-lg">
             Connect with verified school and college tutors across Bangladesh.
             Book sessions for any subject, any time, from anywhere.
           </p>
 
           <SearchBar />
 
-          <div className="flex gap-8 pt-6 border-t border-zinc-100">
+          <div className="flex gap-8 pt-6 border-t border-border">
             {[
               [`${stats?.totalTutors ?? "640"}+`, "Verified Tutors"],
               [`${stats?.totalBookings ?? "5,800"}+`, "Total Bookings"],
@@ -256,7 +256,7 @@ export default async function SkillBridgeHome() {
                 <div className="text-2xl font-extrabold text-emerald-600 tracking-tight">
                   {n}
                 </div>
-                <div className="text-xs text-zinc-400 mt-0.5 font-medium">
+                <div className="text-xs text-muted-foreground mt-0.5 font-medium">
                   {l}
                 </div>
               </div>
@@ -269,7 +269,7 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      <section className="bg-white border-y border-zinc-100 py-16">
+      <section className="bg-card border-y border-border py-16">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-2">
             Browse by Level
@@ -287,7 +287,7 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      <section className="py-20 bg-white border-y border-zinc-100">
+      <section className="py-20 bg-card border-y border-border">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-2">
@@ -298,17 +298,17 @@ export default async function SkillBridgeHome() {
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-            <div className="hidden lg:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-zinc-100 z-0" />
+            <div className="hidden lg:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-border z-0" />
             {STEPS.map(({ num, title, desc }, index) => (
               <div key={num} className="text-center relative z-10">
                 <div
-                  className="w-16 h-16 rounded-2xl bg-emerald-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-100 animate-[bounce_3s_ease-in-out_infinite]"
+                  className="w-16 h-16 rounded-2xl bg-emerald-600 dark:bg-emerald-500 text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-4 shadow-sm animate-[bounce_3s_ease-in-out_infinite]"
                   style={{ animationDelay: `${index * 0.4}s` }}
                 >
                   {num}
                 </div>
                 <h3 className="font-bold text-base mb-2">{title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed">{desc}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -329,9 +329,9 @@ export default async function SkillBridgeHome() {
               return (
                 <div
                   key={cat.id}
-                  className="group flex items-center gap-4 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl px-5 py-4 cursor-pointer transition-all"
+                  className="group flex items-center gap-4 bg-card/10 hover:bg-card/15 border border-white/10 rounded-xl px-5 py-4 cursor-pointer transition-all"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-card/10 flex items-center justify-center shrink-0">
                     <Icon size={18} className={darkColor} />
                   </div>
                   <div className="flex-1">
@@ -349,7 +349,7 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      <section className="py-20 bg-[#faf9f7]">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-2">
             Reviews
@@ -371,7 +371,7 @@ export default async function SkillBridgeHome() {
             <br />
             <span className="text-emerald-400">First class is free.</span>
           </h2>
-          <p className="text-zinc-400 text-lg mb-8">
+          <p className="text-muted-foreground text-lg mb-8">
             Sign up now and enjoy your first session with any tutor completely
             free of charge.
           </p>
@@ -399,16 +399,16 @@ export default async function SkillBridgeHome() {
           <div className="flex gap-6 flex-wrap justify-center">
             {[
               { label: "Find Tutors", href: "/tutors" },
-              { label: "About Us", href: "/#" },
-              { label: "Contact", href: "#" },
-              { label: "Privacy Policy", href: "#" },
+              { label: "About Us", href: "/about" },
+              { label: "Contact", href: "/contact" },
+              { label: "Privacy Policy", href: "/privacy" },
             ].map(({ label, href }) => (
-              <a key={label} href={href} className="text-xs text-zinc-500 hover:text-white transition-colors">
+              <a key={label} href={href} className="text-xs text-muted-foreground hover:text-white transition-colors">
                 {label}
               </a>
             ))}
           </div>
-          <div className="text-xs text-zinc-600">
+          <div className="text-xs text-muted-foreground/40">
             © 2025 SkillBridge. All rights reserved.
           </div>
         </div>

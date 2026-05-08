@@ -27,12 +27,12 @@ const MAX_COMMENT = 500;
 function getRatingConfig(rating: number) {
   if (rating === 5)
     return {
-      iconBg: "bg-emerald-50",
+      iconBg: "bg-emerald-50 dark:bg-emerald-950/40",
       iconFill: "#10b981",
-      numColor: "text-emerald-600",
+      numColor: "text-emerald-600 dark:text-emerald-400",
       starColor: "#fbbf24",
       label: "Excellent!",
-      labelColor: "text-emerald-600",
+      labelColor: "text-emerald-600 dark:text-emerald-400",
       feedbackBg: "",
       feedbackBorder: "",
       feedbackText: "",
@@ -41,12 +41,12 @@ function getRatingConfig(rating: number) {
     };
   if (rating === 4)
     return {
-      iconBg: "bg-amber-50",
+      iconBg: "bg-amber-50 dark:bg-amber-950/40",
       iconFill: "#fbbf24",
-      numColor: "text-amber-500",
+      numColor: "text-amber-500 dark:text-amber-400",
       starColor: "#fbbf24",
       label: "Very good",
-      labelColor: "text-amber-600",
+      labelColor: "text-amber-600 dark:text-amber-400",
       feedbackBg: "",
       feedbackBorder: "",
       feedbackText: "",
@@ -55,15 +55,15 @@ function getRatingConfig(rating: number) {
     };
   if (rating === 3)
     return {
-      iconBg: "bg-amber-50",
+      iconBg: "bg-amber-50 dark:bg-amber-950/40",
       iconFill: "#f59e0b",
-      numColor: "text-amber-500",
+      numColor: "text-amber-500 dark:text-amber-400",
       starColor: "#f59e0b",
       label: "Average",
-      labelColor: "text-amber-700",
-      feedbackBg: "bg-amber-50",
-      feedbackBorder: "border-amber-200",
-      feedbackText: "text-amber-800",
+      labelColor: "text-amber-700 dark:text-amber-300",
+      feedbackBg: "bg-amber-50 dark:bg-amber-950/40",
+      feedbackBorder: "border-amber-200 dark:border-amber-900",
+      feedbackText: "text-amber-800 dark:text-amber-200",
       feedbackMsg:
         "What could have been better? Your feedback helps tutors improve.",
       btnBg: "bg-amber-500 hover:bg-amber-400",
@@ -71,30 +71,30 @@ function getRatingConfig(rating: number) {
     };
   if (rating === 2)
     return {
-      iconBg: "bg-red-50",
+      iconBg: "bg-red-50 dark:bg-red-950/40",
       iconFill: "#ef4444",
       numColor: "text-red-500",
       starColor: "#ef4444",
       label: "Poor",
-      labelColor: "text-red-600",
-      feedbackBg: "bg-red-50",
-      feedbackBorder: "border-red-200",
-      feedbackText: "text-red-800",
+      labelColor: "text-red-600 dark:text-red-400",
+      feedbackBg: "bg-red-50 dark:bg-red-950/40",
+      feedbackBorder: "border-red-200 dark:border-red-900",
+      feedbackText: "text-red-800 dark:text-red-200",
       feedbackMsg:
         "We're sorry to hear that. Please describe the issue so we can follow up.",
       btnBg: "bg-red-500 hover:bg-red-400",
       showFeedback: true,
     };
   return {
-    iconBg: "bg-red-50",
+    iconBg: "bg-red-50 dark:bg-red-950/40",
     iconFill: "#ef4444",
     numColor: "text-red-500",
     starColor: "#ef4444",
     label: "Very poor",
-    labelColor: "text-red-600",
-    feedbackBg: "bg-red-50",
-    feedbackBorder: "border-red-200",
-    feedbackText: "text-red-800",
+    labelColor: "text-red-600 dark:text-red-400",
+    feedbackBg: "bg-red-50 dark:bg-red-950/40",
+    feedbackBorder: "border-red-200 dark:border-red-900",
+    feedbackText: "text-red-800 dark:text-red-200",
     feedbackMsg:
       "We're really sorry. Please describe what went wrong — your feedback matters.",
     btnBg: "bg-red-500 hover:bg-red-400",
@@ -111,7 +111,7 @@ function TutorAvatar({ name }: { name: string }) {
       .toUpperCase()
       .slice(0, 2) ?? "?";
   return (
-    <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold flex items-center justify-center shrink-0">
+    <div className="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 text-[10px] font-extrabold flex items-center justify-center shrink-0">
       {initials}
     </div>
   );
@@ -134,7 +134,7 @@ export function ReviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border border-zinc-100">
+      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden rounded-2xl border border-border">
         <DialogHeader className="px-6 pt-6 pb-0">
           <div
             className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 shrink-0 ${cfg.iconBg}`}
@@ -147,28 +147,28 @@ export function ReviewDialog({
             </svg>
           </div>
 
-          <DialogTitle className="text-base font-extrabold tracking-tight text-zinc-900">
+          <DialogTitle className="text-base font-extrabold tracking-tight text-foreground">
             {mode === "create" ? "Write a review" : "Edit review"}
           </DialogTitle>
-          <p className="text-sm text-zinc-400 mt-1 font-normal">
+          <p className="text-sm text-muted-foreground mt-1 font-normal">
             Share your experience to help other students.
           </p>
-          <div className="h-px bg-zinc-100 mt-4" />
+          <div className="h-px bg-border mt-4" />
         </DialogHeader>
         <div className="px-6 py-5 space-y-4">
-          <div className="flex items-center gap-2.5 bg-zinc-50 border border-zinc-100 rounded-xl px-3 py-2.5">
+          <div className="flex items-center gap-2.5 bg-muted/50 border border-border rounded-xl px-3 py-2.5">
             <TutorAvatar name={tutorName} />
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-zinc-800 truncate">
+              <p className="text-sm font-semibold text-foreground truncate">
                 {tutorName}
               </p>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-foreground">
                 {mode === "create" ? "Reviewing session" : "Editing review"}
               </p>
             </div>
           </div>
           <div>
-            <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase mb-2">
+            <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase mb-2">
               Your rating
             </p>
             <div className="flex items-center gap-3 mb-1">
@@ -185,7 +185,7 @@ export function ReviewDialog({
                       type="button"
                       onClick={() => onRatingChange(n)}
                       className="text-2xl leading-none transition-transform hover:scale-110 focus:outline-none"
-                      style={{ color: rating >= n ? cfg.starColor : "#e5e7eb" }}
+                      style={{ color: rating >= n ? cfg.starColor : "var(--muted)" }}
                     >
                       ★
                     </button>
@@ -207,7 +207,7 @@ export function ReviewDialog({
           )}
 
           <div>
-            <p className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase mb-2">
+            <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase mb-2">
               Comment
             </p>
             <Textarea
@@ -222,14 +222,14 @@ export function ReviewDialog({
               onChange={(e) => onCommentChange(e.target.value)}
               maxLength={MAX_COMMENT}
               rows={3}
-              className="rounded-xl border-zinc-200 text-sm resize-none focus-visible:ring-emerald-500 focus-visible:border-emerald-400"
+              className="rounded-xl border-border text-sm resize-none focus-visible:ring-emerald-500 focus-visible:border-emerald-400"
             />
             <div className="flex justify-end mt-1">
               <span
                 className={`text-[11px] font-medium tabular-nums ${
                   commentLen > MAX_COMMENT * 0.9
                     ? "text-amber-500"
-                    : "text-zinc-300"
+                    : "text-muted-foreground/50"
                 }`}
               >
                 {commentLen} / {MAX_COMMENT}
@@ -238,12 +238,12 @@ export function ReviewDialog({
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-6 py-4 bg-zinc-50 border-t border-zinc-100">
+        <div className="flex items-center justify-between px-6 py-4 bg-muted/50 border-t border-border">
           <Button
             variant="ghost"
             onClick={onClose}
             disabled={isSubmitting}
-            className="text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-xl text-sm font-semibold"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl text-sm font-semibold"
           >
             Cancel
           </Button>
