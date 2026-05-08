@@ -197,16 +197,12 @@ function HeroBanner() {
 export default async function SkillBridgeHome() {
 // categories null হলে map crash করবে
   const [tutorsResult, categoriesResult, statsResult, user] = await Promise.all([
-  getTutors({
-  searchTerm: "",
-  category: "All",
-  minPrice: undefined,
-  maxPrice: undefined,
-  minRating: undefined,
-  availableOnly: false,
-  page: 1,
-  limit: 3,
-}),
+    getTutors({
+      searchTerm: "",
+      category: undefined,
+      page: 1,
+      limit: 3,
+    }),
     getCategories({ page: 1, limit: 10 }),
     getTutorStats(),
     getCurrentUser(),

@@ -44,9 +44,7 @@ export default function TutorsPage() {
 
   const [showDrawer, setShowDrawer] = useState(false);
 
-  const [selectedTutor, setSelectedTutor] = useState<FormattedTutor | null>(
-    null,
-  );
+
 
   const activeFilterCount = [
     filters.category !== "All",
@@ -175,7 +173,7 @@ useEffect(() => {
             <TutorList
               tutors={tutors}
               isLoading={isLoading}
-              onSelect={setSelectedTutor}
+              onSelect={(t) => router.push(`/tutors/${t.id}`)}
             />
             {paginations && (
               <Pagination
@@ -197,11 +195,6 @@ useEffect(() => {
         />
       )}
 
-      <TutorProfile
-        tutor={selectedTutor}
-        onClose={() => setSelectedTutor(null)}
-        onBook={(tutor) => router.push(`/tutors/${tutor.id}`)}
-      />
     </div>
   );
 }

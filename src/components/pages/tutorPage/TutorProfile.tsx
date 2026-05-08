@@ -65,21 +65,13 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
           <DialogHeader>
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                {tutor.user.image ? (
-                  <Image
-    src={tutor.user.image}
-    alt={tutor.user.name ?? "user"}
-    width={80}
-    height={80}
-    className="w-20 h-20 rounded-2xl object-cover"
-  />
-) : (
-                  <div
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl bg-card shadow-sm ${color.text}`}
-                  >
-                    {initials}
-                  </div>
-                )}
+                <Image
+                  src={tutor.user.image || `https://i.pravatar.cc/256?u=${tutor.id}`}
+                  alt={tutor.user.name ?? "user"}
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 rounded-full object-cover border-2 border-background shadow-md"
+                />
 
                 <div>
                   <DialogTitle className="text-lg font-bold text-foreground">
