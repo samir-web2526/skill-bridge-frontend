@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { Search, Inbox } from "lucide-react";
 import { getStudents, StudentProfile } from "@/services/student.service";
 
 // ── Avatar initials helper ────────────────────────────────────────────────────
@@ -163,6 +164,7 @@ export default function TutorStudentsPage() {
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -179,21 +181,43 @@ export default function TutorStudentsPage() {
     fetchStudents();
   }, []);
 
+  const filtered = useMemo(() => {
+    return students.filter((s) => {
+      const q = search.toLowerCase().trim();
+      return (
+        !q ||
+        s.user.name?.toLowerCase().includes(q) ||
+        s.user.email?.toLowerCase().includes(q) ||
+        s.address?.toLowerCase().includes(q)
+      );
+    });
+  }, [students, search]);
+
   return (
     <div className="min-h-screen bg-background p-6 md:p-10">
       {/* Header */}
-      <div className="mb-8">
-        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
-          Dashboard
-        </p>
-        <h1 className="text-2xl font-extrabold text-foreground tracking-tight">
-          My Students
-        </h1>
-        {!loading && !error && (
-          <p className="text-sm text-muted-foreground mt-1">
-            {students.length} student{students.length !== 1 ? "s" : ""} enrolled
-          </p>
-        )}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mb-20">
+          <h1 className="text-2xl font-extrabold text-foreground tracking-tight">
+            My Students
+          </h1>
+          {!loading && !error && (
+            <p className="text-sm text-muted-foreground mt-1">
+              {students.length} student{students.length !== 1 ? "s" : ""} enrolled
+            </p>
+          )}
+        </div>
+
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 h-9 rounded-xl border border-border bg-card text-sm outline-none focus:border-primary transition-all shadow-sm"
+          />
+        </div>
       </div>
 
       {/* Loading */}
@@ -235,11 +259,25 @@ export default function TutorStudentsPage() {
 
       {/* Grid */}
       {!loading && !error && students.length > 0 && (
-        <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {students.map((student) => (
-            <StudentCard key={student.id} student={student} />
-          ))}
-        </div>
+        <>
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                <Inbox size={22} className="text-primary" />
+              </div>
+              <p className="font-semibold text-foreground text-base">No matching students</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Try a different search term.
+              </p>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filtered.map((student) => (
+                <StudentCard key={student.id} student={student} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

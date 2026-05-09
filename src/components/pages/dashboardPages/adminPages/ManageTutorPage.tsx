@@ -2,7 +2,7 @@
 "use client";
 
 import { Search, Trash2, RotateCcw, GraduationCap, Mail, BookOpen } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -87,9 +87,10 @@ function TutorCard({
   onRestore: (id: string) => void;
   onStatus: (id: string, status: userStatus) => void;
 }) {
-  const hasActiveBooking = tutor._count?.booking > 0;
-  const gradient = avatarGradient(tutor.user?.name);
-  const initials = getInitials(tutor.user?.name);
+  const totalBookings = tutor.totalBookings ?? tutor._count?.booking ?? 0;
+  const hasActiveBooking = totalBookings > 0;
+  const gradient = avatarGradient(tutor.user?.name || "");
+  const initials = getInitials(tutor.user?.name || "");
 
   return (
     <div className="group bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
@@ -124,10 +125,10 @@ function TutorCard({
                 {tutor.category.name}
               </span>
             )}
-            {tutor._count?.booking !== undefined && (
+            {totalBookings > 0 && (
               <span className="flex items-center gap-1">
                 <GraduationCap className="w-3 h-3" />
-                {tutor._count.booking} booking{tutor._count.booking !== 1 ? "s" : ""}
+                {totalBookings} booking{totalBookings !== 1 ? "s" : ""}
               </span>
             )}
           </div>
@@ -185,6 +186,7 @@ export default function ManageTutorPage() {
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<"active" | "deleted">("active");
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
@@ -206,6 +208,13 @@ export default function ManageTutorPage() {
     setTotal(res.meta?.total || (res.data ? res.data.length : 0));
     setLoading(false);
   }, [view, page, limit, searchTerm]);
+
+  const filteredTutors = useMemo(() => {
+    return tutors.filter((t: any) => {
+      if (activeFilter === "All") return true;
+      return t.user?.status === activeFilter;
+    });
+  }, [tutors, activeFilter]);
 
   useEffect(() => { fetchTutors(); }, [fetchTutors]);
 
@@ -266,17 +275,41 @@ export default function ManageTutorPage() {
           ))}
         </div>
 
-        {/* Search */}
+        {/* Search & Filters */}
         {view === "active" && (
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }}
-              className="w-full pl-9 pr-4 h-9 rounded-xl border border-border bg-card text-sm text-foreground outline-none focus:border-primary transition-colors shadow-sm placeholder:text-muted-foreground"
-            />
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative">
+              <Search
+                size={13}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <input
+                type="text"
+                placeholder="Search by name or email…"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(1);
+                }}
+                className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors w-52"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-1.5">
+              {["All", "ACTIVE", "PENDING", "BANNED"].map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setActiveFilter(s)}
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                    activeFilter === s
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
+                  }`}
+                >
+                  {s.charAt(0) + s.slice(1).toLowerCase()}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -286,15 +319,17 @@ export default function ManageTutorPage() {
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
-      ) : tutors.length === 0 ? (
+      ) : filteredTutors.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <GraduationCap className="w-14 h-14 mb-4 text-muted-foreground opacity-20" />
-          <p className="font-semibold text-foreground text-base">No tutors found</p>
+          <p className="font-semibold text-foreground text-base">
+            {searchTerm || activeFilter !== "All" ? "No matching tutors found" : "No tutors found"}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">Try adjusting your search or filters.</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {tutors.map((tutor: any) => (
+          {filteredTutors.map((tutor: any) => (
             <TutorCard
               key={tutor.id}
               tutor={tutor}

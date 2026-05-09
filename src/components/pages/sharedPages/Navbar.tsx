@@ -118,7 +118,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                 {user && (
                   <NavigationMenuItem>
                     <NavigationMenuLink
-                      href="/dashboard/student/bookings"
+                      href="/dashboard/bookings"
                       className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
                     >
                       My Bookings
@@ -198,96 +198,96 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
             <ThemeToggle />
             <Sheet>
               <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-lg border-border"
-              >
-                <Menu className="size-4 text-muted-foreground" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-75 overflow-y-auto border-l border-border p-0"
-            >
-              <SheetHeader className="px-5 pt-5 pb-4 border-b border-border">
-                <SheetTitle className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
-                    <BookOpen size={13} className="text-white" />
-                  </div>
-                  <span className="text-base font-bold tracking-tight">
-                    Skill<span className="text-emerald-600">Bridge</span>
-                  </span>
-                </SheetTitle>
-              </SheetHeader>
-
-              <div className="flex flex-col gap-6 p-5">
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="flex w-full flex-col gap-1"
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 rounded-lg border-border"
                 >
-                  {menu.map((item) => renderMobileMenuItem(item))}
-                  {user && (
-                    <Link
-                      href="/dashboard/student/bookings"
-                      className="flex items-center px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-emerald-600 hover:bg-muted rounded-lg transition-colors"
-                    >
-                      My Bookings
-                    </Link>
-                  )}
-                </Accordion>
-
-                <div className="h-px bg-border" />
-
-                <div className="flex flex-col gap-2">
-                  {user ? (
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-3 px-1">
-                        <Avatar className="h-9 w-9">
-                          <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
-                            {user.name?.slice(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">
-                            {user.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{user.email}</p>
-                        </div>
-                      </div>
-                      <Button
-                        asChild
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold gap-2"
-                      >
-                        <Link href="/dashboard">
-                          <LayoutDashboard size={14} />
-                          Dashboard
-                        </Link>
-                      </Button>
-                      <LogoutButton />
+                  <Menu className="size-4 text-muted-foreground" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-75 overflow-y-auto border-l border-border p-0"
+              >
+                <SheetHeader className="px-5 pt-5 pb-4 border-b border-border">
+                  <SheetTitle className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
+                      <BookOpen size={13} className="text-white" />
                     </div>
-                  ) : (
-                    <>
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="w-full rounded-lg border-border font-medium"
+                    <span className="text-base font-bold tracking-tight">
+                      Skill<span className="text-emerald-600">Bridge</span>
+                    </span>
+                  </SheetTitle>
+                </SheetHeader>
+
+                <div className="flex flex-col gap-6 p-5">
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="flex w-full flex-col gap-1"
+                  >
+                    {menu.map((item) => renderMobileMenuItem(item))}
+                    {user && (
+                      <Link
+                        href="/dashboard/student/bookings"
+                        className="flex items-center px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-emerald-600 hover:bg-muted rounded-lg transition-colors"
                       >
-                        <Link href="/login">Login</Link>
-                      </Button>
-                      <Button
-                        asChild
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold"
-                      >
-                        <Link href="/register">Register</Link>
-                      </Button>
-                    </>
-                  )}
+                        My Bookings
+                      </Link>
+                    )}
+                  </Accordion>
+
+                  <div className="h-px bg-border" />
+
+                  <div className="flex flex-col gap-2">
+                    {user ? (
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-3 px-1">
+                          <Avatar className="h-9 w-9">
+                            <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
+                              {user.name?.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">
+                              {user.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">{user.email}</p>
+                          </div>
+                        </div>
+                        <Button
+                          asChild
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold gap-2"
+                        >
+                          <Link href="/dashboard">
+                            <LayoutDashboard size={14} />
+                            Dashboard
+                          </Link>
+                        </Button>
+                        <LogoutButton />
+                      </div>
+                    ) : (
+                      <>
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="w-full rounded-lg border-border font-medium"
+                        >
+                          <Link href="/login">Login</Link>
+                        </Button>
+                        <Button
+                          asChild
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold"
+                        >
+                          <Link href="/register">Register</Link>
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>

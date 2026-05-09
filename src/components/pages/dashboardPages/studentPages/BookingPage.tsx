@@ -138,6 +138,7 @@ export default function StudentBookingPage() {
   const [isReviewSubmitting, setIsReviewSubmitting] = useState(false);
 
   const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
   const { page, handlePageChange } = usePagination();
 
   // ── Bookings fetch ──
@@ -173,6 +174,19 @@ export default function StudentBookingPage() {
     }),
     [bookings, paginations],
   );
+
+  const filtered = useMemo(() => {
+    return bookings.filter((b) => {
+      const matchStatus = activeFilter === "All" || b.status === activeFilter;
+      const q = search.toLowerCase().trim();
+      const matchSearch =
+        !q ||
+        b.tutor?.user?.name?.toLowerCase().includes(q) ||
+        b.tutor?.user?.email?.toLowerCase().includes(q) ||
+        b.tutor?.category?.name?.toLowerCase().includes(q);
+      return matchStatus && matchSearch;
+    });
+  }, [bookings, activeFilter, search]);
 
   // ── Booking handlers ──
   const openCreateDialog = async () => {
@@ -321,25 +335,35 @@ export default function StudentBookingPage() {
           </div>
         )}
 
-        {/* ── Stat cards ── */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search
+              size={13}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
             <input
               type="text"
-              placeholder="Search by tutor..."
+              placeholder="Search by tutor or category…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 h-9 rounded-xl border border-border bg-card text-sm outline-none focus:border-primary transition-all shadow-sm"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors w-52"
             />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 flex-1 md:flex-none">
-            <StatCard label="Total" value={stats.total} dotColor="bg-muted-foreground/30" valueColor="text-foreground" />
-            <StatCard label="Completed" value={stats.completed} dotColor="bg-primary" valueColor="text-primary" />
-            <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-chart-1" valueColor="text-chart-1" />
-            <StatCard label="Pending" value={stats.pending} dotColor="bg-chart-2" valueColor="text-chart-2" />
-            <StatCard label="Cancelled" value={stats.cancelled} dotColor="bg-destructive" valueColor="text-destructive" />
+          <div className="flex flex-wrap gap-1.5">
+            {["All", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setActiveFilter(s)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                  activeFilter === s
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
+                }`}
+              >
+                {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -384,25 +408,29 @@ export default function StudentBookingPage() {
                     </TableCell>
                   </TableRow>
                 ))
-              ) : bookings.length === 0 ? (
+              ) : filtered.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                         <Inbox size={22} className="text-primary" />
                       </div>
-                      <p className="text-sm font-semibold text-muted-foreground">No bookings yet</p>
-                      <Button
-                        onClick={openCreateDialog}
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-xs font-semibold px-4 mt-1"
-                      >
-                        Book your first tutor
-                      </Button>
+                      <p className="text-sm font-semibold text-muted-foreground">
+                        {search || activeFilter !== "All" ? "No matching bookings found" : "No bookings yet"}
+                      </p>
+                      {!search && activeFilter === "All" && (
+                        <Button
+                          onClick={openCreateDialog}
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-xs font-semibold px-4 mt-1"
+                        >
+                          Book your first tutor
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                bookings.map((booking, idx) => {
+                filtered.map((booking, idx) => {
                   const statusCfg = STATUS_CONFIG[booking.status] ?? {
                     pill: "bg-muted text-muted-foreground border-border",
                     dot: "bg-muted-foreground/50",
@@ -412,7 +440,7 @@ export default function StudentBookingPage() {
                   // ── Action flags ──
                   const canCancel = booking.status === "PENDING" && booking.payment?.status !== "PAID";
                   const canPay    = booking.status === "PENDING" && (!booking.payment || booking.payment.status !== "PAID");
-                  const isPaid    = booking.status === "PENDING" && booking.payment?.status === "PAID";
+                  const isPaid    = booking.payment?.status === "PAID" || booking.status === "CONFIRMED";
                   const canReview = booking.status === "COMPLETED" && !booking.review;
                   const hasReview = booking.status === "COMPLETED" && !!booking.review;
                   const showDash  = !canCancel && !canPay && !isPaid && !canReview && !hasReview;

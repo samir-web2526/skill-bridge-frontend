@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-zinc-950 text-zinc-400 border-t border-zinc-900">
+    <footer className="bg-background text-muted-foreground border-t border-border">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Section */}
@@ -14,7 +14,7 @@ const Footer = () => {
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center shadow-sm">
                 <BookOpen size={15} className="text-white" />
               </div>
-              <span className="text-lg font-bold tracking-tight text-white">
+              <span className="text-lg font-bold tracking-tight text-foreground">
                 Skill<span className="text-emerald-500">Bridge</span>
               </span>
             </Link>
@@ -39,7 +39,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-bold mb-6">Platform</h4>
+            <h4 className="text-foreground font-bold mb-6">Platform</h4>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/tutors" className="hover:text-emerald-500 transition-colors">Find Tutors</Link>
@@ -58,7 +58,7 @@ const Footer = () => {
 
           {/* Support */}
           <div>
-            <h4 className="text-white font-bold mb-6">Support</h4>
+            <h4 className="text-foreground font-bold mb-6">Support</h4>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/about" className="hover:text-emerald-500 transition-colors">About Us</Link>
@@ -77,7 +77,7 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-white font-bold mb-6">Contact Us</h4>
+            <h4 className="text-foreground font-bold mb-6">Contact Us</h4>
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-emerald-500 shrink-0 mt-0.5" />
@@ -95,7 +95,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <p>© 2026 SkillBridge. All rights reserved.</p>
           <div className="flex gap-8">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>

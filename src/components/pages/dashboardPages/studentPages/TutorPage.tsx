@@ -292,7 +292,7 @@ export default function StudentTutorPage() {
               placeholder="Search tutors…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/50 transition-colors w-52"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors w-52"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">

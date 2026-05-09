@@ -56,11 +56,10 @@ function Avatar({
   const dim = size === "sm" ? "w-7 h-7 text-[10px]" : "w-9 h-9 text-xs";
   return (
     <div
-      className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${
-        variant === "primary"
+      className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${variant === "primary"
           ? "bg-primary/10 text-primary"
           : "bg-muted text-muted-foreground"
-      }`}
+        }`}
     >
       {initials}
     </div>
@@ -291,9 +290,9 @@ function RatingBar({ star, count, total }: { star: number; count: number; total:
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   const color =
     star === 5 ? "bg-primary"
-    : star === 4 ? "bg-primary/80"
-    : star === 3 ? "bg-primary/60"
-    : "bg-destructive/50";
+      : star === 4 ? "bg-primary/80"
+        : star === 3 ? "bg-primary/60"
+          : "bg-destructive/50";
   return (
     <div className="flex items-center gap-2">
       <span className="text-[11px] text-muted-foreground w-3 shrink-0">{star}</span>
@@ -434,7 +433,6 @@ export default function TutorDashboard() {
     };
   }, [bookings, reviews, students]);
 
-  // ── Loading ────────────────────────────────────────────────────────────────
 
   if (isLoading) {
     return (
@@ -451,7 +449,6 @@ export default function TutorDashboard() {
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-6 pt-10 pb-12 space-y-6">
 
-        {/* ── Page header ── */}
         <div>
           <p className="text-[11px] font-bold tracking-widest text-primary uppercase mb-1">
             My Teaching
@@ -471,8 +468,6 @@ export default function TutorDashboard() {
             {error}
           </div>
         )}
-
-        {/* ── Stat cards ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <StatCard
             label="Total bookings"
@@ -575,10 +570,10 @@ export default function TutorDashboard() {
                   {[5, 4, 3, 2, 1].map((s) => {
                     const count =
                       s === 5 ? stats.fiveStar
-                      : s === 4 ? stats.fourStar
-                      : s === 3 ? stats.threeStar
-                      : s === 2 ? stats.twoStar
-                      : stats.oneStar;
+                        : s === 4 ? stats.fourStar
+                          : s === 3 ? stats.threeStar
+                            : s === 2 ? stats.twoStar
+                              : stats.oneStar;
                     return (
                       <RatingBar key={s} star={s} count={count} total={stats.totalReviews} />
                     );
@@ -597,7 +592,7 @@ export default function TutorDashboard() {
             <SectionHeader
               title="Recent bookings"
               action="View all"
-              onAction={() => router.push("/dashboard/tutor/bookings")}
+              onAction={() => router.push("/dashboard/bookings")}
             />
             {stats.recentBookings.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
@@ -640,7 +635,7 @@ export default function TutorDashboard() {
             <SectionHeader
               title="Recent reviews"
               action="View all"
-              onAction={() => router.push("/dashboard/tutor/reviews")}
+              onAction={() => router.push("/dashboard/reviews")}
             />
             {stats.recentReviews.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
@@ -676,34 +671,34 @@ export default function TutorDashboard() {
         </div>
 
         {/* ── My Students ── */}
-<div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-  <SectionHeader title="My Students" />
+        <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
+          <SectionHeader title="My Students" />
 
-  {students.length === 0 ? (
-    <p className="text-xs text-muted-foreground">No students yet</p>
-  ) : (
-    <div className="space-y-3">
-      {students.slice(0, 5).map((s) => (
-        <div key={s.id} className="flex items-center gap-3">
-          <Avatar name={s.user.name} variant="zinc" size="sm" />
+          {students.length === 0 ? (
+            <p className="text-xs text-muted-foreground">No students yet</p>
+          ) : (
+            <div className="space-y-3">
+              {students.slice(0, 5).map((s) => (
+                <div key={s.id} className="flex items-center gap-3">
+                  <Avatar name={s.user.name} variant="zinc" size="sm" />
 
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-foreground truncate">
-              {s.user.name}
-            </p>
-            <p className="text-[11px] text-muted-foreground truncate">
-              {s.user.email}
-            </p>
-          </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground truncate">
+                      {s.user.name}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground truncate">
+                      {s.user.email}
+                    </p>
+                  </div>
 
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground border border-border">
-            {s.user.status}
-          </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground border border-border">
+                    {s.user.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      ))}
-    </div>
-  )}
-</div>
 
         {/* ── Quick actions ── */}
         <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">

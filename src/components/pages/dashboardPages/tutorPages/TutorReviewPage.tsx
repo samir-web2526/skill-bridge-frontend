@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertCircle, CalendarDays, Inbox } from "lucide-react";
+import { AlertCircle, CalendarDays, Inbox, Search } from "lucide-react";
 import { getMyReceivedReviews, Review } from "@/services/review.service";
 
 function StarRating({ rating }: { rating: number }) {
@@ -135,6 +135,8 @@ export default function TutorReviewPage() {
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const { page, handlePageChange } = usePagination();
 
@@ -176,6 +178,23 @@ export default function TutorReviewPage() {
     };
   }, [reviews, paginations]);
 
+  const filtered = useMemo(() => {
+    return reviews.filter((r) => {
+      const matchFilter =
+        activeFilter === "all" ||
+        (activeFilter === "5" && Math.round(r.rating) === 5) ||
+        (activeFilter === "4" && Math.round(r.rating) === 4) ||
+        (activeFilter === "3" && r.rating < 4);
+      const q = search.toLowerCase().trim();
+      const matchSearch =
+        !q ||
+        r.user?.name?.toLowerCase().includes(q) ||
+        r.user?.email?.toLowerCase().includes(q) ||
+        r.comment?.toLowerCase().includes(q);
+      return matchFilter && matchSearch;
+    });
+  }, [reviews, activeFilter, search]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
@@ -203,56 +222,40 @@ export default function TutorReviewPage() {
           </div>
         )}
 
-        <div className="flex gap-3 flex-wrap items-start">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 flex-1 min-w-0">
-            <StatCard
-              label="Total reviews"
-              value={stats.total}
-              dotColor="bg-zinc-300"
-              valueColor="text-foreground"
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search
+              size={13}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
-            <StatCard
-              label="Avg rating"
-              value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
-              valueColor="text-amber-500"
-              starDisplay
-              avgRating={stats.avgRating}
-            />
-
-            <StatCard
-              label="5-star reviews"
-              value={stats.fiveStar}
-              dotColor="bg-primary"
-              valueColor="text-primary"
+            <input
+              type="text"
+              placeholder="Search by student or comment…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors w-52"
             />
           </div>
 
-          <div className="bg-card rounded-xl border border-border shadow-sm px-4 py-3 w-full sm:w-44 shrink-0">
-            <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase mb-3">
-              Breakdown
-            </p>
-            <div className="space-y-2">
-              {[5, 4, 3, 2, 1].map((s) => {
-                const count =
-                  s === 5
-                    ? stats.fiveStar
-                    : s === 4
-                      ? stats.fourStar
-                      : s === 3
-                        ? stats.threeStar
-                        : s === 2
-                          ? stats.twoStar
-                          : stats.oneStar;
-                return (
-                  <RatingBar
-                    key={s}
-                    star={s}
-                    count={count}
-                    total={reviews.length}
-                  />
-                );
-              })}
-            </div>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { label: "All", value: "all" },
+              { label: "5 stars", value: "5" },
+              { label: "4 stars", value: "4" },
+              { label: "≤ 3 stars", value: "3" },
+            ].map((f) => (
+              <button
+                key={f.value}
+                onClick={() => setActiveFilter(f.value)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                  activeFilter === f.value
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -295,7 +298,7 @@ export default function TutorReviewPage() {
                     </TableCell>
                   </TableRow>
                 ))
-              ) : reviews.length === 0 ? (
+              ) : filtered.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={4} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
@@ -303,16 +306,13 @@ export default function TutorReviewPage() {
                         <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
-                        No reviews yet
-                      </p>
-                      <p className="text-xs text-zinc-300">
-                        Complete sessions to start receiving reviews.
+                        {search || activeFilter !== "all" ? "No matching reviews found" : "No reviews yet"}
                       </p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                reviews.map((review, idx) => (
+                filtered.map((review, idx) => (
                   <TableRow
                     key={review.id}
                     className={`hover:bg-muted/50 transition-colors ${idx % 2 === 1 ? "bg-muted/20" : ""}`}

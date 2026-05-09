@@ -101,72 +101,60 @@ export default function AdminCategoriesPage() {
     setDialogOpen(true);
   };
 
-const handleSubmit = async () => {
-  if (!inputName.trim()) return;
+  const handleSubmit = async () => {
+    if (!inputName.trim()) return;
 
-  setIsSubmitting(true);
+    setIsSubmitting(true);
 
-  try {
-    if (dialogMode === "create") {
-      const result = await createCategory({
-        name: inputName.trim(),
-        description: inputDescription.trim(),
-      });
+    try {
+      if (dialogMode === "create") {
+        const result = await createCategory({
+          name: inputName.trim(),
+          description: inputDescription.trim(),
+        });
 
-      if (result.error) {
-        toast.error(result.error);
-        return;
+        if (result.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        if (result.data) {
+          toast.success("Category created successfully.");
+          setRefresh((prev) => prev + 1);
+        }
+      } else if (dialogMode === "edit" && selectedCategory) {
+        const result = await updateCategory(selectedCategory.id, {
+          name: inputName.trim(),
+          description: inputDescription.trim(),
+        });
+
+        if (result.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        if (result.data) {
+          toast.success("Category updated successfully.");
+          setRefresh((prev) => prev + 1);
+        }
       }
 
-      if (result.data) {
-        toast.success("Category created successfully.");
-
-        setCategories((prev) => [result.data, ...prev]);
-      }
+      setDialogOpen(false);
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    if (dialogMode === "edit" && selectedCategory) {
-      const result = await updateCategory(selectedCategory.id, {
-        name: inputName.trim(),
-        description: inputDescription.trim(),
-      });
-
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
-
-      if (result.data) {
-        const updated = {
-          ...selectedCategory,
-          ...result.data,
-        };
-
-        setCategories((prev) =>
-          prev.map((c) =>
-            c.id === selectedCategory.id ? updated : c
-          )
-        );
-
-        toast.success("Category updated successfully.");
-      }
-    }
-
-    setDialogOpen(false);
-  } catch (err) {
-    toast.error("Something went wrong");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const handleDelete = async (categoryId: string) => {
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
+    
     const result = await deleteCategory(categoryId);
     if (result?.error) {
       toast.error(result.error);
     } else {
       toast.success("Category deleted successfully.");
-      setCategories((prev) => prev.filter((c) => c.id !== categoryId));
       setRefresh((prev) => prev + 1);
     }
   };

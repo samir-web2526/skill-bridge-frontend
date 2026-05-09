@@ -25,29 +25,29 @@ const formSchema = z.object({
 });
 
 const DEMO_CREDENTIALS = [
-  { 
-    role: "Student", 
-    email: "student1@gmail.com", 
-    password: "123456", 
-    color: "text-primary", 
-    bg: "bg-primary/10", 
-    border: "border-primary/20" 
+  {
+    role: "Student",
+    email: "student1@gmail.com",
+    password: "123456",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20"
   },
-  { 
-    role: "Tutor",   
-    email: "tutor1@gmail.com",   
-    password: "123456", 
-    color: "text-secondary-foreground", 
-    bg: "bg-secondary", 
-    border: "border-border" 
+  {
+    role: "Tutor",
+    email: "tutor1@gmail.com",
+    password: "123456",
+    color: "text-secondary-foreground",
+    bg: "bg-secondary",
+    border: "border-border"
   },
-  { 
-    role: "Admin",   
-    email: "admin@gmail.com",    
-    password: "admin123", 
-    color: "text-accent-foreground", 
-    bg: "bg-accent", 
-    border: "border-border" 
+  {
+    role: "Admin",
+    email: "admin@gmail.com",
+    password: "admin123",
+    color: "text-accent-foreground",
+    bg: "bg-accent",
+    border: "border-border"
   },
 ];
 
@@ -141,29 +141,31 @@ export function SignInForm() {
           <div className="flex-1 h-px bg-border" />
         </div>
 
-        <div className="grid grid-cols-1 gap-3 mb-6">
-           <div className="w-full flex justify-center overflow-hidden rounded-xl">
-             <GoogleLogin
-               onSuccess={async (credentialResponse) => {
-                 if (credentialResponse.credential) {
-                   const result = await googleLogin(credentialResponse.credential);
-                   if (result.error) {
-                     toast.error(result.error);
-                   } else {
-                     toast.success("Signed in with Google!");
-                     router.refresh();
-                     router.push("/dashboard");
-                   }
-                 }
-               }}
-               onError={() => {
-                 toast.error("Google Login Failed");
-               }}
-               theme="filled_black"
-               shape="rectangular"
-               width="400px" // Approximate width to match other buttons
-             />
-           </div>
+        <div className="flex justify-center mb-6">
+          <div className="w-[356px] h-[40px] overflow-hidden rounded-xl relative bg-black">
+            <div className="absolute left-[-44px] top-0">
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  if (credentialResponse.credential) {
+                    const result = await googleLogin(credentialResponse.credential);
+                    if (result.error) {
+                      toast.error(result.error);
+                    } else {
+                      toast.success("Signed in with Google!");
+                      router.refresh();
+                      router.push("/dashboard");
+                    }
+                  }
+                }}
+                onError={() => {
+                  toast.error("Google Login Failed");
+                }}
+                theme="filled_black"
+                shape="rectangular"
+                width="400px"
+              />
+            </div>
+          </div>
         </div>
 
 
@@ -276,4 +278,4 @@ export function SignInForm() {
       </div>
     </div>
   );
-}
+}

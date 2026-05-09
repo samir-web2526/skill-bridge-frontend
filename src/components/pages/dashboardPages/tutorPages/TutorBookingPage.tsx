@@ -96,6 +96,7 @@ export default function TutorBookingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
 
   const { page, handlePageChange } = usePagination();
 
@@ -124,6 +125,18 @@ export default function TutorBookingPage() {
     }),
     [bookings, paginations],
   );
+
+  const filtered = useMemo(() => {
+    return bookings.filter((b) => {
+      const matchStatus = activeFilter === "All" || b.status === activeFilter;
+      const q = search.toLowerCase().trim();
+      const matchSearch =
+        !q ||
+        b.user?.name?.toLowerCase().includes(q) ||
+        b.user?.email?.toLowerCase().includes(q);
+      return matchStatus && matchSearch;
+    });
+  }, [bookings, activeFilter, search]);
 
   const handleStatusChange = async (bookingId: string, newStatus: string) => {
     const result = await updateBookingStatus(bookingId, { status: newStatus as any });
@@ -164,23 +177,35 @@ export default function TutorBookingPage() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search
+              size={13}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
             <input
               type="text"
-              placeholder="Search by student..."
+              placeholder="Search by student…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 h-9 rounded-xl border border-border bg-card text-sm outline-none focus:border-primary transition-all shadow-sm"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors w-52"
             />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1 sm:flex-none">
-            <StatCard label="Total" value={stats.total} dotColor="bg-muted-foreground" valueColor="text-foreground" />
-            <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-chart-1" valueColor="text-chart-1" />
-            <StatCard label="Pending" value={stats.pending} dotColor="bg-chart-2" valueColor="text-chart-2" />
-            <StatCard label="Completed" value={stats.completed} dotColor="bg-primary" valueColor="text-primary" />
+          <div className="flex flex-wrap gap-1.5">
+            {["All", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setActiveFilter(s)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                  activeFilter === s
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
+                }`}
+              >
+                {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -229,7 +254,7 @@ export default function TutorBookingPage() {
                     </TableCell>
                   </TableRow>
                 ))
-              ) : bookings.length === 0 ? (
+              ) : filtered.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
@@ -237,20 +262,20 @@ export default function TutorBookingPage() {
                         <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
-                        No bookings yet
+                        {search || activeFilter !== "All" ? "No matching bookings found" : "No bookings yet"}
                       </p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                bookings.map((booking, idx) => {
+                filtered.map((booking, idx) => {
                   const statusCfg = STATUS_CONFIG[booking.status] ?? {
                     pill: "bg-zinc-100 text-zinc-600 border-border",
                     dot: "bg-zinc-400",
                     label: booking.status,
                   };
                   const allowedNext = ALLOWED_TRANSITIONS[booking.status] ?? [];
-                  const isPaid = booking.status === "PENDING" && booking.payment?.status === "PAID";
+                  const isPaid = booking.payment?.status === "PAID" || booking.status === "CONFIRMED";
 
                   return (
                     <TableRow

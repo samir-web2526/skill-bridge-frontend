@@ -73,7 +73,7 @@ function getCategoryColor(name: string): {
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function SubjectsSection({ categories = [] }: SubjectsSectionProps) {
     return (
-        <section className="py-20 bg-white border-y border-gray-100">
+        <section className="py-20 bg-background border-y border-border">
             <div className="max-w-7xl mx-auto px-6">
 
                 {/* Header */}
@@ -81,7 +81,7 @@ export default function SubjectsSection({ categories = [] }: SubjectsSectionProp
                     <p className="text-xs font-bold tracking-widest text-primary uppercase mb-2">
                         All Subjects
                     </p>
-                    <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                    <h2 className="text-3xl font-extrabold text-foreground tracking-tight">
                         Tutors available for every subject
                     </h2>
                 </div>
@@ -94,7 +94,7 @@ export default function SubjectsSection({ categories = [] }: SubjectsSectionProp
                             <Link
                                 key={cat.id}
                                 href={`/tutors?category=${encodeURIComponent(cat.name)}`}
-                                className={`group flex items-center gap-4 bg-white border border-gray-200 ${hover} rounded-xl px-5 py-4 transition-all duration-200 shadow-sm hover:shadow-md`}
+                                className={`group flex items-center gap-4 bg-card border border-border ${hover} rounded-xl px-5 py-4 transition-all duration-200 shadow-sm hover:shadow-md`}
                             >
                                 {/* Icon pill */}
                                 <div className={`w-10 h-10 rounded-lg ${pill} flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110`}>
@@ -103,10 +103,10 @@ export default function SubjectsSection({ categories = [] }: SubjectsSectionProp
 
                                 {/* Text */}
                                 <div className="flex-1 min-w-0">
-                                    <div className="font-semibold text-gray-800 text-sm truncate">
+                                    <div className="font-semibold text-foreground text-sm truncate">
                                         {cat.name}
                                     </div>
-                                    <div className="text-xs text-gray-400 mt-0.5">
+                                    <div className="text-xs text-muted-foreground mt-0.5">
                                         {cat._count?.tutor ?? 0} tutors available
                                     </div>
                                 </div>

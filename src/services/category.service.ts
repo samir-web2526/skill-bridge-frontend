@@ -6,21 +6,6 @@ const API = process.env.NEXT_PUBLIC_API;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-// export interface Category {
-//   id: string;
-//   name: string;
-//   description?: string;  // ← যোগ করো
-//   createdAt: string;
-//   _count?: {
-//     tutor: number;
-//   };
-//   tutor?: {
-//     id: string;
-//     bio: string;
-//     hourlyRate: number;
-//   }[];
-// }
-
 export interface Category {
   id: string;
   name: string;
@@ -47,12 +32,12 @@ export interface Category {
 
 export interface CreateCategoryPayload {
   name: string;
-  description:string;
+  description: string;
 }
 
 export interface UpdateCategoryPayload {
   name?: string;
-  description?:string;
+  description?: string;
 }
 
 export interface CategoryFilters {
@@ -62,15 +47,6 @@ export interface CategoryFilters {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
-
-// Consistent response wrapper
-// export type ServiceResponse<T> =
-//   | { data: T; error: null }
-//   | { data: null; error: string };
-
-// export type PaginatedResponse<T> =
-//   | { data: T; meta: PaginationMeta; error: null }
-//   | { data: null; meta: null; error: string };
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -108,7 +84,7 @@ export async function createCategory(
       body: JSON.stringify(payload),
     });
 
-    const json = await result.json();
+    const json = result.status !== 204 ? await result.json() : null;
 
     if (!result.ok) {
       return { data: null, error: json?.message ?? "Failed to create category" };
@@ -123,39 +99,8 @@ export async function createCategory(
 }
 
 // GET /api/v1/categories  (Public)
-// export async function getCategories(
-//   filters: CategoryFilters = {}
-// ): Promise<PaginatedResponse<Category[]>> {
-//   try {
-//     const qs = buildQueryString(filters);
-
-//     const result = await fetch(`${API}/api/v1/categories${qs}`, {
-//       method: "GET",
-//       headers: { "Content-Type": "application/json" },
-//       next: { revalidate: 60 },
-//     });
-
-//     const json = await result.json();
-
-//     if (!result.ok) {
-//       return { data: null, meta: null, error: json?.message ?? "Failed to fetch categories" };
-//     }
-
-//     return {
-//       data: json?.data ?? [],
-//       meta: json?.meta ?? null,
-//       error: null,
-//     };
-//   } catch (err: unknown) {
-//     const message = err instanceof Error ? err.message : "Something went wrong";
-//     console.error("[getCategories]", message);
-//     return { data: null, meta: null, error: message };
-//   }
-// }
-
 export async function getCategories(
   filters: CategoryFilters = {}
-  
 ): Promise<PaginatedResponse<Category[]>> {
   try {
     const qs = buildQueryString(filters);
@@ -163,10 +108,10 @@ export async function getCategories(
     const result = await fetch(`${API}/api/v1/categories${qs}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
 
-    const json = await result.json();
+    const json = result.status !== 204 ? await result.json() : null;
 
     if (!result.ok) {
       return {
@@ -184,7 +129,6 @@ export async function getCategories(
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
     console.error("[getCategories]", message);
-
     return { data: null, meta: null, error: message };
   }
 }
@@ -200,7 +144,7 @@ export async function getCategoryById(
       cache: "no-store",
     });
 
-    const json = await result.json();
+    const json = result.status !== 204 ? await result.json() : null;
 
     if (!result.ok) {
       return { data: null, error: json?.message ?? "Category not found" };
@@ -231,7 +175,7 @@ export async function updateCategory(
       body: JSON.stringify(payload),
     });
 
-    const json = await result.json();
+    const json = result.status !== 204 ? await result.json() : null;
 
     if (!result.ok) {
       return { data: null, error: json?.message ?? "Update failed" };
@@ -260,7 +204,7 @@ export async function deleteCategory(
       },
     });
 
-    const json = await result.json();
+    const json = result.status !== 204 ? await result.json() : null;
 
     if (!result.ok) {
       return { data: null, error: json?.message ?? "Delete failed" };

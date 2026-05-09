@@ -469,8 +469,8 @@ export default function TutorDetailPage({ tutor: rawTutor, user, relatedTutors =
                     <div className="p-6 rounded-3xl bg-card border border-border hover:shadow-lg transition-all group flex items-center gap-4">
                        <div className="relative w-16 h-16 shrink-0">
                           <Image 
-                            src={rel.user?.image || `https://i.pravatar.cc/256?u=${rel.id}`} 
-                            alt={rel.user?.name} 
+                            src={(rel.user?.image && rel.user.image !== "https://example.com/avatar.png") ? rel.user.image : `https://i.pravatar.cc/256?u=${rel.id}`} 
+                            alt={rel.user?.name || "Tutor Avatar"} 
                             fill 
                             className="rounded-2xl object-cover" 
                           />

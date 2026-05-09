@@ -27,7 +27,7 @@ export default function FAQAccordion() {
     const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
     return (
-        <section className="py-20 bg-card border-y border-border">
+        <section className="py-20 bg-background border-y border-border">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Header */}
                 <div className="text-center mb-14">

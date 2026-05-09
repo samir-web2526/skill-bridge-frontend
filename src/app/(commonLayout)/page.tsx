@@ -266,7 +266,7 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      <section className="bg-card border-y border-border py-16">
+      <section className="bg-muted/30 border-y border-border py-16">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-2">
             Browse by Level
@@ -284,7 +284,7 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      <section className="py-20 bg-card border-y border-border">
+      <section className="py-20 bg-muted/30 border-y border-border">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-2">
@@ -312,40 +312,6 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      {/* <section className="py-20 bg-emerald-700">
-        <div className="max-w-7xl mx-auto px-6">
-          <p className="text-xs font-bold tracking-widest text-emerald-300 uppercase mb-2">
-            All Subjects
-          </p>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight mb-10">
-            Tutors available for every subject
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {categories?.map((cat) => {
-              const { icon: Icon, darkColor } = getCategoryColor(cat.name);
-              return (
-                <Link
-                  key={cat.id}
-                  href={`/tutors?category=${encodeURIComponent(cat.name)}`}
-                  className="group flex items-center gap-4 bg-card/10 hover:bg-card/15 border border-white/10 rounded-xl px-5 py-4 cursor-pointer transition-all"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-card/10 flex items-center justify-center shrink-0">
-                    <Icon size={18} className={darkColor} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-white text-sm">
-                      {cat.name}
-                    </div>
-                    <div className="text-xs text-emerald-300/60 mt-0.5">
-                      {cat._count?.tutor ?? 0} tutors available
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section> */}
       <SubjectsSection categories={categories} />
 
       <section className="py-20 bg-background">
@@ -360,32 +326,33 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      {/* FAQ Section (New 8th Section) */}
       <FAQAccordion></FAQAccordion>
-      <section className="py-24 bg-zinc-900">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <Badge className="mb-5 bg-emerald-900/60 text-emerald-400 border border-emerald-800 rounded-full">
-            <CheckCircle size={11} className="mr-1.5" /> No credit card required
-          </Badge>
-          <h2 className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            Start learning today.
-            <br />
-            <span className="text-emerald-400">First class is free.</span>
-          </h2>
-          <p className="text-zinc-400 text-lg mb-8">
-            Sign up now and enjoy your first session with any tutor completely
-            free of charge.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl px-8 font-semibold text-base"
-            >
-              <Link href="/tutors">
-                Book a Free Class <ArrowRight size={16} className="ml-2" />
-              </Link>
-            </Button>
+      <section className="py-24 bg-muted/30 border-t border-border">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <Badge className="mb-5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full hover:bg-emerald-500/15 transition-colors">
+              <CheckCircle size={11} className="mr-1.5" /> No credit card required
+            </Badge>
+            <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-4 text-foreground">
+              Start learning today.
+              <br />
+              <span className="text-emerald-600 dark:text-emerald-400">First class is free.</span>
+            </h2>
+            <p className="text-muted-foreground text-lg mb-8">
+              Sign up now and enjoy your first session with any tutor completely
+              free of charge.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white rounded-xl px-8 font-semibold text-base shadow-lg shadow-emerald-500/20"
+              >
+                <Link href="/tutors">
+                  Book a Free Class <ArrowRight size={16} className="ml-2" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

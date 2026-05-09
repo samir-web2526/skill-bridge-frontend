@@ -6,14 +6,14 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-emerald-900 py-24 sm:py-32">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+      <section className="relative overflow-hidden bg-muted/30 border-b border-border py-24 sm:py-32">
+        <div className="absolute inset-0 opacity-5 dark:opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
         <div className="relative max-w-5xl mx-auto px-6 text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight mb-6">
             Empowering students with <br className="hidden sm:block" />
-            <span className="text-emerald-400">the best tutors</span>
+            <span className="text-emerald-600 dark:text-emerald-400">the best tutors</span>
           </h1>
-          <p className="text-lg text-emerald-100 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             SkillBridge is Bangladesh's leading tutoring platform. We connect eager learners with qualified educators to unlock potential and achieve academic excellence.
           </p>
         </div>
