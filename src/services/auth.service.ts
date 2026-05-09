@@ -208,3 +208,42 @@ export async function logout(): Promise<void> {
   (await cookieStore).delete("accessToken");
   (await cookieStore).delete("refreshToken");
 }
+
+export async function googleLogin(
+  idToken: string
+): Promise<ServiceResponse<AuthTokens>> {
+  try {
+    const result = await fetch(`${API}/api/v1/auth/google-login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
+    const json = await result.json();
+
+    if (!result.ok) {
+      return { data: null, error: json?.message ?? "Google login failed" };
+    }
+
+    // cookie store e token set kore dao
+    const cookieStore = cookies();
+    (await cookieStore).set("accessToken", json?.data?.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+    (await cookieStore).set("refreshToken", json?.data?.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+
+    return { data: json?.data ?? null, error: null };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Something went wrong";
+    console.error("[googleLogin]", message);
+    return { data: null, error: message };
+  }
+}

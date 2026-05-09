@@ -561,13 +561,14 @@ export default function StudentDashboard() {
 
           {/* Recent bookings */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-            <SectionHeader title="Recent bookings" action="View all" />
+            <SectionHeader onAction={() => router.push("/dashboard/bookings")} title="Recent bookings" action="View all" />
             {stats.recent.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
                 <BookOpen size={22} className="text-muted" />
                 <p className="text-xs text-muted-foreground">No bookings yet</p>
                 <Button
                   size="sm"
+                  onClick={() => router.push("/dashboard/tutors")}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-xs mt-1"
                 >
                   Book a tutor
@@ -625,7 +626,7 @@ export default function StudentDashboard() {
 
           {/* Reviews */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-            <SectionHeader title="My reviews" action="View all" />
+            <SectionHeader onAction={() => router.push("/dashboard/reviews")} title="My reviews" action="View all" />
             {reviews.length === 0 ? (
               <div className="py-8 flex flex-col items-center gap-2">
                 <Star size={22} className="text-muted" />
@@ -678,41 +679,41 @@ export default function StudentDashboard() {
         </div>
 
         {/* ── Quick actions ── */}
-<div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-  <SectionHeader title="Quick actions" />
+        <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
+          <SectionHeader title="Quick actions" />
 
-  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-    {[
-      {
-        label: "Find tutors",
-        icon: TrendingUp,
-        path: "/dashboard/tutors",
-        bg: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900 hover:bg-blue-100 dark:hover:bg-blue-900/60",
-      },
-      {
-        label: "My bookings",
-        icon: CalendarDays,
-        path: "/dashboard/bookings",
-        bg: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900 hover:bg-amber-100 dark:hover:bg-amber-900/60",
-      },
-      {
-        label: "My reviews",
-        icon: Star,
-        path: "/dashboard/reviews",
-        bg: "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-900 hover:bg-purple-100 dark:hover:bg-purple-900/60",
-      },
-    ].map(({ label, icon: Icon, bg, path }) => (
-      <button
-        key={label}
-        onClick={() => router.push(path)}
-        className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${bg}`}
-      >
-        <Icon size={15} />
-        {label}
-      </button>
-    ))}
-  </div>
-</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              {
+                label: "Find tutors",
+                icon: TrendingUp,
+                path: "/dashboard/tutors",
+                bg: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900 hover:bg-blue-100 dark:hover:bg-blue-900/60",
+              },
+              {
+                label: "My bookings",
+                icon: CalendarDays,
+                path: "/dashboard/bookings",
+                bg: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900 hover:bg-amber-100 dark:hover:bg-amber-900/60",
+              },
+              {
+                label: "My reviews",
+                icon: Star,
+                path: "/dashboard/reviews",
+                bg: "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-900 hover:bg-purple-100 dark:hover:bg-purple-900/60",
+              },
+            ].map(({ label, icon: Icon, bg, path }) => (
+              <button
+                key={label}
+                onClick={() => router.push(path)}
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${bg}`}
+              >
+                <Icon size={15} />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
 
       </div>
     </div>
