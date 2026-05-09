@@ -87,8 +87,8 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
               <Badge
                 className={`shrink-0 text-xs ${
                   tutor.availablity
-                    ? "bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-950/50"
-                    : "bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/50"
+                    ? "bg-primary/10 text-primary"
+                    : "bg-destructive/10 text-destructive"
                 }`}
               >
                 {tutor.availablity ? "Available" : "Unavailable"}

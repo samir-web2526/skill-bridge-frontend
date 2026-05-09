@@ -33,18 +33,19 @@ export default function ReviewsSection() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {Array.isArray(reviews) &&
           reviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
       </div>
 
+
       <div className="flex justify-center">
         <Button
           variant="outline"
           onClick={() => router.push("/reviews")}
-          className="flex items-center gap-2 text-sm font-semibold border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 shadow-sm animate-[bounce_2s_ease-in-out_infinite]"
+          className="flex items-center gap-2 text-sm font-semibold border border-primary/30 text-primary hover:bg-primary/5 shadow-sm"
         >
           View all reviews
           <ArrowRight className="w-4 h-4" />

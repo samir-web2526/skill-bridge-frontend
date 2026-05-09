@@ -58,6 +58,7 @@ export interface UpdateCategoryPayload {
 export interface CategoryFilters {
   page?: number;
   limit?: number;
+  searchTerm?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }

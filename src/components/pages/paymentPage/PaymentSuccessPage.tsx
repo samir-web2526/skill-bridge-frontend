@@ -9,12 +9,12 @@ export default function PaymentSuccessPage() {
   const sessionId = searchParams.get("session_id");
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="bg-card border border-border rounded-3xl p-12 text-center max-w-md w-full shadow-sm">
 
         {/* Icon */}
-        <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 className="w-10 h-10 text-primary" />
         </div>
         {/* Title */}
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-3">
@@ -40,7 +40,7 @@ export default function PaymentSuccessPage() {
         <div>
           <Link
             href="/"
-            className="w-full flex items-center justify-center gap-2 bg-emerald-400 hover:bg-zinc-50 text-zinc-600 font-semibold text-sm px-8 py-3 rounded-xl border border-border transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm px-8 py-3 rounded-xl border border-transparent transition-colors"
           >
             <ArrowLeft size={15} />
             Back to Home

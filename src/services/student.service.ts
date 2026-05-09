@@ -110,8 +110,15 @@ export async function getMyProfile(): Promise<ServiceResponse<StudentProfile>> {
 }
 
 export async function updateMyStudentProfile(payload: {
+  name?: string;
   phone?: string;
+  address?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  class?: string;
+  group?: string;
 }): Promise<ServiceResponse<StudentProfile>> {
+
   try {
     const accessToken = await getAccessToken();
 

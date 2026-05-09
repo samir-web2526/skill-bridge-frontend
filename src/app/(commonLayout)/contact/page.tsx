@@ -13,7 +13,7 @@ export default function ContactPage() {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground tracking-tight mb-4">
-            Get in <span className="text-emerald-600">Touch</span>
+            Get in <span className="text-emerald-600 dark:text-emerald-500">Touch</span>
           </h1>
           <p className="text-lg text-muted-foreground">
             Have questions about finding a tutor or joining as an educator? Our support team is here to help you 24/7.
@@ -24,26 +24,26 @@ export default function ContactPage() {
           {/* Contact Info Cards */}
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 shrink-0">
+              <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
                 <Mail size={20} />
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1">Email Us</h3>
                 <p className="text-sm text-muted-foreground mb-2">For general inquiries and support.</p>
-                <a href="mailto:support@skillbridge.com" className="text-sm font-semibold text-emerald-600 hover:underline">
+                <a href="mailto:support@skillbridge.com" className="text-sm font-semibold text-emerald-600 dark:text-emerald-500 hover:underline">
                   support@skillbridge.com
                 </a>
               </div>
             </div>
 
             <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 shrink-0">
+              <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
                 <Phone size={20} />
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1">Call Us</h3>
                 <p className="text-sm text-muted-foreground mb-2">Mon-Fri from 9am to 6pm.</p>
-                <a href="tel:+8801234567890" className="text-sm font-semibold text-emerald-600 hover:underline">
+                <a href="tel:+8801234567890" className="text-sm font-semibold text-emerald-600 dark:text-emerald-500 hover:underline">
                   +880 1234 567 890
                 </a>
               </div>

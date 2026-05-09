@@ -39,11 +39,11 @@ type Booking = {
 
 function Avatar({
   name,
-  variant = "emerald",
+  variant = "primary",
   size = "md",
 }: {
   name: string;
-  variant?: "emerald" | "zinc";
+  variant?: "primary" | "zinc";
   size?: "sm" | "md";
 }) {
   const initials =
@@ -57,8 +57,8 @@ function Avatar({
   return (
     <div
       className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${
-        variant === "emerald"
-          ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400"
+        variant === "primary"
+          ? "bg-primary/10 text-primary"
           : "bg-muted text-muted-foreground"
       }`}
     >
@@ -129,7 +129,7 @@ function SectionHeader({
       {action && (
         <button
           onClick={onAction}
-          className="text-xs text-emerald-600 font-semibold flex items-center gap-0.5 hover:underline"
+          className="text-xs text-primary font-semibold flex items-center gap-0.5 hover:underline"
         >
           {action} <ChevronRight size={12} />
         </button>
@@ -143,26 +143,26 @@ function SectionHeader({
 const STATUS_CONFIG = {
   PENDING: {
     label: "Pending",
-    bg: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900",
-    dot: "bg-amber-400",
+    bg: "bg-muted/50 text-muted-foreground border-border",
+    dot: "bg-muted-foreground",
     Icon: Clock,
   },
   CONFIRMED: {
     label: "Confirmed",
-    bg: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900",
-    dot: "bg-blue-400",
+    bg: "bg-primary/10 text-primary border-primary/20",
+    dot: "bg-primary",
     Icon: CheckCircle2,
   },
   COMPLETED: {
     label: "Completed",
-    bg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900",
-    dot: "bg-emerald-400",
+    bg: "bg-primary text-primary-foreground border-primary",
+    dot: "bg-primary-foreground",
     Icon: CheckCircle2,
   },
   CANCELLED: {
     label: "Cancelled",
-    bg: "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900",
-    dot: "bg-red-400",
+    bg: "bg-destructive/10 text-destructive border-destructive/20",
+    dot: "bg-destructive",
     Icon: XCircle,
   },
 } as const;
@@ -177,7 +177,7 @@ function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
         <div key={i} className="flex-1 flex flex-col items-center gap-1">
           <div className="w-full flex items-end justify-center" style={{ height: 60 }}>
             <div
-              className="w-full rounded-t-sm bg-emerald-400 transition-all duration-700"
+              className="w-full rounded-t-sm bg-primary transition-all duration-700"
               style={{
                 height: `${Math.max((d.value / max) * 60, d.value > 0 ? 4 : 0)}px`,
                 opacity: d.value === 0 ? 0.2 : 1,
@@ -202,18 +202,18 @@ function EarningsSparkline({ data }: { data: number[] }) {
     .join(" ");
   const area = `0,${h} ${pts} ${w},${h}`;
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" preserveAspectRatio="none">
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full text-primary" preserveAspectRatio="none">
       <defs>
         <linearGradient id="earn-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={area} fill="url(#earn-grad)" />
       <polyline
         points={pts}
         fill="none"
-        stroke="#10b981"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -237,10 +237,10 @@ function StatusDonut({
 }) {
   const total = completed + confirmed + pending + cancelled || 1;
   const segments = [
-    { value: completed, color: "#10b981", label: "Completed" },
-    { value: confirmed, color: "#3b82f6", label: "Confirmed" },
-    { value: pending, color: "#f59e0b", label: "Pending" },
-    { value: cancelled, color: "#ef4444", label: "Cancelled" },
+    { value: completed, color: "var(--color-primary)", label: "Completed" },
+    { value: confirmed, color: "var(--color-chart-1)", label: "Confirmed" },
+    { value: pending, color: "var(--color-chart-2)", label: "Pending" },
+    { value: cancelled, color: "var(--color-destructive)", label: "Cancelled" },
   ];
   const r = 36, cx = 44, cy = 44;
   const circ = 2 * Math.PI * r;
@@ -290,10 +290,10 @@ function StatusDonut({
 function RatingBar({ star, count, total }: { star: number; count: number; total: number }) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   const color =
-    star === 5 ? "bg-emerald-500"
-    : star === 4 ? "bg-emerald-300"
-    : star === 3 ? "bg-amber-400"
-    : "bg-red-300";
+    star === 5 ? "bg-primary"
+    : star === 4 ? "bg-primary/80"
+    : star === 3 ? "bg-primary/60"
+    : "bg-destructive/50";
   return (
     <div className="flex items-center gap-2">
       <span className="text-[11px] text-muted-foreground w-3 shrink-0">{star}</span>
@@ -440,7 +440,7 @@ export default function TutorDashboard() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-muted-foreground">
-          <Loader2 size={28} className="animate-spin text-emerald-500" />
+          <Loader2 size={28} className="animate-spin text-primary" />
           <p className="text-sm font-medium">Loading dashboard…</p>
         </div>
       </div>
@@ -453,7 +453,7 @@ export default function TutorDashboard() {
 
         {/* ── Page header ── */}
         <div>
-          <p className="text-[11px] font-bold tracking-widest text-emerald-600 uppercase mb-1">
+          <p className="text-[11px] font-bold tracking-widest text-primary uppercase mb-1">
             My Teaching
           </p>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
@@ -484,7 +484,7 @@ export default function TutorDashboard() {
             label="Completed"
             value={stats.completed}
             icon={CheckCircle2}
-            accent="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
+            accent="bg-primary/10 text-primary"
             sub={
               stats.total > 0
                 ? `${Math.round((stats.completed / stats.total) * 100)}% completion rate`
@@ -495,20 +495,20 @@ export default function TutorDashboard() {
             label="Total earnings"
             value={stats.totalEarnings > 0 ? `৳${stats.totalEarnings.toLocaleString()}` : "—"}
             icon={CreditCard}
-            accent="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400"
+            accent="bg-chart-1/10 text-chart-1"
           />
           <StatCard
             label="Avg rating"
             value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
             icon={Star}
-            accent="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400"
+            accent="bg-chart-2/10 text-chart-2"
             sub={`${stats.totalReviews} review${stats.totalReviews !== 1 ? "s" : ""} received`}
           />
           <StatCard
             label="My Students"
             value={stats.totalStudents}
             icon={Users}
-            accent="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400"
+            accent="bg-chart-3/10 text-chart-3"
             sub="Active learners"
           />
         </div>
@@ -543,7 +543,7 @@ export default function TutorDashboard() {
               <p className="text-xs text-zinc-300 mt-4">No earnings data yet</p>
             ) : (
               <div className="mt-2">
-                <p className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-500 tracking-tight">
+                <p className="text-2xl font-extrabold text-primary tracking-tight">
                   ৳{stats.totalEarnings.toLocaleString()}
                 </p>
                 <p className="text-xs text-muted-foreground mb-3">total earned</p>
@@ -560,7 +560,7 @@ export default function TutorDashboard() {
               <div className="space-y-3 mt-1">
                 {/* Avg rating summary */}
                 <div className="flex items-center gap-3 pb-3 border-b border-border">
-                  <p className="text-3xl font-extrabold text-amber-500">
+                  <p className="text-3xl font-extrabold text-foreground">
                     {stats.avgRating.toFixed(1)}
                   </p>
                   <div>
@@ -610,7 +610,7 @@ export default function TutorDashboard() {
                   const cfg = STATUS_CONFIG[booking.status] ?? STATUS_CONFIG.PENDING;
                   return (
                     <div key={booking.id} className="flex items-center gap-3 py-1">
-                      <Avatar name={booking.user?.name ?? "?"} variant="emerald" size="sm" />
+                      <Avatar name={booking.user?.name ?? "?"} variant="primary" size="sm" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-foreground truncate">
                           {booking.user?.name ?? "—"}
@@ -714,19 +714,19 @@ export default function TutorDashboard() {
                 label: "My bookings",
                 icon: CalendarDays,
                 path: "/dashboard/bookings",
-                bg: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900 hover:bg-blue-100 dark:hover:bg-blue-900/60",
+                bg: "bg-chart-1/10 text-chart-1 border-chart-1/20 hover:bg-chart-1/20",
               },
               {
                 label: "My reviews",
                 icon: Star,
                 path: "/dashboard/reviews",
-                bg: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900 hover:bg-amber-100 dark:hover:bg-amber-900/60",
+                bg: "bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20",
               },
               {
                 label: "My students",
                 icon: Users,
                 path: "/dashboard/tutor/students",
-                bg: "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-900 hover:bg-purple-100 dark:hover:bg-purple-900/60",
+                bg: "bg-chart-3/10 text-chart-3 border-chart-3/20 hover:bg-chart-3/20",
               },
             ].map(({ label, icon: Icon, bg, path }) => (
               <button

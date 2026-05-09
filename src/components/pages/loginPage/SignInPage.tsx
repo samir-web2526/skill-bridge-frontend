@@ -24,19 +24,38 @@ const formSchema = z.object({
 });
 
 const DEMO_CREDENTIALS = [
-  { role: "Student", email: "student1@gmail.com", password: "123456", color: "#166534", bg: "#f0fdf4", border: "#bbf7d0" },
-  { role: "Tutor",   email: "tutor1@gmail.com",   password: "123456", color: "#1e40af", bg: "#eff6ff", border: "#bfdbfe" },
-  { role: "Admin",   email: "admin@gmail.com",    password: "admin123", color: "#6b21a8", bg: "#faf5ff", border: "#e9d5ff" },
+  { 
+    role: "Student", 
+    email: "student1@gmail.com", 
+    password: "123456", 
+    color: "text-primary", 
+    bg: "bg-primary/10", 
+    border: "border-primary/20" 
+  },
+  { 
+    role: "Tutor",   
+    email: "tutor1@gmail.com",   
+    password: "123456", 
+    color: "text-secondary-foreground", 
+    bg: "bg-secondary", 
+    border: "border-border" 
+  },
+  { 
+    role: "Admin",   
+    email: "admin@gmail.com",    
+    password: "admin123", 
+    color: "text-accent-foreground", 
+    bg: "bg-accent", 
+    border: "border-border" 
+  },
 ];
 
 const inputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-  e.currentTarget.style.borderColor = "#0d7a5f";
-  e.currentTarget.style.boxShadow = "0 0 0 3px rgba(13,122,95,0.1)";
+  e.currentTarget.classList.add("ring-2", "ring-ring/20", "border-ring");
 };
 
 const inputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-  e.currentTarget.style.borderColor = "";
-  e.currentTarget.style.boxShadow = "none";
+  e.currentTarget.classList.remove("ring-2", "ring-ring/20", "border-ring");
 };
 
 export function SignInForm() {
@@ -75,14 +94,6 @@ export function SignInForm() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-background px-4 gap-4">
-      <style>{`
-        @keyframes shadowFloat {
-          0%   { box-shadow: 0 4px 16px -4px rgba(13,122,95,0.12), 0 1px 4px -1px rgba(13,122,95,0.08); }
-          50%  { box-shadow: 0 20px 48px -8px rgba(13,122,95,0.28), 0 8px 24px -4px rgba(13,122,95,0.16); }
-          100% { box-shadow: 0 4px 16px -4px rgba(13,122,95,0.12), 0 1px 4px -1px rgba(13,122,95,0.08); }
-        }
-      `}</style>
-
       <div className="w-full max-w-md">
         <button
           onClick={() => router.push("/")}
@@ -94,20 +105,19 @@ export function SignInForm() {
       </div>
 
       <div
-        className="w-full max-w-md bg-card border border-border rounded-[22px] p-8"
-        style={{ animation: "shadowFloat 4s ease-in-out infinite" }}
+        className="w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-xl shadow-primary/5"
       >
-        <h1 className="text-[22px] font-medium text-foreground leading-tight">
+        <h1 className="text-[22px] font-bold text-foreground leading-tight">
           Welcome back
         </h1>
-        <p className="text-[13px] text-muted-foreground mt-1.5 mb-4">
+        <p className="text-[13px] text-muted-foreground mt-1.5 mb-6">
           Sign in to continue your learning journey
         </p>
 
         {/* Demo Credentials */}
-        <div className="mb-5">
-          <p className="text-[11px] font-medium text-muted-foreground mb-2">
-            Demo accounts
+        <div className="mb-6">
+          <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
+            Quick demo access
           </p>
           <div className="grid grid-cols-3 gap-2">
             {DEMO_CREDENTIALS.map((cred) => (
@@ -116,24 +126,52 @@ export function SignInForm() {
                 type="button"
                 disabled={demoLoading !== null}
                 onClick={() => handleDemoLogin(cred)}
-                className="flex items-center justify-center px-2 py-2 rounded-xl border text-[11px] font-medium transition-all duration-150 hover:opacity-80 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  background: cred.bg,
-                  borderColor: cred.border,
-                  color: cred.color,
-                }}
+                className={`flex items-center justify-center px-2 py-2.5 rounded-xl border text-[10px] font-bold uppercase tracking-tight transition-all duration-150 hover:brightness-95 active:scale-95 disabled:opacity-50 ${cred.bg} ${cred.border} ${cred.color}`}
               >
-                {demoLoading === cred.role ? "..." : `Login as ${cred.role}`}
+                {demoLoading === cred.role ? "..." : cred.role}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center gap-3 mb-6">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[11px] text-muted-foreground">or</span>
+          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">Social Login</span>
           <div className="flex-1 h-px bg-border" />
         </div>
+
+        <div className="grid grid-cols-2 gap-3 mb-6">
+           <Button
+             variant="outline"
+             type="button"
+             className="h-11 rounded-xl border-border bg-card hover:bg-muted/50 gap-2 text-xs font-bold uppercase"
+           >
+             <svg className="w-4 h-4" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+             </svg>
+             Google
+           </Button>
+           <Button
+             variant="outline"
+             type="button"
+             className="h-11 rounded-xl border-border bg-card hover:bg-muted/50 gap-2 text-xs font-bold uppercase"
+           >
+             <svg className="w-4 h-4 fill-[#1877F2]" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+             </svg>
+             Facebook
+           </Button>
+        </div>
+
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">or email</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
 
         <form id="signin-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
@@ -141,10 +179,10 @@ export function SignInForm() {
               name="email"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="mb-3.5">
+                <Field data-invalid={fieldState.invalid} className="mb-4">
                   <FieldLabel
                     htmlFor="signin-email"
-                    className="text-xs font-medium text-muted-foreground"
+                    className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest"
                   >
                     Email address
                   </FieldLabel>
@@ -155,8 +193,7 @@ export function SignInForm() {
                     aria-invalid={fieldState.invalid}
                     placeholder="you@example.com"
                     autoComplete="off"
-                    className="h-10 rounded-[10px] bg-muted/40 border-border text-sm focus-visible:ring-0"
-                    style={{ boxShadow: "none" }}
+                    className="h-11 rounded-xl bg-muted/30 border-border text-sm focus-visible:ring-0 transition-all"
                     onFocus={inputFocus}
                     onBlur={inputBlur}
                   />
@@ -171,10 +208,10 @@ export function SignInForm() {
               name="password"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="mb-5">
+                <Field data-invalid={fieldState.invalid} className="mb-6">
                   <FieldLabel
                     htmlFor="signin-password"
-                    className="text-xs font-medium text-muted-foreground"
+                    className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest"
                   >
                     Password
                   </FieldLabel>
@@ -186,8 +223,7 @@ export function SignInForm() {
                       aria-invalid={fieldState.invalid}
                       placeholder="Enter your password"
                       autoComplete="off"
-                      className="h-10 rounded-[10px] bg-muted/40 border-border text-sm focus-visible:ring-0 pr-10"
-                      style={{ boxShadow: "none" }}
+                      className="h-11 rounded-xl bg-muted/30 border-border text-sm focus-visible:ring-0 pr-10 transition-all"
                       onFocus={inputFocus}
                       onBlur={inputBlur}
                     />
@@ -215,16 +251,15 @@ export function SignInForm() {
           <Button
             type="submit"
             form="signin-form"
-            className="w-full h-10.5 rounded-2xl text-sm font-medium text-white border-0 transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0"
-            style={{ background: "#0d7a5f" }}
+            className="w-full h-11 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 border-0 transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-primary/20"
           >
-            Login
+            Sign In
           </Button>
         </form>
 
-        <div className="flex items-center gap-3 my-5">
+        <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[11px] text-muted-foreground">or</span>
+          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">or</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
@@ -232,13 +267,12 @@ export function SignInForm() {
           Don&apos;t have an account?{" "}
           <a
             href="/register"
-            className="font-medium hover:underline"
-            style={{ color: "#0d7a5f" }}
+            className="font-bold text-primary hover:text-primary/90 transition-colors"
           >
-            Register here
+            Create an account
           </a>
         </p>
       </div>
     </div>
   );
-}
+}

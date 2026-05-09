@@ -411,12 +411,12 @@ function StarRating({ rating }: { rating: number }) {
   const rounded = Math.round(rating);
   const numColor =
     rounded >= 5
-      ? "text-emerald-600"
+      ? "text-primary"
       : rounded >= 4
         ? "text-amber-500"
         : rounded >= 3
           ? "text-amber-500"
-          : "text-red-500";
+          : "text-destructive";
 
   return (
     <div className="flex items-center gap-0.5">
@@ -444,7 +444,7 @@ function TutorAvatar({ name }: { name: string }) {
       .toUpperCase()
       .slice(0, 2) ?? "?";
   return (
-    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 text-xs font-extrabold flex items-center justify-center shrink-0">
+    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-extrabold flex items-center justify-center shrink-0">
       {initials}
     </div>
   );
@@ -569,7 +569,7 @@ export default function StudentReviewPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
-        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           My Learning
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
@@ -587,7 +587,7 @@ export default function StudentReviewPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -610,8 +610,8 @@ export default function StudentReviewPage() {
           <StatCard
             label="5-star reviews"
             value={stats.fiveStar}
-            dotColor="bg-emerald-500"
-            valueColor="text-emerald-700 dark:text-emerald-400"
+            dotColor="bg-primary"
+            valueColor="text-primary"
           />
         </div>
 
@@ -664,8 +664,8 @@ export default function StudentReviewPage() {
                 <TableRow>
                   <TableCell colSpan={5} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
                         No reviews yet
@@ -731,7 +731,7 @@ export default function StudentReviewPage() {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDelete(review.id)}
-                          className="h-8 w-8 rounded-lg border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60 hover:text-red-600 transition-colors"
+                          className="h-8 w-8 rounded-lg border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
                         >
                           <Trash2 size={13} />
                         </Button>

@@ -9,6 +9,9 @@ import ReviewsSection from "@/components/pages/homePage/ReviewSection";
 import { getTutors, getTutorStats } from "@/services/tutors.service";
 import { getCategories } from "@/services/category.service";
 import { getCurrentUser } from "@/lib/auth";
+import Link from "next/link";
+import FAQAccordion from "@/components/pages/homePage/FAQSection";
+import SubjectsSection from "@/components/pages/homePage/SubjectSection";
 
 export const dynamic = "force-dynamic";
 
@@ -68,14 +71,14 @@ function HeroBanner() {
         <rect x="83" y="275" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
         <rect x="90" y="275" width="3" height="14" rx="1.5" fill="#fff" opacity="0.3" />
 
-        <path d="M172 308 Q218 288 258 308 Q298 288 344 308 L344 336 Q298 316 258 336 Q218 316 172 336 Z" fill="white" className="dark:fill-muted/20" stroke="currentColor" className="text-emerald-100 dark:text-emerald-900" strokeWidth="1.5" />
-        <line x1="258" y1="308" x2="258" y2="336" stroke="currentColor" className="text-emerald-100 dark:text-emerald-900" strokeWidth="1.5" />
-        <line x1="190" y1="318" x2="246" y2="313" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="190" y1="325" x2="246" y2="320" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="190" y1="332" x2="246" y2="327" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="270" y1="313" x2="326" y2="318" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="270" y1="320" x2="326" y2="325" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="270" y1="327" x2="326" y2="332" stroke="currentColor" className="text-emerald-200 dark:text-emerald-800" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M172 308 Q218 288 258 308 Q298 288 344 308 L344 336 Q298 316 258 336 Q218 316 172 336 Z" fill="white" className="dark:fill-muted/20" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="258" y1="308" x2="258" y2="336" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="190" y1="318" x2="246" y2="313" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="190" y1="325" x2="246" y2="320" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="190" y1="332" x2="246" y2="327" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="313" x2="326" y2="318" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="320" x2="326" y2="325" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="270" y1="327" x2="326" y2="332" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
 
         <rect x="352" y="262" width="112" height="74" rx="6" fill="#1f2937" />
         <rect x="357" y="267" width="102" height="64" rx="4" fill="#064e3b" />
@@ -195,7 +198,7 @@ function HeroBanner() {
 }
 
 export default async function SkillBridgeHome() {
-// categories null হলে map crash করবে
+  // categories null হলে map crash করবে
   const [tutorsResult, categoriesResult, statsResult, user] = await Promise.all([
     getTutors({
       searchTerm: "",
@@ -208,15 +211,13 @@ export default async function SkillBridgeHome() {
     getCurrentUser(),
   ]);
 
-    console.log("categoriesResult:", JSON.stringify(categoriesResult, null, 2));
-
   const tutors = tutorsResult?.data ?? [];
   const categories = categoriesResult?.data ?? [];
   const stats = statsResult?.data ?? null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <section className="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-16 items-center">
+      <section className="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
         <div>
           <Badge className="mb-6 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1 text-xs font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse inline-block" />
@@ -244,9 +245,9 @@ export default async function SkillBridgeHome() {
 
           <div className="flex gap-8 pt-6 border-t border-border">
             {[
-              [`${stats?.totalTutors ?? "640"}+`, "Verified Tutors"],
-              [`${stats?.totalBookings ?? "5,800"}+`, "Total Bookings"],
-              [`${stats?.totalCategories ?? "20"}+`, "Subjects Available"],
+              [`${stats?.totalTutors ?? "1,200"}+`, "Verified Tutors"],
+              [`${stats?.totalBookings ?? "8,500"}+`, "Total Bookings"],
+              [`${stats?.totalCategories ?? "24"}+`, "Subjects Available"],
             ].map(([n, l]) => (
               <div key={l}>
                 <div className="text-2xl font-extrabold text-emerald-600 tracking-tight">
@@ -311,7 +312,7 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
-      <section className="py-20 bg-emerald-700">
+      {/* <section className="py-20 bg-emerald-700">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-xs font-bold tracking-widest text-emerald-300 uppercase mb-2">
             All Subjects
@@ -323,8 +324,9 @@ export default async function SkillBridgeHome() {
             {categories?.map((cat) => {
               const { icon: Icon, darkColor } = getCategoryColor(cat.name);
               return (
-                <div
+                <Link
                   key={cat.id}
+                  href={`/tutors?category=${encodeURIComponent(cat.name)}`}
                   className="group flex items-center gap-4 bg-card/10 hover:bg-card/15 border border-white/10 rounded-xl px-5 py-4 cursor-pointer transition-all"
                 >
                   <div className="w-10 h-10 rounded-lg bg-card/10 flex items-center justify-center shrink-0">
@@ -338,12 +340,13 @@ export default async function SkillBridgeHome() {
                       {cat._count?.tutor ?? 0} tutors available
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
         </div>
-      </section>
+      </section> */}
+      <SubjectsSection categories={categories} />
 
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-6">
@@ -357,6 +360,8 @@ export default async function SkillBridgeHome() {
         </div>
       </section>
 
+      {/* FAQ Section (New 8th Section) */}
+      <FAQAccordion></FAQAccordion>
       <section className="py-24 bg-zinc-900">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <Badge className="mb-5 bg-emerald-900/60 text-emerald-400 border border-emerald-800 rounded-full">
@@ -367,48 +372,23 @@ export default async function SkillBridgeHome() {
             <br />
             <span className="text-emerald-400">First class is free.</span>
           </h2>
-          <p className="text-muted-foreground text-lg mb-8">
+          <p className="text-zinc-400 text-lg mb-8">
             Sign up now and enjoy your first session with any tutor completely
             free of charge.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
+              asChild
               size="lg"
               className="bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl px-8 font-semibold text-base"
             >
-              Book a Free Class <ArrowRight size={16} className="ml-2" />
+              <Link href="/tutors">
+                Book a Free Class <ArrowRight size={16} className="ml-2" />
+              </Link>
             </Button>
           </div>
         </div>
       </section>
-
-      <footer className="bg-zinc-950 border-t border-zinc-800 py-10 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-1.5">
-            <div className="w-6 h-6 rounded-md bg-emerald-600 flex items-center justify-center">
-              <BookOpen size={12} className="text-white" />
-            </div>
-            <span className="font-bold text-white">
-              Skill<span className="text-emerald-500">Bridge</span>
-            </span>
-          </div>
-          <div className="flex gap-6 flex-wrap justify-center">
-            {[
-              { label: "Find Tutors", href: "/tutors" },
-              { label: "About Us", href: "/about" },
-              { label: "Contact", href: "/contact" },
-              { label: "Privacy Policy", href: "/privacy" },
-            ].map(({ label, href }) => (
-              <a key={label} href={href} className="text-xs text-muted-foreground hover:text-white transition-colors">
-                {label}
-              </a>
-            ))}
-          </div>
-          <div className="text-xs text-muted-foreground/40">
-            © 2025 SkillBridge. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

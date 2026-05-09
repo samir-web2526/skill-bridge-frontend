@@ -31,24 +31,30 @@ export default function CategorySection({
           return (
             <Card
               key={cat.id}
-              className={`group cursor-pointer border-0 hover:-translate-y-1 transition-all duration-200 ${bg}`}
+              className={`group cursor-pointer border-0 hover:-translate-y-1.5 transition-all duration-300 h-full flex flex-col ${bg}`}
               onMouseEnter={(e) =>
-                (e.currentTarget.style.boxShadow = `0 4px 14px 0 ${shadowHex}`)
+                (e.currentTarget.style.boxShadow = `0 12px 24px -10px ${shadowHex}`)
               }
               onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
             >
-              <CardContent className="p-5 text-center">
-                <Icon size={22} className={`mx-auto mb-3 ${text}`} />
+              <CardContent className="p-6 text-center flex flex-col h-full">
+                <div className={`w-12 h-12 rounded-2xl ${bg} brightness-95 flex items-center justify-center mx-auto mb-4`}>
+                   <Icon size={24} className={text} />
+                </div>
                 <div
-                  className={`font-semibold text-sm mb-1 ${text} opacity-90`}
+                  className={`font-bold text-base mb-2 ${text}`}
                 >
                   {cat.name}
                 </div>
-                <div className={`text-xs leading-relaxed ${text} opacity-70`}>
-                  {cat.description ?? ""}
+                <div className={`text-xs leading-relaxed ${text} opacity-80 line-clamp-3 mb-6 flex-1`}>
+                  {cat.description || `Find the best tutors for ${cat.name} and improve your grades with personalized sessions.`}
+                </div>
+                <div className="mt-auto pt-2 border-t border-current/10">
+                   <p className={`text-[10px] font-bold uppercase tracking-wider ${text}`}>Explore {cat._count?.tutor ?? 0} Tutors</p>
                 </div>
               </CardContent>
             </Card>
+
           );
         })}
       </div>

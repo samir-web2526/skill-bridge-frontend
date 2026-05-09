@@ -136,7 +136,39 @@ export async function login(
   }
 }
 
-// POST /api/v1/auth/refresh-token
+export async function updateMyProfile(payload: {
+  name?: string;
+  phone?: string;
+  image?: string;
+}): Promise<ServiceResponse<AuthUser>> {
+  try {
+    const cookieStore = cookies();
+    const accessToken = (await cookieStore).get("accessToken")?.value ?? "";
+
+    const result = await fetch(`${API}/api/v1/users/update-profile`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await result.json();
+
+    if (!result.ok) {
+      return { data: null, error: json?.message ?? "Update failed" };
+    }
+
+    return { data: json?.data ?? null, error: null };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Something went wrong";
+    return { data: null, error: message };
+  }
+}
+
+// GET /api/v1/auth/refresh-token
+
 export async function refreshToken(): Promise<ServiceResponse<{ accessToken: string }>> {
   try {
     const cookieStore = cookies();

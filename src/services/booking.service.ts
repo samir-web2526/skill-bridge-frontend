@@ -42,6 +42,17 @@ export interface Booking {
       email: string;
     };
   };
+  payment?: {
+    id: string;
+    status: string;
+    amount: number;
+    transactionId?: string;
+  };
+  review?: {
+    id: string;
+    rating: number;
+    comment: string;
+  };
 }
 
 export interface CreateBookingPayload {
@@ -58,6 +69,7 @@ export interface UpdateBookingPayload {
 export interface BookingFilters {
   page?: number;
   limit?: number;
+  searchTerm?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }

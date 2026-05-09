@@ -27,12 +27,12 @@ const MAX_DESC = 200;
 
 function CategoryIcon() {
   return (
-    <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center mb-3.5 shrink-0">
+    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3.5 shrink-0">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <rect x="2" y="2" width="6" height="6" rx="1.5" fill="#059669" />
-        <rect x="10" y="2" width="6" height="6" rx="1.5" fill="#6ee7b7" />
-        <rect x="2" y="10" width="6" height="6" rx="1.5" fill="#6ee7b7" />
-        <rect x="10" y="10" width="6" height="6" rx="1.5" fill="#d1fae5" />
+        <rect x="2" y="2" width="6" height="6" rx="1.5" className="fill-primary/80" />
+        <rect x="10" y="2" width="6" height="6" rx="1.5" className="fill-primary/60" />
+        <rect x="2" y="10" width="6" height="6" rx="1.5" className="fill-primary/60" />
+        <rect x="10" y="10" width="6" height="6" rx="1.5" className="fill-primary/40" />
       </svg>
     </div>
   );
@@ -98,7 +98,7 @@ export function CategoryDialog({
               value={inputName}
               onChange={(e) => onNameChange(e.target.value)}
               autoFocus
-              className="rounded-xl border-border text-sm focus-visible:ring-emerald-500 focus-visible:border-emerald-400"
+              className="rounded-xl border-border text-sm focus-visible:ring-primary focus-visible:border-primary"
             />
           </div>
 
@@ -112,7 +112,7 @@ export function CategoryDialog({
               onChange={(e) => onDescriptionChange(e.target.value)}
               maxLength={MAX_DESC}
               rows={3}
-              className="rounded-xl border-border text-sm resize-none focus-visible:ring-emerald-500 focus-visible:border-emerald-400"
+              className="rounded-xl border-border text-sm resize-none focus-visible:ring-primary focus-visible:border-primary"
             />
             <div className="flex items-center justify-between">
               <p className="text-[11px] text-muted-foreground/60">
@@ -120,7 +120,7 @@ export function CategoryDialog({
               </p>
               <p
                 className={`text-[11px] font-medium tabular-nums ${
-                  descLen > MAX_DESC * 0.9 ? "text-amber-500" : "text-muted-foreground/60"
+                  descLen > MAX_DESC * 0.9 ? "text-chart-2" : "text-muted-foreground/60"
                 }`}
               >
                 {descLen} / {MAX_DESC}
@@ -142,7 +142,7 @@ export function CategoryDialog({
           <Button
             onClick={onSubmit}
             disabled={!inputName.trim() || isSubmitting}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-semibold px-5 flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-sm font-semibold px-5 flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>

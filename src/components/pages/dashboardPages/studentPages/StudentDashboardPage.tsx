@@ -59,7 +59,7 @@ function TutorAvatar({
   const dim = size === "sm" ? "w-7 h-7 text-[10px]" : "w-9 h-9 text-xs";
   return (
     <div
-      className={`${dim} rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 font-extrabold flex items-center justify-center shrink-0`}
+      className={`${dim} rounded-full bg-primary/10 text-primary font-extrabold flex items-center justify-center shrink-0`}
     >
       {initials}
     </div>
@@ -128,7 +128,7 @@ function SectionHeader({
       {action && (
         <button
           onClick={onAction}
-          className="text-xs text-emerald-600 font-semibold flex items-center gap-0.5 hover:underline"
+          className="text-xs text-primary font-semibold flex items-center gap-0.5 hover:underline"
         >
           {action} <ChevronRight size={12} />
         </button>
@@ -155,8 +155,8 @@ const STATUS_CONFIG = {
   },
   COMPLETED: {
     label: "Completed",
-    bg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900",
-    dot: "bg-emerald-400",
+    bg: "bg-primary/10 text-primary border-primary/20",
+    dot: "bg-primary",
     pulse: false,
     Icon: CheckCircle2,
   },
@@ -177,7 +177,7 @@ function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
         <div key={i} className="flex-1 flex flex-col items-center gap-1">
           <div className="w-full flex items-end justify-center" style={{ height: 60 }}>
             <div
-              className="w-full rounded-t-sm bg-emerald-400 transition-all duration-700"
+              className="w-full rounded-t-sm bg-primary transition-all duration-700"
               style={{
                 height: `${Math.max((d.value / max) * 60, d.value > 0 ? 4 : 0)}px`,
                 opacity: d.value === 0 ? 0.2 : 1,
@@ -205,15 +205,15 @@ function SpendingSparkline({ data }: { data: number[] }) {
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" preserveAspectRatio="none">
       <defs>
         <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={area} fill="url(#spark-grad)" />
       <polyline
         points={pts}
         fill="none"
-        stroke="#10b981"
+        stroke="var(--primary)"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -235,7 +235,7 @@ function StatusDonut({
 }) {
   const total = completed + confirmed + pending + cancelled || 1;
   const segments = [
-    { value: completed, color: "#10b981", label: "Completed" },
+    { value: completed, color: "var(--primary)", label: "Completed" },
     { value: confirmed, color: "#3b82f6", label: "Confirmed" },
     { value: pending, color: "#f59e0b", label: "Pending" },
     { value: cancelled, color: "#ef4444", label: "Cancelled" },
@@ -421,7 +421,7 @@ export default function StudentDashboard() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-muted-foreground">
-          <Loader2 size={28} className="animate-spin text-emerald-500" />
+          <Loader2 size={28} className="animate-spin text-primary" />
           <p className="text-sm font-medium">Loading dashboard…</p>
         </div>
       </div>
@@ -434,7 +434,7 @@ export default function StudentDashboard() {
 
         {/* ── Page header ── */}
         <div>
-          <p className="text-[11px] font-bold tracking-widest text-emerald-600 uppercase mb-1">
+          <p className="text-[11px] font-bold tracking-widest text-primary uppercase mb-1">
             My Learning
           </p>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
@@ -465,7 +465,7 @@ export default function StudentDashboard() {
             label="Completed"
             value={stats.completed}
             icon={CheckCircle2}
-            accent="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
+            accent="bg-primary/10 text-primary"
             sub={stats.total > 0 ? `${Math.round((stats.completed / stats.total) * 100)}% completion rate` : undefined}
           />
           <StatCard
@@ -518,7 +518,7 @@ export default function StudentDashboard() {
               <p className="text-xs text-zinc-300 mt-4">No payment data yet</p>
             ) : (
               <div className="mt-2">
-                <p className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-500 tracking-tight">
+                <p className="text-2xl font-extrabold text-primary tracking-tight">
                   ৳{stats.totalSpend.toLocaleString()}
                 </p>
                 <p className="text-xs text-muted-foreground mb-3">total spent</p>
@@ -544,7 +544,7 @@ export default function StudentDashboard() {
                       </div>
                       <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-emerald-400 rounded-full"
+                          className="h-full bg-primary"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -568,7 +568,7 @@ export default function StudentDashboard() {
                 <p className="text-xs text-muted-foreground">No bookings yet</p>
                 <Button
                   size="sm"
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs mt-1"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-xs mt-1"
                 >
                   Book a tutor
                 </Button>

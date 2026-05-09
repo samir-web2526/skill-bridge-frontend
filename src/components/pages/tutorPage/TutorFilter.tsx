@@ -13,7 +13,10 @@ export type TutorFilters = {
   maxPrice: number | undefined;
   minRating: number | undefined;
   availableOnly: boolean;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
 };
+
 
 type Props = {
   filters: TutorFilters;
@@ -30,7 +33,16 @@ const DEFAULT_FILTERS: TutorFilters = {
   maxPrice: undefined,
   minRating: undefined,
   availableOnly: false,
+  sortBy: "createdAt",
+  sortOrder: "desc",
 };
+
+const SORT_OPTIONS = [
+  { label: "Newest", value: "createdAt", order: "desc" },
+  { label: "Price: Low to High", value: "hourlyRate", order: "asc" },
+  { label: "Price: High to Low", value: "hourlyRate", order: "desc" },
+  { label: "Experience", value: "experience", order: "desc" },
+];
 
 const RATING_OPTIONS = [
   { label: "Any", value: undefined },
@@ -39,7 +51,6 @@ const RATING_OPTIONS = [
   { label: "4.8+", value: 4.8 },
 ];
 
-const BANNER_GREEN = "#0d7a5f";
 
 export function TutorFilter({
   filters,
@@ -57,6 +68,7 @@ export function TutorFilter({
     filters.minRating !== undefined,
     filters.availableOnly,
     filters.search !== "",
+    filters.sortBy !== "createdAt",
   ].filter(Boolean).length;
 
   const content = (
@@ -68,7 +80,7 @@ export function TutorFilter({
           )}
           <p className="text-sm font-medium text-foreground">Filters</p>
           {activeFilterCount > 0 && (
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white bg-emerald-600 dark:bg-emerald-500">
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-primary-foreground bg-primary">
               {activeFilterCount}
             </span>
           )}
@@ -90,7 +102,7 @@ export function TutorFilter({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-7 text-xs font-medium px-3 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300"
+              className="h-7 text-xs font-medium px-3 text-primary hover:text-primary/90"
             >
               Done
             </Button>
@@ -108,12 +120,37 @@ export function TutorFilter({
             placeholder="Name or subject..."
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
-            className={`pl-9 h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 ${filters.search ? "border-emerald-500/50" : ""}`}
+            className={`pl-9 h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 ${filters.search ? "border-primary/50" : ""}`}
             style={{
               outline: "none",
               boxShadow: "none",
             }}
           />
+        </div>
+      </div>
+
+      {/* Sort Section */}
+      <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
+          Sort By
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {SORT_OPTIONS.map((opt) => {
+            const isActive = filters.sortBy === opt.value && filters.sortOrder === opt.order;
+            return (
+              <button
+                key={opt.label}
+                onClick={() => onChange({ ...filters, sortBy: opt.value, sortOrder: opt.order as any })}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                    : "bg-transparent text-muted-foreground border-border hover:border-primary/50"
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -130,8 +167,8 @@ export function TutorFilter({
                 onClick={() => onChange({ ...filters, category: c })}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
                   isActive
-                    ? "bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-600 dark:border-emerald-500 shadow-lg shadow-emerald-600/20"
-                    : "bg-transparent text-muted-foreground border-border hover:border-emerald-500/50"
+                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                    : "bg-transparent text-muted-foreground border-border hover:border-primary/50"
                 }`}
               >
                 {c}
@@ -156,7 +193,7 @@ export function TutorFilter({
                 minPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className={`h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center ${filters.minPrice ? "border-emerald-500/50" : ""}`}
+            className={`h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center ${filters.minPrice ? "border-primary/50" : ""}`}
             style={{
               boxShadow: "none",
             }}
@@ -172,7 +209,7 @@ export function TutorFilter({
                 maxPrice: e.target.value ? Number(e.target.value) : undefined,
               })
             }
-            className={`h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center ${filters.maxPrice ? "border-emerald-500/50" : ""}`}
+            className={`h-9 text-sm rounded-[10px] bg-muted/40 border-border focus-visible:ring-0 text-center ${filters.maxPrice ? "border-primary/50" : ""}`}
             style={{
               boxShadow: "none",
             }}
@@ -193,8 +230,8 @@ export function TutorFilter({
                 onClick={() => onChange({ ...filters, minRating: r.value })}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
                   isActive
-                    ? "bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-600 dark:border-emerald-500 shadow-lg shadow-emerald-600/20"
-                    : "bg-transparent text-muted-foreground border-border hover:border-emerald-500/50"
+                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                    : "bg-transparent text-muted-foreground border-border hover:border-primary/50"
                 }`}
               >
                 {r.label}
@@ -213,11 +250,12 @@ export function TutorFilter({
           onCheckedChange={(checked) =>
             onChange({ ...filters, availableOnly: checked })
           }
-          className="data-[state=checked]:bg-emerald-600 dark:data-[state=checked]:bg-emerald-500"
+          className="data-[state=checked]:bg-primary"
         />
       </div>
     </>
   );
+
 
   if (!asDrawer) {
     return (

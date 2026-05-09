@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { TutorFilter, TutorFilters } from "./TutorFilter";
 import { TutorList } from "./TutorList";
 import { TutorProfile } from "./TutorProfile";
@@ -21,6 +22,8 @@ const DEFAULT_FILTERS: TutorFilters = {
   maxPrice: undefined,
   minRating: undefined,
   availableOnly: false,
+  sortBy: "createdAt",
+  sortOrder: "desc",
 };
 
 export default function TutorsPage() {
@@ -41,10 +44,7 @@ export default function TutorsPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [showFilter, setShowFilter] = useState(false);
-
   const [showDrawer, setShowDrawer] = useState(false);
-
-
 
   const activeFilterCount = [
     filters.category !== "All",
@@ -53,55 +53,62 @@ export default function TutorsPage() {
     filters.minRating !== undefined,
     filters.availableOnly,
     filters.search !== "",
+    filters.sortBy !== "createdAt",
   ].filter(Boolean).length;
 
   useEffect(() => {
-  const loadCategories = async () => {
-    const res = await getCategories();
+    const loadCategories = async () => {
+      const res = await getCategories();
+      if (res.data && Array.isArray(res.data)) {
+        setCategories(res.data.map((cat) => cat.name));
+      }
+    };
+    loadCategories();
+  }, []);
 
-    if (res.data && Array.isArray(res.data)) {
-      setCategories(res.data.map((cat) => cat.name));
-    }
-  };
+  useEffect(() => {
+    const load = async () => {
+      setIsLoading(true);
+      setError(null);
 
-  loadCategories();
-}, []);
+      const result = await getTutors({
+        searchTerm: filters.search || undefined,
+        category: filters.category !== "All" ? filters.category : undefined,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
+        minRating: filters.minRating,
+        availableOnly: filters.availableOnly || undefined,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        page,
+        limit: 10,
+      });
 
-useEffect(() => {
-  const load = async () => {
-    setIsLoading(true);
-    setError(null);
+      if (result.data) {
+        const formatted = result.data.map(formatTutor);
+        setTutors(formatted);
+        setPaginations(result.meta);
+      } else {
+        setTutors([]);
+        setError(result.error);
+      }
 
-    const result = await getTutors({
-      searchTerm: filters.search || undefined,
-      category: filters.category !== "All" ? filters.category : undefined,
-      page,
-      limit: 10,
-    });
+      setIsLoading(false);
+    };
 
-    if (result.data) {
-      const formatted = result.data.map(formatTutor);
-      setTutors(formatted);
-      setPaginations(result.meta);
-    } else {
-      setTutors([]);
-      setError(result.error);
-    }
-
-    setIsLoading(false);
-  };
-
-  load();
-}, [filters, page]);
+    load();
+  }, [filters, page]);
 
   const handleFilterChange = (newFilters: TutorFilters) => {
     setFilters(newFilters);
     handlePageChange(1);
   };
 
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+
         <div className="flex items-end justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Find a Tutor</h1>
@@ -121,7 +128,7 @@ useEffect(() => {
             <SlidersHorizontal className="w-4 h-4" />
             {showFilter ? "Hide Filters" : "Filters"}
             {activeFilterCount > 0 && (
-              <span className="bg-emerald-600 dark:bg-emerald-500 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="bg-primary text-primary-foreground text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -129,21 +136,17 @@ useEffect(() => {
 
           <button
             onClick={() => setShowDrawer(true)}
-            className="flex md:hidden items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-border transition-all"
-            style={
+            className={cn(
+              "flex md:hidden items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-border transition-all shadow-sm",
               activeFilterCount > 0
-                ? {
-                    background: "#0d7a5f",
-                    color: "#fff",
-                    borderColor: "#0d7a5f",
-                  }
-                : undefined
-            }
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-background text-muted-foreground hover:text-foreground"
+            )}
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="bg-card text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="bg-background text-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -151,7 +154,7 @@ useEffect(() => {
         </div>
 
         {error && (
-          <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
+          <div className="mb-4 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             {error}
           </div>
         )}

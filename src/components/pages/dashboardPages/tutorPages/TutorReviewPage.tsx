@@ -18,12 +18,12 @@ function StarRating({ rating }: { rating: number }) {
   const rounded = Math.round(rating);
   const numColor =
     rounded >= 5
-      ? "text-emerald-600"
+      ? "text-primary"
       : rounded >= 4
         ? "text-amber-500"
         : rounded >= 3
           ? "text-amber-500"
-          : "text-red-500";
+          : "text-destructive";
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -50,7 +50,7 @@ function StudentAvatar({ name }: { name: string }) {
       .toUpperCase()
       .slice(0, 2) ?? "?";
   return (
-    <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center shrink-0">
+    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-extrabold flex items-center justify-center shrink-0">
       {initials}
     </div>
   );
@@ -108,12 +108,12 @@ function RatingBar({
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   const barColor =
     star === 5
-      ? "bg-emerald-500"
+      ? "bg-primary"
       : star === 4
-        ? "bg-emerald-300"
+        ? "bg-primary/80"
         : star === 3
-          ? "bg-amber-400"
-          : "bg-red-300";
+          ? "bg-primary/60"
+          : "bg-destructive/50";
   return (
     <div className="flex items-center gap-2">
       <span className="text-[11px] text-muted-foreground w-3 shrink-0">{star}</span>
@@ -177,9 +177,9 @@ export default function TutorReviewPage() {
   }, [reviews, paginations]);
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
-        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           Tutor Dashboard
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
@@ -197,7 +197,7 @@ export default function TutorReviewPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -222,8 +222,8 @@ export default function TutorReviewPage() {
             <StatCard
               label="5-star reviews"
               value={stats.fiveStar}
-              dotColor="bg-emerald-500"
-              valueColor="text-emerald-700"
+              dotColor="bg-primary"
+              valueColor="text-primary"
             />
           </div>
 
@@ -256,10 +256,10 @@ export default function TutorReviewPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+              <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
                 {["Student", "Rating", "Comment", "Date"].map((h, i) => (
                   <TableHead
                     key={i}
@@ -299,8 +299,8 @@ export default function TutorReviewPage() {
                 <TableRow>
                   <TableCell colSpan={4} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
                         No reviews yet
@@ -315,7 +315,7 @@ export default function TutorReviewPage() {
                 reviews.map((review, idx) => (
                   <TableRow
                     key={review.id}
-                    className={`hover:bg-zinc-50 transition-colors ${idx % 2 === 1 ? "bg-zinc-50/50" : ""}`}
+                    className={`hover:bg-muted/50 transition-colors ${idx % 2 === 1 ? "bg-muted/20" : ""}`}
                   >
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">

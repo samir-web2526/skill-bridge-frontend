@@ -25,10 +25,10 @@ import { deleteReview, getAllReviews, Review } from "@/services/review.service";
 
 function InitialAvatar({
   name,
-  variant = "emerald",
+  variant = "primary",
 }: {
   name: string;
-  variant?: "emerald" | "zinc";
+  variant?: "primary" | "zinc";
 }) {
   const initials =
     name
@@ -40,8 +40,8 @@ function InitialAvatar({
   return (
     <div
       className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
-        variant === "emerald"
-          ? "bg-emerald-700 text-white"
+        variant === "primary"
+          ? "bg-primary text-primary-foreground"
           : "bg-muted text-muted-foreground"
       }`}
     >
@@ -119,12 +119,12 @@ function RatingBar({
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   const barColor =
     star === 5
-      ? "bg-emerald-500"
+      ? "bg-primary"
       : star === 4
-        ? "bg-emerald-300"
+        ? "bg-chart-1"
         : star === 3
-          ? "bg-amber-400"
-          : "bg-red-300";
+          ? "bg-chart-2"
+          : "bg-destructive/50";
   return (
     <div className="flex items-center gap-2">
       <span className="text-[11px] text-muted-foreground w-3 shrink-0">{star}</span>
@@ -230,7 +230,7 @@ export default function AdminReviewsPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
-        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           Admin
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
@@ -248,7 +248,7 @@ export default function AdminReviewsPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -265,21 +265,21 @@ export default function AdminReviewsPage() {
             <StatCard
               label="Avg rating"
               value={stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}
-              valueColor="text-amber-500"
+              valueColor="text-foreground"
               starDisplay
               avgRating={stats.avgRating}
             />
             <StatCard
               label="5-star reviews"
               value={stats.fiveStar}
-              dotColor="bg-emerald-400"
-              valueColor="text-emerald-700 dark:text-emerald-400"
+              dotColor="bg-primary"
+              valueColor="text-primary"
             />
             <StatCard
               label="Below 4 stars"
               value={stats.belowFour}
-              dotColor="bg-amber-400"
-              valueColor="text-amber-700 dark:text-amber-400"
+              dotColor="bg-chart-2"
+              valueColor="text-chart-2"
             />
           </div>
           <div className="bg-card rounded-xl border border-border shadow-sm px-4 py-3 w-full sm:w-44 shrink-0">
@@ -322,7 +322,7 @@ export default function AdminReviewsPage() {
               placeholder="Search reviews…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-emerald-400 transition-colors w-52"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors w-52"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -332,7 +332,7 @@ export default function AdminReviewsPage() {
                 onClick={() => setActiveFilter(f.value)}
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   activeFilter === f.value
-                    ? "bg-emerald-600 text-white border-emerald-600"
+                    ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
                 }`}
               >
@@ -342,7 +342,7 @@ export default function AdminReviewsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
@@ -399,8 +399,8 @@ export default function AdminReviewsPage() {
                 <TableRow>
                   <TableCell colSpan={6} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
                         No reviews found
@@ -418,7 +418,7 @@ export default function AdminReviewsPage() {
                       <div className="flex items-center gap-3">
                         <InitialAvatar
                           name={review?.user?.name ?? "?"}
-                          variant="emerald"
+                          variant="primary"
                         />
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-foreground truncate">
@@ -480,7 +480,7 @@ export default function AdminReviewsPage() {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(review.id)}
-                        className="h-8 w-8 rounded-lg border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60 hover:text-red-600 transition-colors"
+                        className="h-8 w-8 rounded-lg border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>

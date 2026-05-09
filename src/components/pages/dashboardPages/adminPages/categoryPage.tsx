@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Category, createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category.service";
 import { PaginationMeta } from "@/types/sharedTypes";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Inbox, Pencil, Plus, Trash2 } from "lucide-react";
+import { AlertCircle, Inbox, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCategoryColor } from "@/lib/category/categoryColors";
 import { CategoryDialog } from "./categoryDialog";
@@ -52,23 +52,25 @@ export default function AdminCategoriesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refresh, setRefresh] = useState(0);
 
+  const [search, setSearch] = useState("");
   const { page, handlePageChange } = usePagination();
 
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getCategories({page});
-   if (result?.data) {
-  setCategories(Array.isArray(result.data) ? result.data : []);
-  setPaginations(result.meta);
-}else {
+      const result = await getCategories({ page, searchTerm: search || undefined });
+      if (result?.data) {
+        setCategories(Array.isArray(result.data) ? result.data : []);
+        setPaginations(result.meta);
+      } else {
         setError("Failed to load categories. Please try again.");
       }
       setIsLoading(false);
     };
     load();
-  }, [page, refresh]);
+  }, [page, refresh, search]);
+
 
   const stats = useMemo(() => {
     const total = paginations?.total ?? categories.length;
@@ -172,7 +174,7 @@ const handleSubmit = async () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
-        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           Admin
         </p>
         <div className="flex items-end justify-between flex-wrap gap-3">
@@ -190,7 +192,7 @@ const handleSubmit = async () => {
 
           <Button
             onClick={openCreateDialog}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold px-4 flex items-center gap-2 shadow-sm"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold px-4 flex items-center gap-2 shadow-sm"
           >
             <Plus size={15} />
             Add new
@@ -200,34 +202,47 @@ const handleSubmit = async () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <StatCard
-            label="Total categories"
-            value={stats.total}
-            dotColor="bg-muted-foreground/30"
-            valueColor="text-foreground"
-          />
-          <StatCard
-            label="Total tutors"
-            value={stats.totalTutors}
-            dotColor="bg-emerald-500"
-            valueColor="text-emerald-700 dark:text-emerald-400"
-          />
-          <StatCard
-            label="Avg per category"
-            value={stats.avg}
-            dotColor="bg-blue-400"
-            valueColor="text-blue-700 dark:text-blue-400"
-          />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search categories..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-4 h-9 rounded-xl border border-border bg-card text-sm outline-none focus:border-primary transition-all shadow-sm"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 flex-1 md:flex-none">
+            <StatCard
+              label="Total categories"
+              value={stats.total}
+              dotColor="bg-muted-foreground/30"
+              valueColor="text-foreground"
+            />
+            <StatCard
+              label="Total tutors"
+              value={stats.totalTutors}
+              dotColor="bg-primary"
+              valueColor="text-primary"
+            />
+            <StatCard
+              label="Avg per category"
+              value={stats.avg}
+              dotColor="bg-chart-1"
+              valueColor="text-chart-1"
+            />
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50 border-border">
@@ -271,8 +286,8 @@ const handleSubmit = async () => {
                 <TableRow>
                   <TableCell colSpan={3} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
                         No categories found
@@ -304,8 +319,8 @@ const handleSubmit = async () => {
                               {category.name}
                             </p>
                             <p className="text-xs text-muted-foreground mt-0.5">
-                              {category?.tutor?.length ?? 0} tutor
-                              {(category?.tutor?.length ?? 0) !== 1 ? "s" : ""}
+                              {category?._count?.tutor ?? 0} tutor
+                              {(category?._count?.tutor ?? 0) !== 1 ? "s" : ""}
                             </p>
                           </div>
                         </div>
@@ -331,7 +346,7 @@ const handleSubmit = async () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDelete(category.id)}
-                            className="h-8 w-8 rounded-lg border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60 hover:text-red-600 transition-colors"
+                            className="h-8 w-8 rounded-lg border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive transition-colors"
                           >
                             <Trash2 size={13} />
                           </Button>

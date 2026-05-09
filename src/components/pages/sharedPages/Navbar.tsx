@@ -47,10 +47,34 @@ interface NavbarProps {
 const defaultMenu: MenuItem[] = [
   { title: "Home", url: "/" },
   { title: "Find Tutors", url: "/tutors" },
-  { title: "Student Reviews", url: "/reviews" },
+  {
+    title: "Resources",
+    url: "#",
+    items: [
+      {
+        title: "Student Reviews",
+        url: "/reviews",
+        description: "See what our students have to say about their experience.",
+        icon: <BookOpen className="size-4" />,
+      },
+      {
+        title: "About Us",
+        url: "/about",
+        description: "Learn more about our mission and vision.",
+        icon: <BookOpen className="size-4" />,
+      },
+      {
+        title: "Privacy Policy",
+        url: "/privacy",
+        description: "Read our privacy policy and data protection guidelines.",
+        icon: <BookOpen className="size-4" />,
+      },
+    ],
+  },
   { title: "About", url: "/about" },
   { title: "Contact", url: "/contact" },
 ];
+
 
 function LogoutButton() {
   const [isPending, startTransition] = useTransition();
@@ -91,6 +115,16 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
             <NavigationMenu>
               <NavigationMenuList className="gap-0">
                 {menu.map((item) => renderMenuItem(item))}
+                {user && (
+                  <NavigationMenuItem>
+                    <NavigationMenuLink
+                      href="/dashboard/student/bookings"
+                      className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+                    >
+                      My Bookings
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                )}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -135,14 +169,14 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                   size="sm"
                   className="text-muted-foreground hover:text-foreground font-medium rounded-lg"
                 >
-                  <a href="/login">Login</a>
+                  <Link href="/login">Login</Link>
                 </Button>
                 <Button
                   asChild
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4 font-semibold shadow-sm"
                 >
-                  <a href="/register">Register</a>
+                  <Link href="/register">Register</Link>
                 </Button>
               </>
             )}
@@ -194,6 +228,14 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                   className="flex w-full flex-col gap-1"
                 >
                   {menu.map((item) => renderMobileMenuItem(item))}
+                  {user && (
+                    <Link
+                      href="/dashboard/student/bookings"
+                      className="flex items-center px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-emerald-600 hover:bg-muted rounded-lg transition-colors"
+                    >
+                      My Bookings
+                    </Link>
+                  )}
                 </Accordion>
 
                 <div className="h-px bg-border" />
@@ -232,13 +274,13 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
                         variant="outline"
                         className="w-full rounded-lg border-border font-medium"
                       >
-                        <a href="/login">Login</a>
+                        <Link href="/login">Login</Link>
                       </Button>
                       <Button
                         asChild
                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold"
                       >
-                        <a href="/register">Register</a>
+                        <Link href="/register">Register</Link>
                       </Button>
                     </>
                   )}
@@ -300,20 +342,20 @@ const renderMobileMenuItem = (item: MenuItem) => {
     );
   }
   return (
-    <a
+    <Link
       key={item.title}
       href={item.url}
       className="flex items-center px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-emerald-600 hover:bg-muted rounded-lg transition-colors"
     >
       {item.title}
-    </a>
+    </Link>
   );
 };
 
 /* ── SUBMENU LINK ── */
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
-    <a
+    <Link
       href={item.url}
       className="flex flex-row gap-3 rounded-lg p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-foreground group"
     >
@@ -330,7 +372,7 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
           </p>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 

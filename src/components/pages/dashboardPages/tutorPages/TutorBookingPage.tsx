@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, CalendarDays, CheckCircle2, Inbox, Trash2 } from "lucide-react";
+import { AlertCircle, CalendarDays, CheckCircle2, Inbox, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { getBookings, updateBookingStatus } from "@/services/booking.service";
 
@@ -22,24 +22,24 @@ const STATUS_CONFIG: Record<
   { pill: string; dot: string; pulse?: boolean; label: string }
 > = {
   PENDING: {
-    pill: "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-900",
-    dot: "bg-amber-400",
+    pill: "bg-muted/50 text-muted-foreground border-border",
+    dot: "bg-muted-foreground",
     pulse: true,
     label: "Pending",
   },
   CONFIRMED: {
-    pill: "bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-400 border-blue-200 dark:border-blue-900",
-    dot: "bg-blue-400",
+    pill: "bg-primary/10 text-primary border-primary/20",
+    dot: "bg-primary",
     label: "Confirmed",
   },
   COMPLETED: {
-    pill: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900",
-    dot: "bg-emerald-500",
+    pill: "bg-primary text-primary-foreground border-primary",
+    dot: "bg-primary-foreground",
     label: "Completed",
   },
   CANCELLED: {
-    pill: "bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-400 border-red-200 dark:border-red-900",
-    dot: "bg-red-400",
+    pill: "bg-destructive/10 text-destructive border-destructive/20",
+    dot: "bg-destructive",
     label: "Cancelled",
   },
 };
@@ -84,7 +84,7 @@ function StudentAvatar({ name }: { name: string }) {
       .toUpperCase()
       .slice(0, 2) ?? "?";
   return (
-    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 text-xs font-extrabold flex items-center justify-center shrink-0">
+    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-extrabold flex items-center justify-center shrink-0">
       {initials}
     </div>
   );
@@ -95,6 +95,7 @@ export default function TutorBookingPage() {
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const { page, handlePageChange } = usePagination();
 
@@ -102,7 +103,7 @@ export default function TutorBookingPage() {
     const load = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getBookings({ page });
+      const result = await getBookings({ page, searchTerm: search || undefined });
       if (result.error) {
         setError(result.error);
       } else {
@@ -112,7 +113,7 @@ export default function TutorBookingPage() {
       setIsLoading(false);
     };
     load();
-  }, [page]);
+  }, [page, search]);
 
   const stats = useMemo(
     () => ({
@@ -139,7 +140,7 @@ export default function TutorBookingPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
-        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           Tutor Dashboard
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
@@ -157,20 +158,33 @@ export default function TutorBookingPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard label="Total" value={stats.total} dotColor="bg-muted-foreground" valueColor="text-foreground" />
-          <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-blue-400" valueColor="text-blue-700 dark:text-blue-400" />
-          <StatCard label="Pending" value={stats.pending} dotColor="bg-amber-400" valueColor="text-amber-700 dark:text-amber-400" />
-          <StatCard label="Completed" value={stats.completed} dotColor="bg-emerald-500" valueColor="text-emerald-700 dark:text-emerald-400" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search by student..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-4 h-9 rounded-xl border border-border bg-card text-sm outline-none focus:border-primary transition-all shadow-sm"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1 sm:flex-none">
+            <StatCard label="Total" value={stats.total} dotColor="bg-muted-foreground" valueColor="text-foreground" />
+            <StatCard label="Confirmed" value={stats.confirmed} dotColor="bg-chart-1" valueColor="text-chart-1" />
+            <StatCard label="Pending" value={stats.pending} dotColor="bg-chart-2" valueColor="text-chart-2" />
+            <StatCard label="Completed" value={stats.completed} dotColor="bg-primary" valueColor="text-primary" />
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -219,8 +233,8 @@ export default function TutorBookingPage() {
                 <TableRow>
                   <TableCell colSpan={5} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600 dark:text-emerald-400" />
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
                         No bookings yet
@@ -241,7 +255,7 @@ export default function TutorBookingPage() {
                   return (
                     <TableRow
                       key={booking.id}
-                      className={`hover:bg-muted/50 transition-colors ${idx % 2 === 1 ? "bg-muted/20" : ""}`}
+                      className={`hover:bg-muted/30 transition-colors ${idx % 2 === 1 ? "bg-muted/5" : ""}`}
                     >
                       {/* Student */}
                       <TableCell className="pl-6 py-4">
@@ -269,7 +283,7 @@ export default function TutorBookingPage() {
                       {/* Date */}
                       <TableCell className="py-4">
                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                          <CalendarDays size={13} className="text-zinc-300 shrink-0" />
+                          <CalendarDays size={13} className="text-muted-foreground/30 shrink-0" />
                           {new Date(booking.createdAt).toLocaleDateString("en-BD", {
                             day: "numeric",
                             month: "short",
@@ -281,8 +295,8 @@ export default function TutorBookingPage() {
                       {/* Payment */}
                       <TableCell className="py-4">
                         {isPaid ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400">
-                            <CheckCircle2 size={11} className="text-blue-500 dark:text-blue-400" />
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border border-chart-1/20 bg-chart-1/10 text-chart-1">
+                            <CheckCircle2 size={11} className="text-chart-1" />
                             Paid
                           </span>
                         ) : (
@@ -298,7 +312,7 @@ export default function TutorBookingPage() {
                               size="sm"
                               variant="ghost"
                               onClick={() => handleStatusChange(booking.id, "CONFIRMED")}
-                              className="h-7 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/60 shadow-none px-3"
+                              className="h-7 text-xs font-semibold rounded-lg border border-chart-1/20 bg-chart-1/10 text-chart-1 hover:bg-chart-1/20 shadow-none px-3"
                             >
                               Confirm
                             </Button>
@@ -308,7 +322,7 @@ export default function TutorBookingPage() {
                               size="sm"
                               variant="ghost"
                               onClick={() => handleStatusChange(booking.id, "COMPLETED")}
-                              className="h-7 text-xs font-semibold rounded-lg border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-none px-3"
+                              className="h-7 text-xs font-semibold rounded-lg border border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 shadow-none px-3"
                             >
                               Complete
                             </Button>
@@ -318,7 +332,7 @@ export default function TutorBookingPage() {
                               size="sm"
                               variant="ghost"
                               onClick={() => handleStatusChange(booking.id, "CANCELLED")}
-                              className="h-7 w-7 rounded-lg border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-400 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60 hover:text-red-600 dark:hover:text-red-300 transition-colors p-0"
+                              className="h-7 w-7 rounded-lg border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive transition-colors p-0"
                             >
                               <Trash2 size={13} />
                             </Button>

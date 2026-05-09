@@ -28,9 +28,9 @@ function StarRating({ rating, count }: { rating: number | null; count?: number }
   if (!rating || rating === 0) {
     return (
       <div>
-        <p className="text-xs text-zinc-300 font-medium">No rating</p>
+        <p className="text-xs text-muted-foreground/50 font-medium">No rating</p>
         {count !== undefined && (
-          <p className="text-[11px] text-zinc-300 mt-0.5">({count} reviews)</p>
+          <p className="text-[11px] text-muted-foreground/40 mt-0.5">({count} reviews)</p>
         )}
       </div>
     );
@@ -44,7 +44,7 @@ function StarRating({ rating, count }: { rating: number | null; count?: number }
           <svg key={i} width="11" height="11" viewBox="0 0 12 12">
             <polygon
               points="6,1 7.5,4.5 11,4.5 8.5,7 9.5,11 6,9 2.5,11 3.5,7 1,4.5 4.5,4.5"
-              fill={i < rounded ? "#fbbf24" : "#e5e7eb"}
+              fill={i < rounded ? "#fbbf24" : "var(--muted)"}
             />
           </svg>
         ))}
@@ -68,7 +68,7 @@ function TutorAvatar({ name }: { name: string }) {
       .toUpperCase()
       .slice(0, 2) ?? "?";
   return (
-    <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center shrink-0">
+    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-extrabold flex items-center justify-center shrink-0">
       {initials}
     </div>
   );
@@ -100,7 +100,7 @@ function StatCard({
               <span
                 key={i}
                 style={{
-                  color: i < Math.round(avgRating ?? 0) ? "#fbbf24" : "#e5e7eb",
+                  color: i < Math.round(avgRating ?? 0) ? "#fbbf24" : "var(--muted)",
                 }}
               >
                 ★
@@ -233,9 +233,9 @@ export default function StudentTutorPage() {
 };
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
-        <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase mb-1">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           My Learning
         </p>
         <div className="flex items-end justify-between flex-wrap gap-2">
@@ -253,7 +253,7 @@ export default function StudentTutorPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-5">
         {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <AlertCircle size={15} className="shrink-0" />
             {error}
           </div>
@@ -276,7 +276,7 @@ export default function StudentTutorPage() {
           <StatCard
             label="Avg rate/hr"
             value={stats.avgRate > 0 ? `৳${stats.avgRate}` : "—"}
-            valueColor="text-emerald-700"
+            valueColor="text-primary"
           />
         </div>
 
@@ -285,14 +285,14 @@ export default function StudentTutorPage() {
           <div className="relative">
             <Search
               size={13}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-300"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <input
               type="text"
               placeholder="Search tutors…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-zinc-300 outline-none focus:border-emerald-400 transition-colors w-52"
+              className="pl-8 pr-3 py-1.5 text-sm rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/50 transition-colors w-52"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -302,7 +302,7 @@ export default function StudentTutorPage() {
                 onClick={() => setActiveCategory(cat)}
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   activeCategory === cat
-                    ? "bg-emerald-600 text-white border-emerald-600"
+                    ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-zinc-300 hover:text-zinc-700"
                 }`}
               >
@@ -313,10 +313,10 @@ export default function StudentTutorPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
                 {["Tutor", "Category", "Rate", "Rating", "Exp", ""].map(
                   (h, i) => (
                     <TableHead
@@ -338,21 +338,21 @@ export default function StudentTutorPage() {
                   <TableRow key={i} className="animate-pulse">
                     <TableCell className="pl-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 shrink-0" />
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
                         <div className="space-y-1.5">
-                          <div className="h-3 w-28 rounded bg-zinc-100" />
-                          <div className="h-2.5 w-20 rounded bg-zinc-100" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                          <div className="h-2.5 w-20 rounded bg-muted" />
                         </div>
                       </div>
                     </TableCell>
                     {Array.from({ length: 4 }).map((_, j) => (
                       <TableCell key={j} className="py-4">
-                        <div className="h-3 w-16 rounded bg-zinc-100" />
+                        <div className="h-3 w-16 rounded bg-muted" />
                       </TableCell>
                     ))}
                     <TableCell className="py-4 pr-6">
                       <div className="flex justify-end">
-                        <div className="h-7 w-20 rounded-lg bg-zinc-100" />
+                        <div className="h-7 w-20 rounded-lg bg-muted" />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -361,8 +361,8 @@ export default function StudentTutorPage() {
                 <TableRow>
                   <TableCell colSpan={6} className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
-                        <Inbox size={22} className="text-emerald-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Inbox size={22} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-muted-foreground">
                         No tutors found
@@ -378,8 +378,8 @@ export default function StudentTutorPage() {
                   return (
                     <TableRow
                       key={tutor.id}
-                      className={`hover:bg-zinc-50 transition-colors ${
-                        idx % 2 === 1 ? "bg-zinc-50/50" : ""
+                      className={`hover:bg-muted/50 transition-colors ${
+                        idx % 2 === 1 ? "bg-muted/20" : ""
                       }`}
                     >
                       <TableCell className="pl-6 py-4">
@@ -405,7 +405,7 @@ export default function StudentTutorPage() {
                       </TableCell>
 
                       <TableCell className="py-4">
-                        <span className="text-sm font-semibold text-emerald-700">
+                        <span className="text-sm font-semibold text-primary">
                           ৳{Number(tutor.hourlyRate).toLocaleString()}/hr
                         </span>
                       </TableCell>
@@ -428,7 +428,7 @@ export default function StudentTutorPage() {
                           <Button
                             size="sm"
                             onClick={() => setSelectedTutor(tutor)}
-                            className="h-7 text-xs font-semibold rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 shadow-none px-3"
+                            className="h-7 text-xs font-semibold rounded-lg border border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 shadow-none px-3"
                             variant="ghost"
                           >
                             View Profile
