@@ -204,7 +204,7 @@ export default async function SkillBridgeHome() {
       searchTerm: "",
       category: undefined,
       page: 1,
-      limit: 3,
+      limit: 4,
     }),
     getCategories({ page: 1, limit: 10 }),
     getTutorStats(),

@@ -355,11 +355,10 @@ export default function StudentBookingPage() {
               <button
                 key={s}
                 onClick={() => setActiveFilter(s)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                  activeFilter === s
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === s
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
               </button>
@@ -439,11 +438,11 @@ export default function StudentBookingPage() {
 
                   // ── Action flags ──
                   const canCancel = booking.status === "PENDING" && booking.payment?.status !== "PAID";
-                  const canPay    = booking.status === "PENDING" && (!booking.payment || booking.payment.status !== "PAID");
-                  const isPaid    = booking.payment?.status === "PAID" || booking.status === "CONFIRMED";
+                  const canPay = booking.status === "PENDING" && (!booking.payment || booking.payment.status !== "PAID");
+                  const isPaid = booking.payment?.status === "PAID" || booking.status === "CONFIRMED";
                   const canReview = booking.status === "COMPLETED" && !booking.review;
                   const hasReview = booking.status === "COMPLETED" && !!booking.review;
-                  const showDash  = !canCancel && !canPay && !isPaid && !canReview && !hasReview;
+                  const showDash = !canCancel && !canPay && !isPaid && !canReview && !hasReview;
 
                   return (
                     <TableRow
@@ -622,10 +621,10 @@ export default function StudentBookingPage() {
                 <span className="text-zinc-700">
                   {paymentTarget?.date
                     ? new Date(paymentTarget.date).toLocaleDateString("en-BD", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
                     : "—"}
                 </span>
               </div>

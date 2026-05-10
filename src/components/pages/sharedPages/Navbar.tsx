@@ -34,6 +34,7 @@ interface MenuItem {
   title: string;
   url: string;
   description?: string;
+  className?: string;
   icon?: React.ReactNode;
   items?: MenuItem[];
 }
@@ -56,6 +57,7 @@ const defaultMenu: MenuItem[] = [
         url: "/reviews",
         description: "See what our students have to say about their experience.",
         icon: <BookOpen className="size-4" />,
+        className: "border border-red-500",
       },
       {
         title: "About Us",

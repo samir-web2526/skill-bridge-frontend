@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TutorFilter, TutorFilters } from "./TutorFilter";
 import { TutorList } from "./TutorList";
-import { TutorProfile } from "./TutorProfile";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination, PaginationMeta } from "@/components/ui/Pagination";
 import { usePagination } from "@/hooks/usePagination";

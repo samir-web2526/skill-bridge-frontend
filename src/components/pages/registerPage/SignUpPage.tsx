@@ -7,6 +7,8 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
+import { googleLogin } from "@/services/auth.service";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +36,7 @@ const baseSchema = z.object({
 const tutorSchema = baseSchema.extend({
   role: z.literal("TUTOR"),
   bio: z.string().min(10),
-  hourlyRate: z.number().min(1), 
+  hourlyRate: z.number().min(1),
   experience: z.number().min(1),
   categoryId: z.string().min(1),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
@@ -80,53 +82,76 @@ export function SignUpForm() {
   // Fetch categories once on mount
   React.useEffect(() => {
     getCategories({ limit: 100 }).then((res) => {
-      if (!res.error && res.data){
+      if (!res.error && res.data) {
         setCategories(res.data);
       }
     });
   }, []);
 
-const form = useForm<z.infer<typeof formSchema>>({
-  resolver: zodResolver(formSchema),
-  defaultValues: {
-  name: "",
-  email: "",
-  password: "",
-  role: "STUDENT",
-}
-});
+  // const form = useForm<z.infer<typeof formSchema>>({
+  //   resolver: zodResolver(formSchema),
+  //   defaultValues: {
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  //   role: "STUDENT",
+  // }
+  // });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      role: "STUDENT",
+      gender: undefined,
+      // Student fields
+      dateOfBirth: "",
+      address: "",
+      class: "",
+      group: "",
+      // Tutor fields
+      bio: "",
+      hourlyRate: "",
+      experience: "",
+      categoryId: "",
+      availableFrom: "",
+      availableTo: "",
+    } as any,
+  });
 
   async function onSubmit(values: FormValues) {
     console.log("ERRORS:", form.formState.errors);
-  console.log("VALUES:", values);
-  const payload: any = {
-    name: values.name,
-    email: values.email,
-    password: values.password,
-    role: values.role,
-    gender: values.gender,
-  };
+    console.log("VALUES:", values);
+    const payload: any = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      role: values.role,
+      gender: values.gender,
+    };
 
-  if (values.role === "TUTOR") {
-  payload.bio = values.bio;
-  payload.hourlyRate = values.hourlyRate;
-  payload.experience = values.experience;
-  payload.categoryId = values.categoryId;
-  payload.availableFrom = values.availableFrom;
-  payload.availableTo = values.availableTo;
-} else {
-    payload.dateOfBirth = (values as any).dateOfBirth || undefined;
-    payload.address = (values as any).address || undefined;
-    payload.class = (values as any).class || undefined;
-    payload.group = (values as any).group || undefined;
+    if (values.role === "TUTOR") {
+      payload.bio = values.bio;
+      payload.hourlyRate = values.hourlyRate;
+      payload.experience = values.experience;
+      payload.categoryId = values.categoryId;
+      payload.availableFrom = values.availableFrom;
+      payload.availableTo = values.availableTo;
+    } else {
+      payload.dateOfBirth = (values as any).dateOfBirth || undefined;
+      payload.address = (values as any).address || undefined;
+      payload.class = (values as any).class || undefined;
+      payload.group = (values as any).group || undefined;
+    }
+
+    const result = await register(payload);
+    if (result.error) { toast.error(result.error); return; }
+    toast.success("Account created successfully!");
+    router.push("/login");
   }
-
-  const result = await register(payload);
-  if (result.error) { toast.error(result.error); return; }
-  toast.success("Account created successfully!");
-  router.push("/login");
-}
-const role = useWatch({ control: form.control, name: "role" });
+  const role = useWatch({ control: form.control, name: "role" });
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-background px-4 gap-4 py-20">
       <div className="w-full max-w-md">
@@ -150,15 +175,31 @@ const role = useWatch({ control: form.control, name: "role" });
           <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">Sign up with</span>
           <div className="flex-1 h-px bg-border" />
         </div>
-
-        <div className="grid grid-cols-1 gap-3 mb-8">
-           <Button
-             variant="outline"
-             type="button"
-             className="h-11 rounded-xl border-border bg-card hover:bg-muted/50 gap-2 text-xs font-bold uppercase"
-           >
-             Google
-           </Button>
+        <div className="flex justify-center mb-8">
+          <div className="w-[356px] h-[40px] overflow-hidden rounded-xl relative bg-black">
+            <div className="absolute left-[-44px] top-0">
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  if (credentialResponse.credential) {
+                    const result = await googleLogin(credentialResponse.credential);
+                    if (result.error) {
+                      toast.error(result.error);
+                    } else {
+                      toast.success("Signed in with Google!");
+                      router.refresh();
+                      router.push("/dashboard");
+                    }
+                  }
+                }}
+                onError={() => {
+                  toast.error("Google Login Failed");
+                }}
+                theme="filled_black"
+                shape="rectangular"
+                width="400px"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 mb-8">
