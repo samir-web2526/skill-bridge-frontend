@@ -5,8 +5,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export interface StudentProfile {
   id: string;
   gender: string | null;
@@ -31,18 +29,10 @@ export interface StudentProfile {
   };
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();
   return (await cookieStore).get("accessToken")?.value ?? "";
 }
-
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// GET /api/v1/students
-// ADMIN → all students
-// TUTOR → only own booked students
 
 export async function getStudents(): Promise<
   ServiceResponse<StudentProfile[]>
@@ -96,9 +86,9 @@ export async function getMyProfile(): Promise<ServiceResponse<StudentProfile>> {
       },
       cache: "no-store",
     });
- const json = await result.json();
-    if (!result.ok) { 
-        return { data: null, error: json?.message ?? "Failed to fetch profile" };
+    const json = await result.json();
+    if (!result.ok) {
+      return { data: null, error: json?.message ?? "Failed to fetch profile" };
     }
 
     return { data: json?.data ?? null, error: null };

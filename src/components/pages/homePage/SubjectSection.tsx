@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 interface Category {
     id: string | number;
     name: string;
@@ -11,12 +10,11 @@ interface SubjectsSectionProps {
     categories?: Category[];
 }
 
-// ─── Icon + colour map ────────────────────────────────────────────────────────
 function getCategoryColor(name: string): {
     icon: React.FC<{ size?: number; className?: string }>;
-    accent: string;      // Tailwind text colour for the icon
-    pill: string;        // Tailwind bg for the icon pill
-    hover: string;       // Tailwind border colour on hover
+    accent: string;
+    pill: string;
+    hover: string;
 } {
     const map: Record<
         string,
@@ -39,7 +37,6 @@ function getCategoryColor(name: string): {
     const defaults = { accent: "text-primary", pill: "bg-primary/10", hover: "hover:border-primary/50" };
     const colors = map[name] ?? defaults;
 
-    // Simple SVG icon switcher
     const icons: Record<string, React.FC<{ size?: number; className?: string }>> = {
         Mathematics: ({ size = 18, className }) => (
             <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
@@ -70,13 +67,11 @@ function getCategoryColor(name: string): {
     return { icon: icons[name] ?? DefaultIcon, ...colors };
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
 export default function SubjectsSection({ categories = [] }: SubjectsSectionProps) {
     return (
         <section className="py-20 bg-background border-y border-border">
             <div className="max-w-7xl mx-auto px-6">
 
-                {/* Header */}
                 <div className="mb-12">
                     <p className="text-xs font-bold tracking-widest text-primary uppercase mb-2">
                         All Subjects
@@ -86,7 +81,6 @@ export default function SubjectsSection({ categories = [] }: SubjectsSectionProp
                     </h2>
                 </div>
 
-                {/* Grid */}
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {categories.map((cat) => {
                         const { icon: Icon, accent, pill, hover } = getCategoryColor(cat.name);
@@ -96,12 +90,10 @@ export default function SubjectsSection({ categories = [] }: SubjectsSectionProp
                                 href={`/tutors?category=${encodeURIComponent(cat.name)}`}
                                 className={`group flex items-center gap-4 bg-card border border-border ${hover} rounded-xl px-5 py-4 transition-all duration-200 shadow-sm hover:shadow-md`}
                             >
-                                {/* Icon pill */}
                                 <div className={`w-10 h-10 rounded-lg ${pill} flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110`}>
                                     <Icon size={18} className={accent} />
                                 </div>
 
-                                {/* Text */}
                                 <div className="flex-1 min-w-0">
                                     <div className="font-semibold text-foreground text-sm truncate">
                                         {cat.name}
@@ -111,7 +103,6 @@ export default function SubjectsSection({ categories = [] }: SubjectsSectionProp
                                     </div>
                                 </div>
 
-                                {/* Arrow */}
                                 <svg
                                     className="w-4 h-4 text-gray-300 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200 shrink-0"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"

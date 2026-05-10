@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -197,11 +196,10 @@ export default function TutorBookingPage() {
               <button
                 key={s}
                 onClick={() => setActiveFilter(s)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                  activeFilter === s
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === s
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
               </button>
@@ -297,7 +295,6 @@ export default function TutorBookingPage() {
                         </div>
                       </TableCell>
 
-                      {/* Status */}
                       <TableCell className="py-4">
                         <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border ${statusCfg.pill}`}>
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusCfg.dot} ${statusCfg.pulse ? "animate-pulse" : ""}`} />
@@ -305,7 +302,6 @@ export default function TutorBookingPage() {
                         </span>
                       </TableCell>
 
-                      {/* Date */}
                       <TableCell className="py-4">
                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                           <CalendarDays size={13} className="text-muted-foreground/30 shrink-0" />
@@ -317,7 +313,6 @@ export default function TutorBookingPage() {
                         </div>
                       </TableCell>
 
-                      {/* Payment */}
                       <TableCell className="py-4">
                         {isPaid ? (
                           <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border border-chart-1/20 bg-chart-1/10 text-chart-1">
@@ -329,7 +324,6 @@ export default function TutorBookingPage() {
                         )}
                       </TableCell>
 
-                      {/* Actions */}
                       <TableCell className="py-4 pr-6">
                         <div className="flex items-center justify-end gap-2">
                           {allowedNext.includes("CONFIRMED") && (

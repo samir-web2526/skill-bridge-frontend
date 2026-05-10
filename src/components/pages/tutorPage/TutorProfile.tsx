@@ -85,11 +85,10 @@ export function TutorProfile({ tutor, onClose, onBook }: Props) {
               </div>
 
               <Badge
-                className={`shrink-0 text-xs ${
-                  tutor.availablity
+                className={`shrink-0 text-xs ${tutor.availablity
                     ? "bg-primary/10 text-primary"
                     : "bg-destructive/10 text-destructive"
-                }`}
+                  }`}
               >
                 {tutor.availablity ? "Available" : "Unavailable"}
               </Badge>

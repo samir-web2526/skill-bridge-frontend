@@ -60,11 +60,10 @@ function InitialAvatar({
 
   return (
     <div
-      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
-        variant === "primary"
+      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${variant === "primary"
           ? "bg-primary text-primary-foreground"
           : "bg-muted text-muted-foreground"
-      }`}
+        }`}
     >
       {initials}
     </div>
@@ -97,7 +96,7 @@ function StatCard({
 
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
-const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
+  const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -106,27 +105,27 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
 
   const { page, handlePageChange } = usePagination();
 
- useEffect(() => {
-  const load = async () => {
-    setIsLoading(true);
-    setError(null);
+  useEffect(() => {
+    const load = async () => {
+      setIsLoading(true);
+      setError(null);
 
-    const result = await getBookings({ page });
+      const result = await getBookings({ page });
 
-    if (result.error) {
-      setError(result.error);
-      setBookings([]);
-      setPaginations(null);
-    } else {
-      setBookings(result.data ?? []);
-      setPaginations(result.meta);
-    }
+      if (result.error) {
+        setError(result.error);
+        setBookings([]);
+        setPaginations(null);
+      } else {
+        setBookings(result.data ?? []);
+        setPaginations(result.meta);
+      }
 
-    setIsLoading(false);
-  };
+      setIsLoading(false);
+    };
 
-  load();
-}, [page]);
+    load();
+  }, [page]);
 
   const counts = useMemo(() => {
     return {
@@ -232,11 +231,10 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
               <button
                 key={s}
                 onClick={() => setActiveFilter(s)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                  activeFilter === s
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === s
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
               </button>
@@ -353,9 +351,8 @@ const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
                           className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border ${status.pill}`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.dot} ${
-                              status.pulse ? "animate-pulse" : ""
-                            }`}
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.dot} ${status.pulse ? "animate-pulse" : ""
+                              }`}
                           />
                           {status.label}
                         </span>

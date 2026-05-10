@@ -23,8 +23,6 @@ import { register } from "@/services/auth.service";
 import { getCategories, Category } from "@/services/category.service";
 import { Separator } from "@/components/ui/separator";
 
-// ─── Schema ───────────────────────────────────────────────────────────────────
-
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -72,14 +70,11 @@ const sharedInputClass =
 const sharedSelectClass =
   "h-11 w-full rounded-xl border border-border bg-muted/30 px-3 text-sm text-foreground outline-none transition-all";
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export function SignUpForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
 
-  // Fetch categories once on mount
   React.useEffect(() => {
     getCategories({ limit: 100 }).then((res) => {
       if (!res.error && res.data) {
@@ -87,16 +82,6 @@ export function SignUpForm() {
       }
     });
   }, []);
-
-  // const form = useForm<z.infer<typeof formSchema>>({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues: {
-  //   name: "",
-  //   email: "",
-  //   password: "",
-  //   role: "STUDENT",
-  // }
-  // });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -106,12 +91,11 @@ export function SignUpForm() {
       password: "",
       role: "STUDENT",
       gender: undefined,
-      // Student fields
       dateOfBirth: "",
       address: "",
       class: "",
       group: "",
-      // Tutor fields
+
       bio: "",
       hourlyRate: "",
       experience: "",
@@ -211,8 +195,6 @@ export function SignUpForm() {
 
         <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-
-            {/* ── Role (show first so fields below update) ── */}
             <Controller
               name="role"
               control={form.control}
@@ -238,7 +220,6 @@ export function SignUpForm() {
 
             <Separator className="mb-6" />
 
-            {/* ── Name ── */}
             <Controller
               name="name"
               control={form.control}
@@ -261,7 +242,6 @@ export function SignUpForm() {
               )}
             />
 
-            {/* ── Email ── */}
             <Controller
               name="email"
               control={form.control}
@@ -285,7 +265,6 @@ export function SignUpForm() {
               )}
             />
 
-            {/* ── Password ── */}
             <Controller
               name="password"
               control={form.control}
@@ -319,7 +298,6 @@ export function SignUpForm() {
               )}
             />
 
-            {/* ── Gender (both roles) ── */}
             <Controller
               name="gender"
               control={form.control}
@@ -345,10 +323,8 @@ export function SignUpForm() {
               )}
             />
 
-            {/* ════════ TUTOR FIELDS ════════ */}
             {role === "TUTOR" && (
               <>
-                {/* Category */}
                 <Controller
                   name={"categoryId" as any}
                   control={form.control}
@@ -374,7 +350,6 @@ export function SignUpForm() {
                   )}
                 />
 
-                {/* Bio */}
                 <Controller
                   name={"bio" as any}
                   control={form.control}
@@ -397,7 +372,6 @@ export function SignUpForm() {
                   )}
                 />
 
-                {/* Hourly Rate + Experience (side by side) */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <Controller
                     name={"hourlyRate" as any}
@@ -447,7 +421,6 @@ export function SignUpForm() {
                   />
                 </div>
 
-                {/* Available From + Available To */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <Controller
                     name={"availableFrom" as any}
@@ -494,10 +467,8 @@ export function SignUpForm() {
               </>
             )}
 
-            {/* ════════ STUDENT FIELDS ════════ */}
             {role === "STUDENT" && (
               <>
-                {/* Date of Birth */}
                 <Controller
                   name={"dateOfBirth" as any}
                   control={form.control}
@@ -519,7 +490,6 @@ export function SignUpForm() {
                   )}
                 />
 
-                {/* Class + Group */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <Controller
                     name={"class" as any}
@@ -568,7 +538,6 @@ export function SignUpForm() {
                   />
                 </div>
 
-                {/* Address */}
                 <Controller
                   name={"address" as any}
                   control={form.control}

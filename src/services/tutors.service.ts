@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 export type userStatus = "ACTIVE" | "BANNED" | "PENDING";
 
 export interface Category {
@@ -33,11 +32,11 @@ export interface TutorProfile {
   experience: number;
   education: string;
   availability: boolean;
-  availableFrom:string;
-  availableTo:string;
-  averageRating: number | null;  
+  availableFrom: string;
+  availableTo: string;
+  averageRating: number | null;
   totalBookings: number;
-  totalReview: number;    
+  totalReview: number;
   isDeleted: boolean;
   deletedAt: string | null;
   createdAt: string;
@@ -58,7 +57,7 @@ export interface TutorProfile {
 export interface TutorStats {
   totalTutors: number;
   totalBookings: number;
-  totalStudents:number;
+  totalStudents: number;
   totalCategories: number;
 }
 
@@ -103,9 +102,6 @@ function buildQueryString(filters: TutorFilters): string {
   return qs ? `?${qs}` : "";
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// GET /api/v1/tutors
 export async function getTutors(
   filters: TutorFilters = {}
 ): Promise<PaginatedResponse<TutorProfile[]>> {
@@ -125,10 +121,10 @@ export async function getTutors(
     }
 
     return {
-  data: json?.data?.data ?? [],   
-  meta: json?.data?.meta ?? null,
-  error: null,
-};
+      data: json?.data?.data ?? [],
+      meta: json?.data?.meta ?? null,
+      error: null,
+    };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
     console.error("[getTutors]", message);
@@ -136,13 +132,12 @@ export async function getTutors(
   }
 }
 
-// GET /api/v1/tutors/stats
 export async function getTutorStats(): Promise<ServiceResponse<TutorStats>> {
   try {
     const result = await fetch(`${API}/api/v1/tutors/stats`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 60 }, // 1 minute cache — stats don't change that often
+      next: { revalidate: 60 },
     });
 
     const json = await result.json();
@@ -159,7 +154,6 @@ export async function getTutorStats(): Promise<ServiceResponse<TutorStats>> {
   }
 }
 
-// GET /api/v1/tutors/profile  (TUTOR only)
 export async function getMyTutorProfile(): Promise<ServiceResponse<TutorProfile>> {
   try {
     const accessToken = await getAccessToken();
@@ -187,34 +181,6 @@ export async function getMyTutorProfile(): Promise<ServiceResponse<TutorProfile>
   }
 }
 
-// GET /api/v1/tutors/deleted  (ADMIN only)
-// export async function getDeletedTutors(): Promise<ServiceResponse<TutorProfile[]>> {
-//   try {
-//     const accessToken = await getAccessToken();
-
-//     const result = await fetch(`${API}/api/v1/tutors/deleted`, {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       cache: "no-store",
-//     });
-
-//     const json = await result.json();
-
-//     if (!result.ok) {
-//       return { data: null, error: json?.message ?? "Failed to fetch deleted tutors" };
-//     }
-
-//     return { data: json?.data ?? [], error: null };
-//   } catch (err: unknown) {
-//     const message = err instanceof Error ? err.message : "Something went wrong";
-//     console.error("[getDeletedTutors]", message);
-//     return { data: null, error: message };
-//   }
-// }
-
 export async function getDeletedTutors(): Promise<PaginatedResponse<TutorProfile[]>> {
   try {
     const accessToken = await getAccessToken();
@@ -235,7 +201,7 @@ export async function getDeletedTutors(): Promise<PaginatedResponse<TutorProfile
     }
 
     return {
-      data: json?.data ?? [],  
+      data: json?.data ?? [],
       meta: {
         page: 1,
         limit: 10,
@@ -249,7 +215,6 @@ export async function getDeletedTutors(): Promise<PaginatedResponse<TutorProfile
   }
 }
 
-// GET /api/v1/tutors/:id
 export async function getTutorById(
   tutorId: string
 ): Promise<ServiceResponse<TutorProfile>> {
@@ -274,7 +239,6 @@ export async function getTutorById(
   }
 }
 
-// PATCH /api/v1/tutors/:id  (TUTOR only)
 export async function updateTutor(
   tutorId: string,
   payload: UpdateTutorPayload
@@ -305,7 +269,6 @@ export async function updateTutor(
   }
 }
 
-// PATCH /api/v1/tutors/update-status/:id  (ADMIN only)
 export async function updateTutorStatus(
   tutorId: string,
   status: userStatus
@@ -336,7 +299,6 @@ export async function updateTutorStatus(
   }
 }
 
-// PATCH /api/v1/tutors/restore/:id  (ADMIN only)
 export async function restoreTutor(
   tutorId: string
 ): Promise<ServiceResponse<TutorProfile>> {
@@ -365,7 +327,6 @@ export async function restoreTutor(
   }
 }
 
-// DELETE /api/v1/tutors/:id  (ADMIN only)
 export async function deleteTutor(
   tutorId: string
 ): Promise<ServiceResponse<null>> {

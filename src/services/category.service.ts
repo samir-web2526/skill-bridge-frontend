@@ -4,8 +4,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export interface Category {
   id: string;
   name: string;
@@ -48,8 +46,6 @@ export interface CategoryFilters {
   sortOrder?: "asc" | "desc";
 }
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
 async function getAccessToken(): Promise<string> {
   const cookieStore = cookies();
   return (await cookieStore).get("accessToken")?.value ?? "";
@@ -66,9 +62,6 @@ function buildQueryString(filters: CategoryFilters): string {
   return qs ? `?${qs}` : "";
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// POST /api/v1/categories  (ADMIN only)
 export async function createCategory(
   payload: CreateCategoryPayload
 ): Promise<ServiceResponse<Category>> {
@@ -98,7 +91,6 @@ export async function createCategory(
   }
 }
 
-// GET /api/v1/categories  (Public)
 export async function getCategories(
   filters: CategoryFilters = {}
 ): Promise<PaginatedResponse<Category[]>> {
@@ -133,7 +125,6 @@ export async function getCategories(
   }
 }
 
-// GET /api/v1/categories/:categoryId  (Public)
 export async function getCategoryById(
   categoryId: string
 ): Promise<ServiceResponse<Category>> {
@@ -158,7 +149,6 @@ export async function getCategoryById(
   }
 }
 
-// PATCH /api/v1/categories/:categoryId  (ADMIN only)
 export async function updateCategory(
   categoryId: string,
   payload: UpdateCategoryPayload
@@ -189,7 +179,6 @@ export async function updateCategory(
   }
 }
 
-// DELETE /api/v1/categories/:categoryId  (ADMIN only)
 export async function deleteCategory(
   categoryId: string
 ): Promise<ServiceResponse<null>> {

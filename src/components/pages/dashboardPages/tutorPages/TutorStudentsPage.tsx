@@ -4,7 +4,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Search, Inbox } from "lucide-react";
 import { getStudents, StudentProfile } from "@/services/student.service";
 
-// ── Avatar initials helper ────────────────────────────────────────────────────
 function getInitials(name: string) {
   return name
     .split(" ")
@@ -14,7 +13,6 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-// ── Deterministic avatar gradient from name ───────────────────────────────────
 const gradients = [
   "from-emerald-400 to-teal-600",
   "from-rose-400 to-pink-600",
@@ -32,7 +30,6 @@ function avatarGradient(name: string) {
   return gradients[idx];
 }
 
-// ── Status badge ──────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
   const isActive = status?.toLowerCase() === "active";
   return (
@@ -51,7 +48,6 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ── Info chip ─────────────────────────────────────────────────────────────────
 function Chip({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-1.5 bg-muted border border-border rounded-lg px-3 py-1.5 text-xs text-muted-foreground">
@@ -61,26 +57,22 @@ function Chip({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
-// ── Single Student Card ───────────────────────────────────────────────────────
 function StudentCard({ student }: { student: StudentProfile }) {
   const gradient = avatarGradient(student.user.name ?? "?");
   const initials = getInitials(student.user.name ?? "?");
 
   return (
     <div className="group relative bg-card rounded-2xl border border-border shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-      {/* Top accent bar — primary */}
       <div className="h-1 w-full bg-primary" />
 
       <div className="p-5">
         <div className="flex items-start gap-4">
-          {/* Avatar */}
           <div
             className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
           >
             {initials}
           </div>
 
-          {/* Name + email */}
           <div className="flex-1 min-w-0">
             <h2 className="font-bold text-foreground text-base leading-tight truncate">
               {student.user.name}
@@ -97,7 +89,6 @@ function StudentCard({ student }: { student: StudentProfile }) {
           <StatusBadge status={student.user.status} />
         </div>
 
-        {/* Chips */}
         {(student.class || student.group || student.address) && (
           <div className="mt-4 pt-4 border-t border-border flex flex-wrap gap-2">
             {student.class && (
@@ -142,7 +133,6 @@ function StudentCard({ student }: { student: StudentProfile }) {
   );
 }
 
-// ── Loading skeleton ──────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
     <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden animate-pulse">
@@ -159,7 +149,6 @@ function SkeletonCard() {
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function TutorStudentsPage() {
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -195,7 +184,6 @@ export default function TutorStudentsPage() {
 
   return (
     <div className="min-h-screen bg-background p-6 md:p-10">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="mb-20">
           <h1 className="text-2xl font-extrabold text-foreground tracking-tight">
@@ -220,7 +208,6 @@ export default function TutorStudentsPage() {
         </div>
       </div>
 
-      {/* Loading */}
       {loading && (
         <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -229,7 +216,6 @@ export default function TutorStudentsPage() {
         </div>
       )}
 
-      {/* Error */}
       {!loading && error && (
         <div className="flex items-center gap-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-2xl px-5 py-4 text-sm font-medium">
           <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -241,7 +227,6 @@ export default function TutorStudentsPage() {
         </div>
       )}
 
-      {/* Empty */}
       {!loading && !error && students.length === 0 && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <svg className="w-14 h-14 mb-4 text-muted-foreground opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -257,7 +242,6 @@ export default function TutorStudentsPage() {
         </div>
       )}
 
-      {/* Grid */}
       {!loading && !error && students.length > 0 && (
         <>
           {filtered.length === 0 ? (

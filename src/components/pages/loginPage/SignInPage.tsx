@@ -115,7 +115,6 @@ export function SignInForm() {
           Sign in to continue your learning journey
         </p>
 
-        {/* Demo Credentials */}
         <div className="mb-6">
           <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
             Quick demo access

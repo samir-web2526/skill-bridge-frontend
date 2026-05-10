@@ -247,11 +247,10 @@ export default function TutorReviewPage() {
               <button
                 key={f.value}
                 onClick={() => setActiveFilter(f.value)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                  activeFilter === f.value
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === f.value
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {f.label}
               </button>

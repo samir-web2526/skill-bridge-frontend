@@ -39,11 +39,10 @@ function InitialAvatar({
       .slice(0, 2) ?? "?";
   return (
     <div
-      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
-        variant === "primary"
+      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${variant === "primary"
           ? "bg-primary text-primary-foreground"
           : "bg-muted text-muted-foreground"
-      }`}
+        }`}
     >
       {initials}
     </div>
@@ -330,11 +329,10 @@ export default function AdminReviewsPage() {
               <button
                 key={f.value}
                 onClick={() => setActiveFilter(f.value)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                  activeFilter === f.value
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === f.value
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {f.label}
               </button>

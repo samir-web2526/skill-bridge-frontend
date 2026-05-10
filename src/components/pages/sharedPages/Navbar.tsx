@@ -102,7 +102,7 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
       )}
     >
       <div className="container mx-auto px-4">
-        {/* ── DESKTOP ── */}
+
         <nav className="hidden lg:flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -185,7 +185,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
           </div>
         </nav>
 
-        {/* ── MOBILE ── */}
         <div className="flex lg:hidden items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
@@ -297,7 +296,6 @@ const Navbar = ({ className, user, menu = defaultMenu }: NavbarProps) => {
   );
 };
 
-/* ── DESKTOP MENU ITEM ── */
 const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
@@ -327,7 +325,6 @@ const renderMenuItem = (item: MenuItem) => {
   );
 };
 
-/* ── MOBILE MENU ITEM ── */
 const renderMobileMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
@@ -354,7 +351,6 @@ const renderMobileMenuItem = (item: MenuItem) => {
   );
 };
 
-/* ── SUBMENU LINK ── */
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <Link

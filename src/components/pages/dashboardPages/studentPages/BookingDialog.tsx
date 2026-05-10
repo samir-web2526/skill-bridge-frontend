@@ -173,7 +173,7 @@ export function BookingDialog({
         </DialogHeader>
 
         <div className="px-6 py-5 space-y-4">
-          {/* Cancel confirmation */}
+
           {!isCreate && (
             <p className="text-sm text-zinc-600">
               Are you sure you want to cancel your booking with{" "}
@@ -182,7 +182,6 @@ export function BookingDialog({
             </p>
           )}
 
-          {/* Tutor list */}
           {isCreate && (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {tutors.map((t) => (
@@ -195,11 +194,10 @@ export function BookingDialog({
                     setDate("");
                     setLocalError(null);
                   }}
-                  className={`p-2 border rounded cursor-pointer transition-colors ${
-                    selectedTutorId === t.id
+                  className={`p-2 border rounded cursor-pointer transition-colors ${selectedTutorId === t.id
                       ? "bg-emerald-50 border-emerald-400"
                       : "hover:bg-zinc-50"
-                  }`}
+                    }`}
                 >
                   <span>{t.user?.name}</span>
                   {selectedTutorId === t.id && (
@@ -212,7 +210,6 @@ export function BookingDialog({
             </div>
           )}
 
-          {/* Date */}
           {isCreate && selectedTutor && (
             <div className="space-y-1">
               <label className="text-xs text-muted-foreground">Select Date</label>
@@ -221,9 +218,8 @@ export function BookingDialog({
                 value={date}
                 min={todayStr()}
                 onChange={(e) => handleDateChange(e.target.value)}
-                className={`border p-2 w-full rounded ${
-                  isDateAlreadyBooked ? "border-red-400 bg-red-50" : ""
-                }`}
+                className={`border p-2 w-full rounded ${isDateAlreadyBooked ? "border-red-400 bg-red-50" : ""
+                  }`}
               />
               {isDateAlreadyBooked && (
                 <p className="text-xs text-red-500">
@@ -233,7 +229,6 @@ export function BookingDialog({
             </div>
           )}
 
-          {/* Time — শুধু valid date থাকলে দেখাবে */}
           {isCreate && selectedTutor && date && !isDateAlreadyBooked && (
             <div className="space-y-1">
               <label className="text-xs text-muted-foreground">
@@ -261,7 +256,6 @@ export function BookingDialog({
             </div>
           )}
 
-          {/* Error */}
           {(localError || error) && (
             <p className="text-red-500 text-sm">
               {localError || error?.message}
@@ -269,7 +263,6 @@ export function BookingDialog({
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end gap-2 p-4 border-t">
           <Button variant="ghost" onClick={handleClose} disabled={isSubmitting}>
             Close
@@ -285,8 +278,8 @@ export function BookingDialog({
             {isSubmitting
               ? "Please wait..."
               : isCreate
-              ? "Confirm Booking"
-              : "Yes, Cancel"}
+                ? "Confirm Booking"
+                : "Yes, Cancel"}
           </Button>
         </div>
       </DialogContent>

@@ -13,21 +13,21 @@ export default function AllReviewPage() {
   const { page, handlePageChange } = usePagination();
 
   useEffect(() => {
-  const load = async () => {
-    setIsLoading(true);
+    const load = async () => {
+      setIsLoading(true);
 
-    const result = await getAllReviews(page, 9);
+      const result = await getAllReviews(page, 9);
 
-    if (result.data) {
-      setReviews(result.data.data);     
-      setPaginations(result.data.meta);
-    }
+      if (result.data) {
+        setReviews(result.data.data);
+        setPaginations(result.data.meta);
+      }
 
-    setIsLoading(false);
-  };
+      setIsLoading(false);
+    };
 
-  load();
-}, [page]);
+    load();
+  }, [page]);
 
   return (
     <div className="min-h-screen bg-background">

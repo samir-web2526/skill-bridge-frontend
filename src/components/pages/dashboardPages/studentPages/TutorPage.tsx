@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -21,10 +20,8 @@ import { usePagination } from "@/hooks/usePagination";
 import { toast } from "sonner";
 import { createBooking } from "@/services/booking.service";
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
 function StarRating({ rating, count }: { rating: number | null; count?: number }) {
-  // null/undefined/0 হলে "No rating" দেখাও
+
   if (!rating || rating === 0) {
     return (
       <div>
@@ -114,8 +111,6 @@ function StatCard({
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-
 export default function StudentTutorPage() {
   const [tutors, setTutors] = useState<any[]>([]);
   const [paginations, setPaginations] = useState<PaginationMeta | null>(null);
@@ -132,8 +127,6 @@ export default function StudentTutorPage() {
 
   const { page, handlePageChange } = usePagination();
 
-  // ── Fetch — REST call directly, "use server" action কে client useEffect থেকে
-  //    call না করে সরাসরি API hit করা safe ──
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
@@ -142,7 +135,7 @@ export default function StudentTutorPage() {
         const params = new URLSearchParams();
         params.append("page", String(page));
         params.append("limit", "10");
-        params.append("isAvailable", "true"); // backend field name
+        params.append("isAvailable", "true");
 
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API}/api/v1/tutors?${params.toString()}`,
@@ -166,7 +159,6 @@ export default function StudentTutorPage() {
     load();
   }, [page]);
 
-  // ── Stats — hourlyRate Decimal string থেকে number-এ convert করো ──
   const stats = useMemo(() => {
     const total = paginations?.total ?? tutors.length;
     const rated = tutors.filter((t) => t.averageRating && t.averageRating > 0);
@@ -177,9 +169,9 @@ export default function StudentTutorPage() {
     const avgRate =
       tutors.length > 0
         ? Math.round(
-            tutors.reduce((s, t) => s + Number(t.hourlyRate ?? 0), 0) /
-              tutors.length
-          )
+          tutors.reduce((s, t) => s + Number(t.hourlyRate ?? 0), 0) /
+          tutors.length
+        )
         : 0;
     return { total, avgRating, avgRate };
   }, [tutors, paginations]);
@@ -214,23 +206,23 @@ export default function StudentTutorPage() {
   };
 
   const handleBookingSubmit = async (data?: {
-  tutorId: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-}) => {
-  if (!data) return;
-  setIsBookingSubmitting(true);
-  const result = await createBooking(data);
-  if (result?.error) {
-    toast.error(result.error);
-  } else {
-    toast.success("Booking created!");
-    setBookingDialogOpen(false);
-    setSelectedTutorId("");
-  }
-  setIsBookingSubmitting(false);
-};
+    tutorId: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+  }) => {
+    if (!data) return;
+    setIsBookingSubmitting(true);
+    const result = await createBooking(data);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Booking created!");
+      setBookingDialogOpen(false);
+      setSelectedTutorId("");
+    }
+    setIsBookingSubmitting(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -259,7 +251,6 @@ export default function StudentTutorPage() {
           </div>
         )}
 
-        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard
             label="Available tutors"
@@ -280,7 +271,6 @@ export default function StudentTutorPage() {
           />
         </div>
 
-        {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative">
             <Search
@@ -300,11 +290,10 @@ export default function StudentTutorPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                  activeCategory === cat
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeCategory === cat
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-card text-muted-foreground border-border hover:border-zinc-300 hover:text-zinc-700"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -312,7 +301,6 @@ export default function StudentTutorPage() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
@@ -321,9 +309,8 @@ export default function StudentTutorPage() {
                   (h, i) => (
                     <TableHead
                       key={i}
-                      className={`text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 ${
-                        i === 0 ? "pl-6" : ""
-                      } ${i === 5 ? "text-right pr-6" : ""}`}
+                      className={`text-[11px] font-bold tracking-widest text-muted-foreground uppercase py-3 ${i === 0 ? "pl-6" : ""
+                        } ${i === 5 ? "text-right pr-6" : ""}`}
                     >
                       {h}
                     </TableHead>
@@ -378,9 +365,8 @@ export default function StudentTutorPage() {
                   return (
                     <TableRow
                       key={tutor.id}
-                      className={`hover:bg-muted/50 transition-colors ${
-                        idx % 2 === 1 ? "bg-muted/20" : ""
-                      }`}
+                      className={`hover:bg-muted/50 transition-colors ${idx % 2 === 1 ? "bg-muted/20" : ""
+                        }`}
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">

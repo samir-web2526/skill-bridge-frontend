@@ -69,16 +69,14 @@ export function TutorProfileDialog({ open, tutor, onClose, onBook }: Props) {
                 {tutor.user?.email}
               </p>
               <span
-                className={`mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                  isAvailable
+                className={`mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${isAvailable
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                     : "bg-zinc-100 text-muted-foreground border-border"
-                }`}
+                  }`}
               >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                    isAvailable ? "bg-emerald-500 animate-pulse" : "bg-zinc-400"
-                  }`}
+                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${isAvailable ? "bg-emerald-500 animate-pulse" : "bg-zinc-400"
+                    }`}
                 />
                 {isAvailable ? "Available" : "Unavailable"}
               </span>

@@ -129,7 +129,6 @@ export function TutorFilter({
         </div>
       </div>
 
-      {/* Sort Section */}
       <div className="px-4.5 py-3.5 flex flex-col gap-2.5 border-b border-border">
         <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.07em]">
           Sort By
@@ -141,11 +140,10 @@ export function TutorFilter({
               <button
                 key={opt.label}
                 onClick={() => onChange({ ...filters, sortBy: opt.value, sortOrder: opt.order as any })}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
-                  isActive
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
                     : "bg-transparent text-muted-foreground border-border hover:border-primary/50"
-                }`}
+                  }`}
               >
                 {opt.label}
               </button>
@@ -165,11 +163,10 @@ export function TutorFilter({
               <button
                 key={c}
                 onClick={() => onChange({ ...filters, category: c })}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
-                  isActive
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
                     : "bg-transparent text-muted-foreground border-border hover:border-primary/50"
-                }`}
+                  }`}
               >
                 {c}
               </button>
@@ -228,11 +225,10 @@ export function TutorFilter({
               <button
                 key={r.label}
                 onClick={() => onChange({ ...filters, minRating: r.value })}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
-                  isActive
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
                     : "bg-transparent text-muted-foreground border-border hover:border-primary/50"
-                }`}
+                  }`}
               >
                 {r.label}
               </button>

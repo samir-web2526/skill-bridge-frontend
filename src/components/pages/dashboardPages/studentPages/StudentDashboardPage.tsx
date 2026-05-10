@@ -20,8 +20,6 @@ import { getMyGivenReviews, Review } from "@/services/review.service";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-// ── Types ──────────────────────────────────────────────────────────────────────
-
 type Booking = {
   id: string;
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
@@ -38,9 +36,6 @@ type Booking = {
     user?: { name: string; email: string };
   };
 };
-
-
-// ── Helper components ──────────────────────────────────────────────────────────
 
 function TutorAvatar({
   name,
@@ -137,7 +132,6 @@ function SectionHeader({
   );
 }
 
-// Status config
 const STATUS_CONFIG = {
   PENDING: {
     label: "Pending",
@@ -302,8 +296,6 @@ function StatusDonut({
   );
 }
 
-// ── Main Dashboard ─────────────────────────────────────────────────────────────
-
 export default function StudentDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -335,8 +327,6 @@ export default function StudentDashboard() {
     load();
   }, []);
 
-  // ── Derived stats ────────────────────────────────────────────────────────────
-
   const stats = useMemo(() => {
     const completed = bookings.filter((b) => b.status === "COMPLETED").length;
     const confirmed = bookings.filter((b) => b.status === "CONFIRMED").length;
@@ -352,7 +342,6 @@ export default function StudentDashboard() {
         ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
         : 0;
 
-    // Monthly bookings (last 6 months)
     const now = new Date();
     const monthlyData = Array.from({ length: 6 }, (_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
@@ -367,7 +356,6 @@ export default function StudentDashboard() {
       return { label, value: count };
     });
 
-    // Monthly spending (last 6 months)
     const monthlySpend = Array.from({ length: 6 }, (_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
       return bookings
@@ -382,7 +370,6 @@ export default function StudentDashboard() {
         .reduce((s, b) => s + Number(b.tutor?.hourlyRate ?? 0), 0);
     });
 
-    // Category breakdown
     const catMap: Record<string, number> = {};
     bookings.forEach((b) => {
       const cat = b.tutor?.category?.name ?? "Other";
@@ -392,7 +379,6 @@ export default function StudentDashboard() {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5);
 
-    // Recent bookings (latest 5)
     const recent = [...bookings]
       .sort(
         (a, b) =>
@@ -415,8 +401,6 @@ export default function StudentDashboard() {
     };
   }, [bookings, reviews]);
 
-  // ── Loading skeleton ─────────────────────────────────────────────────────────
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -431,8 +415,6 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-6 pt-10 pb-12 space-y-6">
-
-        {/* ── Page header ── */}
         <div>
           <p className="text-[11px] font-bold tracking-widest text-primary uppercase mb-1">
             My Learning
@@ -445,7 +427,6 @@ export default function StudentDashboard() {
           </p>
         </div>
 
-        {/* ── Error ── */}
         {error && (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
@@ -453,7 +434,6 @@ export default function StudentDashboard() {
           </div>
         )}
 
-        {/* ── Stat cards ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <StatCard
             label="Total bookings"
@@ -483,10 +463,8 @@ export default function StudentDashboard() {
           />
         </div>
 
-        {/* ── Row: Donut + Monthly bookings bar ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Status donut */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Booking status" />
             <StatusDonut
@@ -497,7 +475,6 @@ export default function StudentDashboard() {
             />
           </div>
 
-          {/* Monthly bookings bar */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Bookings — last 6 months" />
             {bookings.length === 0 ? (
@@ -508,10 +485,8 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* ── Row: Spending sparkline + Category breakdown ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Spending sparkline */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Spending trend — last 6 months" />
             {stats.totalSpend === 0 ? (
@@ -527,7 +502,6 @@ export default function StudentDashboard() {
             )}
           </div>
 
-          {/* Category breakdown */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Sessions by subject" />
             {stats.categories.length === 0 ? (
@@ -556,10 +530,8 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* ── Row: Recent bookings + Reviews ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Recent bookings */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader onAction={() => router.push("/dashboard/bookings")} title="Recent bookings" action="View all" />
             {stats.recent.length === 0 ? (
@@ -624,7 +596,6 @@ export default function StudentDashboard() {
             )}
           </div>
 
-          {/* Reviews */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader onAction={() => router.push("/dashboard/reviews")} title="My reviews" action="View all" />
             {reviews.length === 0 ? (
@@ -637,7 +608,6 @@ export default function StudentDashboard() {
               </div>
             ) : (
               <div className="space-y-3">
-                {/* Avg rating summary */}
                 {stats.avgRating > 0 && (
                   <div className="flex items-center gap-3 pb-3 border-b border-border">
                     <p className="text-3xl font-extrabold text-amber-500">
@@ -678,7 +648,6 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* ── Quick actions ── */}
         <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
           <SectionHeader title="Quick actions" />
 

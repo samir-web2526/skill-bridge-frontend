@@ -4,8 +4,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
 export type PaymentMethod = "STRIPE" | "CASH";
 
@@ -73,9 +71,6 @@ function buildQueryString(filters: PaymentFilters): string {
   return qs ? `?${qs}` : "";
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// POST /api/v1/payments/init  (STUDENT only)
 export async function initializePayment(
   bookingId: string
 ): Promise<ServiceResponse<InitPaymentResponse>> {
@@ -105,7 +100,6 @@ export async function initializePayment(
   }
 }
 
-// GET /api/v1/payments/  (ADMIN only)
 export async function getAllPayments(
   filters: PaymentFilters = {}
 ): Promise<PaginatedResponse<Payment[]>> {
@@ -140,7 +134,6 @@ export async function getAllPayments(
   }
 }
 
-// GET /api/v1/payments/:bookingId  (STUDENT, TUTOR, ADMIN)
 export async function getPaymentByBookingId(
   bookingId: string
 ): Promise<ServiceResponse<Payment>> {

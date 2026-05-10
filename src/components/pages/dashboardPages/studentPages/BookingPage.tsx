@@ -115,7 +115,6 @@ export default function StudentBookingPage() {
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
 
-  // Booking dialog
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [bookingDialogMode, setBookingDialogMode] = useState<"create" | "cancel">("create");
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
@@ -125,12 +124,10 @@ export default function StudentBookingPage() {
   const [bookingError, setBookingError] = useState<BookingError | null>(null);
   const [existingBookingDates, setExistingBookingDates] = useState<string[]>([]);
 
-  // Payment modal
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paymentTarget, setPaymentTarget] = useState<any | null>(null);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
-  // Review dialog
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewTarget, setReviewTarget] = useState<any | null>(null);
   const [reviewRating, setReviewRating] = useState(5);
@@ -141,7 +138,6 @@ export default function StudentBookingPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const { page, handlePageChange } = usePagination();
 
-  // ── Bookings fetch ──
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
@@ -162,7 +158,6 @@ export default function StudentBookingPage() {
     };
     load();
   }, [page, refresh, search]);
-
 
   const stats = useMemo(
     () => ({
@@ -188,7 +183,6 @@ export default function StudentBookingPage() {
     });
   }, [bookings, activeFilter, search]);
 
-  // ── Booking handlers ──
   const openCreateDialog = async () => {
     const result = await getTutors({ limit: 15 });
     setTutors(result.data ?? []);
@@ -253,7 +247,6 @@ export default function StudentBookingPage() {
     setIsBookingSubmitting(false);
   };
 
-  // ── Payment handlers ──
   const openPaymentModal = (booking: any) => {
     setPaymentTarget(booking);
     setPaymentModalOpen(true);
@@ -271,7 +264,6 @@ export default function StudentBookingPage() {
     setIsPaymentLoading(false);
   };
 
-  // ── Review handlers ──
   const openReviewDialog = (booking: any) => {
     setReviewTarget(booking);
     setReviewRating(5);
@@ -300,7 +292,6 @@ export default function StudentBookingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* ── Header ── */}
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-2">
         <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           My Learning
@@ -356,8 +347,8 @@ export default function StudentBookingPage() {
                 key={s}
                 onClick={() => setActiveFilter(s)}
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === s
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
                   }`}
               >
                 {s === "All" ? "All" : (STATUS_CONFIG[s]?.label ?? s)}
@@ -366,7 +357,6 @@ export default function StudentBookingPage() {
           </div>
         </div>
 
-        {/* ── Table ── */}
         <div className="rounded-2xl border border-border bg-card overflow-x-auto shadow-sm">
           <Table>
             <TableHeader>
@@ -436,7 +426,6 @@ export default function StudentBookingPage() {
                     label: booking.status,
                   };
 
-                  // ── Action flags ──
                   const canCancel = booking.status === "PENDING" && booking.payment?.status !== "PAID";
                   const canPay = booking.status === "PENDING" && (!booking.payment || booking.payment.status !== "PAID");
                   const isPaid = booking.payment?.status === "PAID" || booking.status === "CONFIRMED";
@@ -449,7 +438,6 @@ export default function StudentBookingPage() {
                       key={booking.id}
                       className={`hover:bg-muted/30 transition-colors ${idx % 2 === 1 ? "bg-muted/5" : ""}`}
                     >
-                      {/* Tutor */}
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
                           <TutorAvatar name={booking.tutor?.user?.name ?? "?"} />
@@ -464,14 +452,12 @@ export default function StudentBookingPage() {
                         </div>
                       </TableCell>
 
-                      {/* Category */}
                       <TableCell className="py-4">
                         <span className="text-sm text-muted-foreground">
                           {booking.tutor?.category?.name ?? "—"}
                         </span>
                       </TableCell>
 
-                      {/* Rate */}
                       <TableCell className="py-4">
                         <span className="text-sm font-semibold text-primary">
                           {booking.tutor?.hourlyRate
@@ -480,7 +466,6 @@ export default function StudentBookingPage() {
                         </span>
                       </TableCell>
 
-                      {/* Status */}
                       <TableCell className="py-4">
                         <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border ${statusCfg.pill}`}>
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusCfg.dot} ${statusCfg.pulse ? "animate-pulse" : ""}`} />
@@ -488,7 +473,6 @@ export default function StudentBookingPage() {
                         </span>
                       </TableCell>
 
-                      {/* Date */}
                       <TableCell className="py-4">
                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                           <CalendarDays size={13} className="text-zinc-300 shrink-0" />
@@ -500,7 +484,6 @@ export default function StudentBookingPage() {
                         </div>
                       </TableCell>
 
-                      {/* Actions */}
                       <TableCell className="py-4 pr-6">
                         <div className="flex items-center justify-end gap-2">
                           {canCancel && (
@@ -572,7 +555,6 @@ export default function StudentBookingPage() {
         )}
       </div>
 
-      {/* ── Booking Dialog ── */}
       <BookingDialog
         open={bookingDialogOpen}
         mode={bookingDialogMode}
@@ -587,7 +569,6 @@ export default function StudentBookingPage() {
         existingBookingDates={existingBookingDates}
       />
 
-      {/* ── Review Dialog ── */}
       <ReviewDialog
         open={reviewDialogOpen}
         mode="create"
@@ -601,7 +582,6 @@ export default function StudentBookingPage() {
         onCommentChange={setReviewComment}
       />
 
-      {/* ── Payment Modal ── */}
       <Dialog open={paymentModalOpen} onOpenChange={() => setPaymentModalOpen(false)}>
         <DialogContent className="sm:max-w-sm p-0 gap-0 overflow-hidden rounded-2xl border">
           <DialogHeader className="px-6 pt-6 pb-0">

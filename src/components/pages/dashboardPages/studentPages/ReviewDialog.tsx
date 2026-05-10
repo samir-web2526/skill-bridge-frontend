@@ -226,11 +226,10 @@ export function ReviewDialog({
             />
             <div className="flex justify-end mt-1">
               <span
-                className={`text-[11px] font-medium tabular-nums ${
-                  commentLen > MAX_COMMENT * 0.9
+                className={`text-[11px] font-medium tabular-nums ${commentLen > MAX_COMMENT * 0.9
                     ? "text-amber-500"
                     : "text-muted-foreground/50"
-                }`}
+                  }`}
               >
                 {commentLen} / {MAX_COMMENT}
               </span>

@@ -53,9 +53,9 @@ export const formatTutor = (tutor: TutorProfile): FormattedTutor => ({
 
   category: tutor.category
     ? {
-        id: tutor.category.id,
-        name: tutor.category.name,
-      }
+      id: tutor.category.id,
+      name: tutor.category.name,
+    }
     : null,
 
   user: {
@@ -88,15 +88,14 @@ export function TutorCard({ tutor, onSelect }: Props) {
       className="group cursor-pointer border border-border hover:-translate-y-1.5 transition-all duration-300 h-full flex flex-col hover:shadow-lg"
     >
       <CardHeader className="p-0 relative h-32 shrink-0 rounded-t-xl">
-        {/* Banner */}
-        <div 
-          className="h-20 w-full rounded-t-xl overflow-hidden relative" 
+
+        <div
+          className="h-20 w-full rounded-t-xl overflow-hidden relative"
           style={{ backgroundColor: color.shadowHex || color.darkColor || "#10b981" }}
         >
           <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
         </div>
 
-        {/* Avatar */}
         <div className="absolute top-8 left-5 w-20 h-20 rounded-2xl border-4 border-card bg-muted overflow-hidden z-10 shadow-sm transition-transform duration-500 group-hover:-translate-y-1">
           <Image
             src={tutor.user.image || `https://i.pravatar.cc/256?u=${tutor.id}`}
@@ -106,21 +105,18 @@ export function TutorCard({ tutor, onSelect }: Props) {
           />
         </div>
 
-        {/* Availability Badge */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
           <span
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-md ${
-              isAvailable
+            className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-md ${isAvailable
                 ? "bg-primary text-primary-foreground"
                 : "bg-destructive text-destructive-foreground"
-            }`}
+              }`}
           >
             <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
             {isAvailable ? "Available" : "Unavailable"}
           </span>
         </div>
 
-        {/* Category Badge */}
         <div className="absolute top-24 right-4 z-20">
           <Badge className="bg-card text-foreground border border-border text-[10px] font-bold shadow-sm">
             {tutor?.category?.name}

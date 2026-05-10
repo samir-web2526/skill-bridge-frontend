@@ -16,7 +16,6 @@ import {
   userStatus,
 } from "@/services/tutors.service";
 
-// ── Avatar initials ───────────────────────────────────────────────────────────
 function getInitials(name: string = "") {
   return name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
 }
@@ -36,7 +35,6 @@ function avatarGradient(name: string = "") {
   return avatarColors[idx];
 }
 
-// ── Status badge ──────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: userStatus }) {
   const map: Record<userStatus, string> = {
     ACTIVE: "bg-primary/10 text-primary border-primary/20",
@@ -56,7 +54,6 @@ function StatusBadge({ status }: { status: userStatus }) {
   );
 }
 
-// ── Skeleton ──────────────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
     <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden animate-pulse">
@@ -73,7 +70,6 @@ function SkeletonCard() {
   );
 }
 
-// ── Tutor Card ────────────────────────────────────────────────────────────────
 function TutorCard({
   tutor,
   view,
@@ -94,16 +90,15 @@ function TutorCard({
 
   return (
     <div className="group bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
-      {/* accent bar */}
+
       <div className="h-1 w-full bg-primary" />
 
       <div className="p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-        {/* Avatar */}
+
         <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-md`}>
           {initials}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0 space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-bold text-foreground text-base leading-tight">
@@ -140,7 +135,6 @@ function TutorCard({
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-2 shrink-0">
           {view === "active" && (
             <>
@@ -180,7 +174,6 @@ function TutorCard({
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function ManageTutorPage() {
   const [tutors, setTutors] = useState<TutorProfile[]>([]);
   const [loading, setLoading] = useState(false);
@@ -244,7 +237,7 @@ export default function ManageTutorPage() {
 
   return (
     <div className="min-h-screen bg-background p-6 md:p-10">
-      {/* Header */}
+
       <div className="mb-8">
         <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
           Admin Panel
@@ -257,9 +250,8 @@ export default function ManageTutorPage() {
         </p>
       </div>
 
-      {/* Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        {/* View toggle */}
+
         <div className="flex gap-2 p-1 bg-muted rounded-xl w-fit">
           {(["active", "deleted"] as const).map((v) => (
             <button
@@ -275,7 +267,6 @@ export default function ManageTutorPage() {
           ))}
         </div>
 
-        {/* Search & Filters */}
         {view === "active" && (
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative">
@@ -300,11 +291,10 @@ export default function ManageTutorPage() {
                 <button
                   key={s}
                   onClick={() => setActiveFilter(s)}
-                  className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                    activeFilter === s
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${activeFilter === s
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-card text-muted-foreground border-border hover:border-foreground/20 hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   {s.charAt(0) + s.slice(1).toLowerCase()}
                 </button>
@@ -314,7 +304,6 @@ export default function ManageTutorPage() {
         )}
       </div>
 
-      {/* List */}
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -342,7 +331,6 @@ export default function ManageTutorPage() {
         </div>
       )}
 
-      {/* Pagination */}
       {view === "active" && totalPages > 1 && (
         <div className="flex justify-center items-center gap-3 mt-8">
           <Button

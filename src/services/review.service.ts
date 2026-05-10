@@ -5,8 +5,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export interface Review {
   id: string;
   rating: number;
@@ -15,21 +13,21 @@ export interface Review {
   tutorId: string;
   userId: string;
   createdAt: string;
-  user:{
-  id: string;
-  name: string;
-  email: string;
-  };
-  tutor?: {
-  id: string;
-  bio: string;
-  hourlyRate: number;
-  user?: {
+  user: {
     id: string;
     name: string;
     email: string;
   };
-};
+  tutor?: {
+    id: string;
+    bio: string;
+    hourlyRate: number;
+    user?: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
 }
 
 export interface ReviewResponse {
@@ -37,7 +35,7 @@ export interface ReviewResponse {
     page: number;
     limit: number;
     total: number;
-    totalPage:number
+    totalPage: number
   };
   data: Review[];
 }
@@ -45,7 +43,7 @@ export interface ReviewResponse {
 export interface CreateReviewPayload {
   bookingId: string;
   tutorId: string;
-  rating: number;      
+  rating: number;
   comment?: string;
 }
 
@@ -59,9 +57,6 @@ async function getAccessToken(): Promise<string> {
   return (await cookieStore).get("accessToken")?.value ?? "";
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// POST /api/v1/reviews  (STUDENT only)
 export async function createReview(
   payload: CreateReviewPayload
 ): Promise<ServiceResponse<Review>> {
@@ -126,7 +121,7 @@ export async function getAllReviews(
     return { data: null, error: err.message };
   }
 }
-// GET /api/v1/reviews/my-given-reviews  (STUDENT only)
+
 export async function getMyGivenReviews(
   page = 1
 ): Promise<ServiceResponse<ReviewResponse>> {
@@ -160,7 +155,6 @@ export async function getMyGivenReviews(
   }
 }
 
-// GET /api/v1/reviews/my-received-reviews  (TUTOR only)
 export async function getMyReceivedReviews(
   page = 1
 ): Promise<ServiceResponse<ReviewResponse>> {
@@ -194,7 +188,6 @@ export async function getMyReceivedReviews(
   }
 }
 
-// GET /api/v1/reviews/tutor/:tutorId  (Public)
 export async function getReviewsByTutorId(
   tutorId: string,
   page = 1
@@ -226,7 +219,6 @@ export async function getReviewsByTutorId(
   }
 }
 
-// GET /api/v1/reviews/:id  (Public)
 export async function getReviewById(
   reviewId: string
 ): Promise<ServiceResponse<Review>> {
@@ -251,7 +243,6 @@ export async function getReviewById(
   }
 }
 
-// PATCH /api/v1/reviews/:id  (STUDENT only)
 export async function updateReview(
   reviewId: string,
   payload: UpdateReviewPayload
@@ -282,7 +273,6 @@ export async function updateReview(
   }
 }
 
-// DELETE /api/v1/reviews/:id  (STUDENT, ADMIN)
 export async function deleteReview(
   reviewId: string
 ): Promise<ServiceResponse<null>> {

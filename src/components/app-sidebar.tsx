@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
-// ─── ADMIN NAV ───────────────────────────────────────────
 const ADMIN_NAV = [
   {
     title: "Overview",
@@ -33,13 +32,13 @@ const ADMIN_NAV = [
     isActive: true,
     items: [
       {
-        title:"Dashboard",
-        url:"/dashboard",
+        title: "Dashboard",
+        url: "/dashboard",
         icon: LayoutDashboard,
       },
       {
-        title:"All Tutors",
-        url:"/dashboard/all-tutors",
+        title: "All Tutors",
+        url: "/dashboard/all-tutors",
         icon: Search,
       },
       {
@@ -71,7 +70,6 @@ const ADMIN_NAV = [
   },
 ];
 
-// ─── STUDENT NAV ─────────────────────────────────────────
 const STUDENT_NAV = [
   {
     title: "Overview",
@@ -107,7 +105,7 @@ const STUDENT_NAV = [
     ],
   },
 ];
-// ─── TUTOR NAV ───────────────────────────────────────────
+
 const TUTOR_NAV = [
   {
     title: "Overview",
@@ -166,7 +164,7 @@ export function AppSidebar({
   }
   return (
     <Sidebar collapsible="icon" {...props}>
-      {/* ── Logo ── */}
+
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -187,12 +185,10 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
 
-      {/* ── Nav Items (role-based) ── */}
       <SidebarContent>
         <NavMain items={navItem} />
       </SidebarContent>
 
-      {/* ── User Info ── */}
       <SidebarFooter>
         <NavUser
           user={{

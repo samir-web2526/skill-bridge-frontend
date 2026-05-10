@@ -8,7 +8,6 @@ const Footer = () => {
     <footer className="bg-background text-muted-foreground border-t border-border">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand Section */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center shadow-sm">
@@ -37,7 +36,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h4 className="text-foreground font-bold mb-6">Platform</h4>
             <ul className="space-y-4 text-sm">
@@ -56,7 +54,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support */}
           <div>
             <h4 className="text-foreground font-bold mb-6">Support</h4>
             <ul className="space-y-4 text-sm">
@@ -75,7 +72,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div>
             <h4 className="text-foreground font-bold mb-6">Contact Us</h4>
             <ul className="space-y-4 text-sm">

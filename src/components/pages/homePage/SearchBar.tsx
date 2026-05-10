@@ -17,17 +17,17 @@ export default function SearchBar() {
     async function fetchPopular() {
       const result = await getCategories({ page: 1, limit: 20 });
 
-if (result.data) {
-  const sorted = [...result.data]
-    .sort(
-      (a, b) =>
-        (b.totalBookings ?? 0) - (a.totalBookings ?? 0)
-    )
-    .slice(0, 5)
-    .map((cat) => cat.name);
+      if (result.data) {
+        const sorted = [...result.data]
+          .sort(
+            (a, b) =>
+              (b.totalBookings ?? 0) - (a.totalBookings ?? 0)
+          )
+          .slice(0, 5)
+          .map((cat) => cat.name);
 
-  setPopularCategories(sorted);
-}
+        setPopularCategories(sorted);
+      }
     }
 
     fetchPopular();

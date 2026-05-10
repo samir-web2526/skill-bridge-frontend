@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 export type BookingStatus =
   | "PENDING"
   | "CONFIRMED"
@@ -57,9 +56,9 @@ export interface Booking {
 
 export interface CreateBookingPayload {
   tutorId: string;
-  date: string;       
-  startTime: string;   
-  endTime: string;    
+  date: string;
+  startTime: string;
+  endTime: string;
 }
 
 export interface UpdateBookingPayload {
@@ -90,9 +89,6 @@ function buildQueryString(filters: BookingFilters): string {
   return qs ? `?${qs}` : "";
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// POST /api/v1/bookings  (STUDENT only)
 export async function createBooking(
   payload: CreateBookingPayload
 ): Promise<ServiceResponse<Booking>> {
@@ -122,7 +118,6 @@ export async function createBooking(
   }
 }
 
-// GET /api/v1/bookings  (STUDENT, TUTOR, ADMIN)
 export async function getBookings(
   filters: BookingFilters = {}
 ): Promise<PaginatedResponse<Booking[]>> {
@@ -146,10 +141,10 @@ export async function getBookings(
     }
 
     return {
-  data: json?.data?.data ?? [],   // ← was json?.data
-  meta: json?.data?.meta ?? null, // ← was json?.meta
-  error: null,
-};
+      data: json?.data?.data ?? [],
+      meta: json?.data?.meta ?? null,
+      error: null,
+    };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Something went wrong";
     console.error("[getBookings]", message);
@@ -157,7 +152,6 @@ export async function getBookings(
   }
 }
 
-// GET /api/v1/bookings/:bookingId  (STUDENT, TUTOR, ADMIN)
 export async function getBookingById(
   bookingId: string
 ): Promise<ServiceResponse<Booking>> {
@@ -187,7 +181,6 @@ export async function getBookingById(
   }
 }
 
-// PATCH /api/v1/bookings/:bookingId/cancel  (STUDENT only)
 export async function cancelBooking(
   bookingId: string
 ): Promise<ServiceResponse<Booking>> {
@@ -216,7 +209,6 @@ export async function cancelBooking(
   }
 }
 
-// PATCH /api/v1/bookings/:bookingId/status  (TUTOR only)
 export async function updateBookingStatus(
   bookingId: string,
   payload: UpdateBookingPayload

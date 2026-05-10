@@ -149,7 +149,7 @@ export default function AdminCategoriesPage() {
 
   const handleDelete = async (categoryId: string) => {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
-    
+
     const result = await deleteCategory(categoryId);
     if (result?.error) {
       toast.error(result.error);
@@ -289,7 +289,7 @@ export default function AdminCategoriesPage() {
                     icon: Icon,
                     bg: bgColor,
                     text: color,
-                  } = getCategoryColor(category?.name ?? "default" );
+                  } = getCategoryColor(category?.name ?? "default");
                   return (
                     <TableRow
                       key={category.id}

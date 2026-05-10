@@ -19,8 +19,6 @@ import { getBookings } from "@/services/booking.service";
 import { getMyReceivedReviews, Review } from "@/services/review.service";
 import { getStudents, StudentProfile } from "@/services/student.service";
 
-// ── Types ───────────────────────────────────────────────────────────────────
-
 type Booking = {
   id: string;
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
@@ -34,8 +32,6 @@ type Booking = {
     user?: { name: string; email: string };
   };
 };
-
-// ── Helper components ───────────────────────────────────────────────────────
 
 function Avatar({
   name,
@@ -57,8 +53,8 @@ function Avatar({
   return (
     <div
       className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${variant === "primary"
-          ? "bg-primary/10 text-primary"
-          : "bg-muted text-muted-foreground"
+        ? "bg-primary/10 text-primary"
+        : "bg-muted text-muted-foreground"
         }`}
     >
       {initials}
@@ -137,8 +133,6 @@ function SectionHeader({
   );
 }
 
-// ── Status config ────────────────────────────────────────────────────────────
-
 const STATUS_CONFIG = {
   PENDING: {
     label: "Pending",
@@ -166,8 +160,6 @@ const STATUS_CONFIG = {
   },
 } as const;
 
-// ── Mini bar chart ───────────────────────────────────────────────────────────
-
 function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
   const max = Math.max(...data.map((d) => d.value), 1);
   return (
@@ -189,8 +181,6 @@ function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
     </div>
   );
 }
-
-// ── Earnings sparkline ───────────────────────────────────────────────────────
 
 function EarningsSparkline({ data }: { data: number[] }) {
   const max = Math.max(...data, 1);
@@ -220,8 +210,6 @@ function EarningsSparkline({ data }: { data: number[] }) {
     </svg>
   );
 }
-
-// ── Status donut ─────────────────────────────────────────────────────────────
 
 function StatusDonut({
   completed,
@@ -284,8 +272,6 @@ function StatusDonut({
   );
 }
 
-// ── Rating distribution bar ───────────────────────────────────────────────────
-
 function RatingBar({ star, count, total }: { star: number; count: number; total: number }) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   const color =
@@ -303,8 +289,6 @@ function RatingBar({ star, count, total }: { star: number; count: number; total:
     </div>
   );
 }
-
-// ── Main Tutor Dashboard ─────────────────────────────────────────────────────
 
 export default function TutorDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -343,14 +327,11 @@ export default function TutorDashboard() {
     load();
   }, []);
 
-  // ── Derived stats ──────────────────────────────────────────────────────────
-
   const stats = useMemo(() => {
     const completed = bookings.filter((b) => b.status === "COMPLETED").length;
     const confirmed = bookings.filter((b) => b.status === "CONFIRMED").length;
     const pending = bookings.filter((b) => b.status === "PENDING").length;
     const cancelled = bookings.filter((b) => b.status === "CANCELLED").length;
-    // const totalStudents = students.length;
 
     const totalEarnings = bookings
       .filter((b) => b.status === "COMPLETED")
@@ -361,7 +342,6 @@ export default function TutorDashboard() {
         ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
         : 0;
 
-    // Monthly bookings (last 6 months)
     const now = new Date();
     const monthlyData = Array.from({ length: 6 }, (_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
@@ -373,7 +353,6 @@ export default function TutorDashboard() {
       return { label, value: count };
     });
 
-    // Monthly earnings (last 6 months)
     const monthlyEarnings = Array.from({ length: 6 }, (_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
       return bookings
@@ -388,24 +367,20 @@ export default function TutorDashboard() {
         .reduce((s, b) => s + Number(b.tutor?.hourlyRate ?? 0), 0);
     });
 
-    // Rating breakdown
     const fiveStar = reviews.filter((r) => Math.round(r.rating) === 5).length;
     const fourStar = reviews.filter((r) => Math.round(r.rating) === 4).length;
     const threeStar = reviews.filter((r) => Math.round(r.rating) === 3).length;
     const twoStar = reviews.filter((r) => Math.round(r.rating) === 2).length;
     const oneStar = reviews.filter((r) => Math.round(r.rating) === 1).length;
 
-    // Recent bookings (latest 5)
     const recentBookings = [...bookings]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 5);
 
-    // Recent reviews (latest 4)
     const recentReviews = [...reviews]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 4);
 
-    // Unique students
     const uniqueStudents = new Set(
       bookings.map((b) => b.user?.email).filter(Boolean)
     ).size;
@@ -461,7 +436,6 @@ export default function TutorDashboard() {
           </p>
         </div>
 
-        {/* ── Error ── */}
         {error && (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
@@ -508,7 +482,6 @@ export default function TutorDashboard() {
           />
         </div>
 
-        {/* ── Row: Donut + Monthly bookings bar ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Booking status" />
@@ -530,7 +503,6 @@ export default function TutorDashboard() {
           </div>
         </div>
 
-        {/* ── Row: Earnings sparkline + Rating breakdown ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Earnings trend — last 6 months" />
@@ -553,7 +525,7 @@ export default function TutorDashboard() {
               <p className="text-xs text-zinc-300 mt-4">No reviews yet</p>
             ) : (
               <div className="space-y-3 mt-1">
-                {/* Avg rating summary */}
+
                 <div className="flex items-center gap-3 pb-3 border-b border-border">
                   <p className="text-3xl font-extrabold text-foreground">
                     {stats.avgRating.toFixed(1)}
@@ -565,7 +537,7 @@ export default function TutorDashboard() {
                     </p>
                   </div>
                 </div>
-                {/* Bars */}
+
                 <div className="space-y-2">
                   {[5, 4, 3, 2, 1].map((s) => {
                     const count =
@@ -584,10 +556,8 @@ export default function TutorDashboard() {
           </div>
         </div>
 
-        {/* ── Row: Recent bookings + Recent reviews ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Recent bookings */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Recent bookings"
@@ -630,7 +600,6 @@ export default function TutorDashboard() {
             )}
           </div>
 
-          {/* Recent reviews */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Recent reviews"
@@ -670,7 +639,6 @@ export default function TutorDashboard() {
           </div>
         </div>
 
-        {/* ── My Students ── */}
         <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
           <SectionHeader title="My Students" />
 
@@ -700,7 +668,6 @@ export default function TutorDashboard() {
           )}
         </div>
 
-        {/* ── Quick actions ── */}
         <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
           <SectionHeader title="Quick actions" />
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

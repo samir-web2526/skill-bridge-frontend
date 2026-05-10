@@ -25,7 +25,7 @@ export function TutorList({ tutors, isLoading = false, onSelect }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center bg-card rounded-2xl border border-border border-dashed">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-           <span className="text-3xl">🔍</span>
+          <span className="text-3xl">🔍</span>
         </div>
         <p className="font-bold text-lg text-foreground mb-1">
           No tutors found

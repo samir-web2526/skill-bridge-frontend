@@ -4,8 +4,6 @@ import { cookies } from "next/headers";
 
 const API = process.env.NEXT_PUBLIC_API;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type Role = "STUDENT" | "TUTOR" | "ADMIN";
 
 export interface AuthUser {
@@ -25,7 +23,6 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
-// Student registration payload
 export interface RegisterStudentPayload {
   name: string;
   email: string;
@@ -40,7 +37,6 @@ export interface RegisterStudentPayload {
   group?: string;
 }
 
-// Tutor registration payload
 export interface RegisterTutorPayload {
   name: string;
   email: string;
@@ -64,14 +60,6 @@ export interface LoginPayload {
   password: string;
 }
 
-// Consistent response wrapper
-// export type ServiceResponse<T> =
-//   | { data: T; error: null }
-//   | { data: null; error: string };
-
-// ─── Services ─────────────────────────────────────────────────────────────────
-
-// POST /api/v1/auth/register
 export async function register(
   payload: RegisterPayload
 ): Promise<ServiceResponse<AuthUser>> {
@@ -96,7 +84,6 @@ export async function register(
   }
 }
 
-// POST /api/v1/auth/login
 export async function login(
   payload: LoginPayload
 ): Promise<ServiceResponse<AuthTokens>> {
@@ -113,19 +100,18 @@ export async function login(
       return { data: null, error: json?.message ?? "Login failed" };
     }
 
-    // cookie store e token set kore dao
     const cookieStore = cookies();
     (await cookieStore).set("accessToken", json?.data?.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
     });
     (await cookieStore).set("refreshToken", json?.data?.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+      maxAge: 60 * 60 * 24 * 30,
     });
 
     return { data: json?.data ?? null, error: null };
@@ -167,8 +153,6 @@ export async function updateMyProfile(payload: {
   }
 }
 
-// GET /api/v1/auth/refresh-token
-
 export async function refreshToken(): Promise<ServiceResponse<{ accessToken: string }>> {
   try {
     const cookieStore = cookies();
@@ -186,12 +170,11 @@ export async function refreshToken(): Promise<ServiceResponse<{ accessToken: str
       return { data: null, error: json?.message ?? "Token refresh failed" };
     }
 
-    // নতুন accessToken cookie তে update kore dao
     (await cookieStore).set("accessToken", json?.data?.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
     });
 
     return { data: json?.data ?? null, error: null };
@@ -202,7 +185,6 @@ export async function refreshToken(): Promise<ServiceResponse<{ accessToken: str
   }
 }
 
-// Logout — cookie clear kore dao
 export async function logout(): Promise<void> {
   const cookieStore = cookies();
   (await cookieStore).delete("accessToken");
@@ -225,19 +207,18 @@ export async function googleLogin(
       return { data: null, error: json?.message ?? "Google login failed" };
     }
 
-    // cookie store e token set kore dao
     const cookieStore = cookies();
     (await cookieStore).set("accessToken", json?.data?.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
     });
     (await cookieStore).set("refreshToken", json?.data?.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+      maxAge: 60 * 60 * 24 * 30,
     });
 
     return { data: json?.data ?? null, error: null };
@@ -246,4 +227,4 @@ export async function googleLogin(
     console.error("[googleLogin]", message);
     return { data: null, error: message };
   }
-}
+}

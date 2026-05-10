@@ -119,9 +119,8 @@ export function CategoryDialog({
                 Keep it short and clear.
               </p>
               <p
-                className={`text-[11px] font-medium tabular-nums ${
-                  descLen > MAX_DESC * 0.9 ? "text-chart-2" : "text-muted-foreground/60"
-                }`}
+                className={`text-[11px] font-medium tabular-nums ${descLen > MAX_DESC * 0.9 ? "text-chart-2" : "text-muted-foreground/60"
+                  }`}
               >
                 {descLen} / {MAX_DESC}
               </p>

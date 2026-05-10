@@ -23,11 +23,7 @@ import { getBookings, Booking } from "@/services/booking.service";
 import { getAllReviews, Review } from "@/services/review.service";
 import { getTutors, getTutorStats, TutorProfile, TutorStats } from "@/services/tutors.service";
 
-// ── Types ────────────────────────────────────────────────────────────────────
-
 type BookingStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
-
-// ── Helper components ────────────────────────────────────────────────────────
 
 function Avatar({
   name,
@@ -48,11 +44,10 @@ function Avatar({
   const dim = size === "sm" ? "w-7 h-7 text-[10px]" : "w-9 h-9 text-xs";
   return (
     <div
-      className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${
-        variant === "emerald"
-          ? "bg-primary/10 text-primary"
-          : "bg-muted text-muted-foreground"
-      }`}
+      className={`${dim} rounded-full font-extrabold flex items-center justify-center shrink-0 ${variant === "emerald"
+        ? "bg-primary/10 text-primary"
+        : "bg-muted text-muted-foreground"
+        }`}
     >
       {initials}
     </div>
@@ -138,8 +133,6 @@ function SectionHeader({
   );
 }
 
-// ── Status config ─────────────────────────────────────────────────────────────
-
 const STATUS_CONFIG: Record<
   BookingStatus,
   { label: string; bg: string; dot: string; Icon: React.ElementType }
@@ -170,8 +163,6 @@ const STATUS_CONFIG: Record<
   },
 };
 
-// ── Mini bar chart ────────────────────────────────────────────────────────────
-
 function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
   const max = Math.max(...data.map((d) => d.value), 1);
   return (
@@ -193,8 +184,6 @@ function MiniBarChart({ data }: { data: { label: string; value: number }[] }) {
     </div>
   );
 }
-
-// ── Revenue sparkline ─────────────────────────────────────────────────────────
 
 function RevenueSparkline({ data }: { data: number[] }) {
   const max = Math.max(...data, 1);
@@ -225,8 +214,6 @@ function RevenueSparkline({ data }: { data: number[] }) {
     </svg>
   );
 }
-
-// ── Status donut ──────────────────────────────────────────────────────────────
 
 function StatusDonut({
   completed,
@@ -305,8 +292,6 @@ function StatusDonut({
   );
 }
 
-// ── Main Admin Dashboard ──────────────────────────────────────────────────────
-
 export default function AdminDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -323,7 +308,6 @@ export default function AdminDashboard() {
       setStatsLoading(true);
       setError(null);
 
-      // Platform stats এবং rest data parallel fetch
       const [bookingRes, reviewRes, tutorRes, statsRes] = await Promise.all([
         getBookings({ limit: 100 }),
         getAllReviews(1, 100),
@@ -355,13 +339,11 @@ export default function AdminDashboard() {
     load();
   }, []);
 
-  // ── Derived stats ─────────────────────────────────────────────────────────
-
   const stats = useMemo(() => {
-    const completed  = bookings.filter((b) => b.status === "COMPLETED").length;
-    const confirmed  = bookings.filter((b) => b.status === "CONFIRMED").length;
-    const pending    = bookings.filter((b) => b.status === "PENDING").length;
-    const cancelled  = bookings.filter((b) => b.status === "CANCELLED").length;
+    const completed = bookings.filter((b) => b.status === "COMPLETED").length;
+    const confirmed = bookings.filter((b) => b.status === "CONFIRMED").length;
+    const pending = bookings.filter((b) => b.status === "PENDING").length;
+    const cancelled = bookings.filter((b) => b.status === "CANCELLED").length;
 
     const totalRevenue = bookings
       .filter((b) => b.status === "COMPLETED")
@@ -372,7 +354,6 @@ export default function AdminDashboard() {
         ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
         : 0;
 
-    // Monthly bookings (last 6 months)
     const now = new Date();
     const monthlyData = Array.from({ length: 6 }, (_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
@@ -384,7 +365,6 @@ export default function AdminDashboard() {
       return { label, value: count };
     });
 
-    // Monthly revenue (last 6 months)
     const monthlyRevenue = Array.from({ length: 6 }, (_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
       return bookings
@@ -399,7 +379,6 @@ export default function AdminDashboard() {
         .reduce((s, b) => s + Number(b.tutor?.hourlyRate ?? 0), 0);
     });
 
-    // Category breakdown
     const catMap: Record<string, number> = {};
     bookings.forEach((b) => {
       const cat = b.tutor?.category?.name ?? "Other";
@@ -409,7 +388,6 @@ export default function AdminDashboard() {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5);
 
-    // Top tutors by booking count
     const tutorBookingMap: Record<
       string,
       { name: string; email: string; count: number; rating: number }
@@ -431,12 +409,10 @@ export default function AdminDashboard() {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
-    // Recent bookings (latest 5)
     const recentBookings = [...bookings]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 5);
 
-    // Recent reviews (latest 4)
     const recentReviews = [...reviews]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 4);
@@ -463,8 +439,6 @@ export default function AdminDashboard() {
     };
   }, [bookings, reviews, tutors]);
 
-  // ── Loading ───────────────────────────────────────────────────────────────
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -480,7 +454,6 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-6 pt-10 pb-12 space-y-6">
 
-        {/* ── Page header ── */}
         <div className="flex items-end justify-between flex-wrap gap-3">
           <div>
             <p className="text-[11px] font-bold tracking-widest text-primary uppercase mb-1">
@@ -495,7 +468,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Error ── */}
         {error && (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-400">
             <AlertCircle size={15} className="shrink-0" />
@@ -503,7 +475,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── Platform stats — /api/v1/tutors/stats থেকে ── */}
         <div>
           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
             Platform stats
@@ -544,7 +515,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Revenue + avg rating ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <StatCard
             label="Total revenue"
@@ -562,7 +532,6 @@ export default function AdminDashboard() {
           />
         </div>
 
-        {/* ── Donut + Monthly bookings ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Booking status" />
@@ -584,7 +553,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Revenue sparkline + Category breakdown ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Revenue trend — last 6 months" />
@@ -631,10 +599,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Recent bookings + Recent reviews ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Recent bookings */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Recent bookings"
@@ -693,7 +659,6 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {/* Recent reviews */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Recent reviews"
@@ -753,10 +718,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Top tutors + Quick actions ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Top tutors */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader
               title="Top tutors by bookings"
@@ -799,7 +762,6 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {/* Quick actions */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
             <SectionHeader title="Quick actions" />
             <div className="grid grid-cols-2 gap-3">

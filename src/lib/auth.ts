@@ -2,21 +2,17 @@
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type Role = "STUDENT" | "TUTOR" | "ADMIN";
 
 export interface CurrentUser {
-    name:string;
+  name: string;
   id: string;
   email: string;
   phone?: string | null;
   image?: string | null;
   role: Role;
-  status:string;
+  status: string;
 }
-
-// ─── Service ──────────────────────────────────────────────────────────────────
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {

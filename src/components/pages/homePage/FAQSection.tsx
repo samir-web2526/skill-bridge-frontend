@@ -29,7 +29,7 @@ export default function FAQAccordion() {
     return (
         <section className="py-20 bg-background border-y border-border">
             <div className="max-w-7xl mx-auto px-6">
-                {/* Header */}
+
                 <div className="text-center mb-14">
                     <p className="text-xs font-bold tracking-widest text-primary uppercase mb-2">
                         FAQ
@@ -39,7 +39,6 @@ export default function FAQAccordion() {
                     </h2>
                 </div>
 
-                {/* Accordion list */}
                 <div className="max-w-2xl mx-auto space-y-3">
                     {faqs.map(({ q, a }, i) => {
                         const isOpen = openIndex === i;
@@ -49,7 +48,6 @@ export default function FAQAccordion() {
                                 className={`rounded-2xl border transition-all duration-200 shadow-sm bg-background ${isOpen ? "border-primary" : "border-border"
                                     }`}
                             >
-                                {/* Question row — clickable */}
                                 <button
                                     onClick={() => toggle(i)}
                                     className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
@@ -57,11 +55,10 @@ export default function FAQAccordion() {
                                 >
                                     <span className="font-bold text-base text-foreground">{q}</span>
 
-                                    {/* Chevron icon */}
                                     <span
                                         className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-transform duration-300 ${isOpen
-                                                ? "bg-primary text-primary-foreground rotate-180"
-                                                : "bg-muted text-muted-foreground rotate-0"
+                                            ? "bg-primary text-primary-foreground rotate-180"
+                                            : "bg-muted text-muted-foreground rotate-0"
                                             }`}
                                     >
                                         <svg
@@ -80,7 +77,6 @@ export default function FAQAccordion() {
                                     </span>
                                 </button>
 
-                                {/* Answer — animated reveal */}
                                 <div
                                     className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                                         }`}

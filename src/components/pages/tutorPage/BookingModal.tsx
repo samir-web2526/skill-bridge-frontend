@@ -39,12 +39,12 @@ export function BookingModal({ tutor, onClose, onSuccess }: Props) {
     setError(null);
 
     try {
-     await createBooking({
-  tutorId: tutor.id,
-  date: new Date(date).toISOString(),
-  startTime: tutor.availableFrom,
-  endTime: tutor.availableTo,
-});
+      await createBooking({
+        tutorId: tutor.id,
+        date: new Date(date).toISOString(),
+        startTime: tutor.availableFrom,
+        endTime: tutor.availableTo,
+      });
 
       toast.success("Booking confirmed!", {
         description: `Session with ${tutor?.user?.name} booked successfully.`,

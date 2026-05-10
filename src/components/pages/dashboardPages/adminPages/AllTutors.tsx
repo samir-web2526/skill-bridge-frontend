@@ -32,8 +32,7 @@ function TutorCard({ tutor }: { tutor: TutorProfile }) {
   const initials = getInitials(tutor.user?.name);
   const color = avatarColor(tutor.user?.name);
   const rating = Number(tutor.averageRating ?? 0).toFixed(1);
-  
-  // Filter out the dummy placeholder URL so pravatar fallback kicks in
+
   const rawImage = tutor.user?.image;
   const image = rawImage === "https://example.com/avatar.png" ? null : rawImage;
   const avatarUrl = image || `https://i.pravatar.cc/150?u=${tutor.user?.email || tutor.id}`;
@@ -44,14 +43,14 @@ function TutorCard({ tutor }: { tutor: TutorProfile }) {
 
   return (
     <div className="bg-card border border-border rounded-2xl p-5 hover:shadow-md transition-all duration-200 group">
-      {/* Top row */}
+
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          {/* Avatar */}
+
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 ${color} overflow-hidden shadow-sm relative`}>
-            <Image 
-              src={avatarUrl} 
-              alt={tutor.user?.name || "Tutor"} 
+            <Image
+              src={avatarUrl}
+              alt={tutor.user?.name || "Tutor"}
               fill
               className="object-cover"
             />
@@ -67,20 +66,17 @@ function TutorCard({ tutor }: { tutor: TutorProfile }) {
           </div>
         </div>
 
-        {/* Availability Badge */}
         <span
-          className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-md ${
-            isAvailable
+          className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-md ${isAvailable
               ? "bg-primary text-primary-foreground"
               : "bg-destructive text-destructive-foreground"
-          }`}
+            }`}
         >
           <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
           {isAvailable ? "Available" : "Unavailable"}
         </span>
       </div>
 
-      {/* Stats row */}
       <div className="grid grid-cols-3 gap-2 mb-4">
         <div className="bg-muted/30 rounded-lg p-2 text-center">
           <div className="flex items-center justify-center gap-1 mb-0.5">
@@ -99,14 +95,12 @@ function TutorCard({ tutor }: { tutor: TutorProfile }) {
         </div>
       </div>
 
-      {/* Bio */}
       {tutor.bio && (
         <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed h-8">
           {tutor.bio}
         </p>
       )}
 
-      {/* Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-border text-[10px] text-muted-foreground font-medium">
         <span className="flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -176,7 +170,7 @@ export default function AllTutors() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-        {/* Search */}
+
         <div className="relative w-full sm:w-64">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -188,7 +182,6 @@ export default function AllTutors() {
           />
         </div>
 
-        {/* Grid */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -204,7 +197,6 @@ export default function AllTutors() {
           </div>
         )}
 
-        {/* Pagination */}
         {meta && meta.totalPage > 1 && (
           <div className="flex justify-center items-center gap-3 mt-6">
             <Button variant="outline" disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="rounded-xl">
