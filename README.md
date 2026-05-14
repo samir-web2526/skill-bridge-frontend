@@ -1,54 +1,107 @@
 # Skill Bridge
-A modern platform to connect students with the perfect tutors.
+
+A modern platform that helps students connect with the perfect tutors easily and efficiently.
 
 ---
 
-## Table of Contents
+## About The Project
 
-- [About the Project](#about-the-project)
-- [Project Overview](#project-overview)
-- [Key Features](#key-features)
-- [Tech Stack](#tech-stack)
-- [Dependencies](#dependencies)
-- [Installation️ & Setup](#installation--setup)
-- [Folder Structure](#folder-structure)
-- [Contributions](#contributions)
-- [How to Contribute](#how-to-contribute)
-- [License](#license)
-- [Contact](#contact)
+Skill Bridge is a full-stack tutoring platform designed to make learning more accessible by connecting students with qualified tutors. The platform includes role-based dashboards, secure authentication, tutor discovery, payment integration, and a modern responsive UI for a smooth user experience.
 
 ---
 
-## About the Project 
-Skill Bridge is a comprehensive web application designed to facilitate learning by connecting students with qualified tutors. It offers a seamless experience for finding tutors, managing profiles, processing payments, and maintaining a role-based environment for students, tutors, and administrators.
+## Features
+
+- Role-based dashboards for Admin, Student, and Tutor
+- Tutor search and discovery system
+- Secure authentication with Better Auth & Google OAuth
+- Responsive modern UI with dark/light mode
+- Form handling and validation using React Hook Form & Zod
+- Secure payment integration
+- Protected routes with middleware support
 
 ---
 
-## Project Overview  
-The platform streamlines the tutoring experience with modern tools and design. It features dedicated dashboards for different user roles (Admin, Student, Tutor), secure authentication (including Google OAuth), and robust form handling. With a sleek UI built on Tailwind CSS and Shadcn, the project aims to provide high accessibility and responsiveness.
+## Tech Stack
+
+### Frontend
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS v4
+
+### UI & Libraries
+- Shadcn UI
+- Radix UI
+- Lucide React
+
+### Authentication & Validation
+- Better Auth
+- Google OAuth
+- React Hook Form
+- Zod
 
 ---
 
-## Key Features  
-- **Role-Based Dashboards** — Distinct interfaces and capabilities for Admins, Students, and Tutors.
-- **Tutor Search & Discovery** — Easy browsing to find the perfect match for educational needs.
-- **Secure Authentication** — Integration with Better Auth and Google OAuth for reliable and safe login.
-- **Payment Integration** — Services dedicated to handling secure and smooth transactions.
-- **Modern UI/UX** — Responsive and accessible design using Tailwind CSS v4 and Radix UI primitives.
-- **Dark/Light Mode** — Built-in theme toggling supported by Next-Themes.
+## Installation & Setup
+
+### Clone the repository
+
+```bash
+git clone https://github.com/your-username/skill-bridge-frontend.git
+```
+
+### Navigate to the project folder
+
+```bash
+cd skill-bridge-frontend
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run the development server
+
+```bash
+npm run dev
+```
 
 ---
 
-## Tech Stack  
-**Frontend:** Next.js (v16) · React (v19) · Tailwind CSS v4 · TypeScript  
-**UI Components:** Radix UI · Shadcn UI  
-**Forms & Validation:** React Hook Form · Zod  
-**Authentication:** Better Auth · Google OAuth  
+## Folder Structure
+
+```plaintext
+skill-bridge-frontend/
+│
+├── src/
+│   ├── app/
+│   │   ├── (commonLayout)/
+│   │   ├── (dashboardLayout)/
+│   │   ├── login/
+│   │   └── register/
+│   │
+│   ├── components/
+│   │   ├── pages/
+│   │   ├── providers/
+│   │   └── ui/
+│   │
+│   ├── hooks/
+│   ├── lib/
+│   ├── services/
+│   ├── types/
+│   └── middleware.ts
+│
+├── public/
+├── package.json
+└── next.config.js
+```
 
 ---
 
-## Dependencies  
-List of major required dependencies used in the project:
+## Dependencies
 
 ```json
 {
@@ -66,5 +119,19 @@ List of major required dependencies used in the project:
 
 ---
 
-## Installation️ & Setup
-1. Clone the repo and install dependencies:
+## Live Demo
+
+🔗 Live Site: https://yourdomain.com
+
+---
+
+## Contact
+
+- Portfolio: https://yourportfolio.com
+- Email: your-email@example.com
+
+---
+
+## License
+
+This project is licensed under the MIT License.
