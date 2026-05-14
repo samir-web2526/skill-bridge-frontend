@@ -1,4 +1,4 @@
-# Skill Bridge
+# Skill Bridge Frontend
 
 A modern platform that helps students connect with the perfect tutors easily and efficiently.
 
