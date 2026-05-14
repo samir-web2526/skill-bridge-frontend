@@ -28,7 +28,7 @@ Skill Bridge is a full-stack tutoring platform designed to connect students with
 
 - Role-based dashboards for Admin, Student, and Tutor
 - Tutor search and discovery system
-- Secure authentication with Better Auth & Google OAuth
+- Secure authentication with Custom Auth & Google OAuth
 - Responsive modern UI with dark/light mode
 - Form handling and validation using React Hook Form & Zod
 - Secure payment integration
@@ -50,7 +50,7 @@ Skill Bridge is a full-stack tutoring platform designed to connect students with
 - Lucide React
 
 ### Authentication & Validation
-- Better Auth
+- Custom Auth
 - Google OAuth
 - React Hook Form
 - Zod
@@ -62,7 +62,7 @@ Skill Bridge is a full-stack tutoring platform designed to connect students with
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/skill-bridge-frontend.git
+git clone https://github.com/samir-web2526/skill-bridge-frontend.git
 ```
 
 ### Navigate to the project folder
